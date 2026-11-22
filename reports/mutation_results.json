@@ -4,90 +4,146 @@
     "description": "chunk split threshold halved",
     "file": "scripts/stage7_chunking.py",
     "result": "KILLED",
-    "pytest": "1 failed, 624 passed, 1 warning, 18 subtests passed in 16.37s"
+    "pytest": "1 failed, 698 passed, 18 subtests passed in 24.58s"
   },
   {
     "id": "M2",
     "description": "forward merge ignores MAX_CHUNK_CHARS",
     "file": "scripts/stage7_chunking.py",
     "result": "KILLED",
-    "pytest": "1 failed, 631 passed, 1 warning, 18 subtests passed in 15.72s"
+    "pytest": "1 failed, 660 passed, 18 subtests passed in 24.64s"
   },
   {
     "id": "M13",
     "description": "backward merge ignores MAX_CHUNK_CHARS",
     "file": "scripts/stage7_chunking.py",
     "result": "KILLED",
-    "pytest": "1 failed, 635 passed, 1 warning, 18 subtests passed in 16.41s"
+    "pytest": "1 failed, 663 passed, 18 subtests passed in 25.68s"
   },
   {
     "id": "M3",
     "description": "retrieval top-k off by one",
     "file": "scripts/stage10_retrieval.py",
     "result": "KILLED",
-    "pytest": "1 failed, 199 passed, 1 warning, 18 subtests passed in 8.22s"
+    "pytest": "1 failed, 223 passed, 18 subtests passed in 17.67s"
   },
   {
     "id": "M4",
     "description": "retrieval sorts worst-first",
     "file": "scripts/stage10_retrieval.py",
     "result": "KILLED",
-    "pytest": "1 failed, 199 passed, 1 warning, 18 subtests passed in 8.76s"
+    "pytest": "1 failed, 223 passed, 18 subtests passed in 16.75s"
   },
   {
     "id": "M5",
     "description": "retrieval category filter disabled",
     "file": "scripts/stage10_retrieval.py",
     "result": "KILLED",
-    "pytest": "1 failed, 208 passed, 1 warning, 18 subtests passed in 8.16s"
+    "pytest": "1 failed, 232 passed, 18 subtests passed in 16.95s"
   },
   {
     "id": "M6",
     "description": "citation threshold >= -> > 0",
     "file": "scripts/stage14_citation_extraction.py",
     "result": "KILLED",
-    "pytest": "1 failed, 274 passed, 1 warning, 18 subtests passed in 8.70s"
+    "pytest": "1 failed, 298 passed, 18 subtests passed in 17.55s"
   },
   {
     "id": "M7",
     "description": "groundedness threshold ignored",
     "file": "scripts/stage15_groundedness_validation.py",
     "result": "KILLED",
-    "pytest": "1 failed, 297 passed, 1 warning, 18 subtests passed in 8.51s"
+    "pytest": "1 failed, 321 passed, 18 subtests passed in 17.44s"
   },
   {
     "id": "M8",
     "description": "cache key drops model_name",
     "file": "scripts/stage17_response_caching.py",
     "result": "KILLED",
-    "pytest": "1 failed, 353 passed, 1 warning, 18 subtests passed in 8.32s"
+    "pytest": "1 failed, 377 passed, 18 subtests passed in 16.73s"
   },
   {
     "id": "M9",
     "description": "planner step limit off by one",
     "file": "scripts/stage21_agent_planning.py",
     "result": "KILLED",
-    "pytest": "1 failed, 458 passed, 1 warning, 18 subtests passed in 8.76s"
+    "pytest": "1 failed, 482 passed, 18 subtests passed in 16.64s"
   },
   {
     "id": "M10",
     "description": "context budget never cuts off",
     "file": "scripts/stage11_context_assembly.py",
     "result": "KILLED",
-    "pytest": "1 failed, 230 passed, 1 warning, 18 subtests passed in 9.56s"
+    "pytest": "1 failed, 254 passed, 18 subtests passed in 15.82s"
   },
   {
     "id": "M11",
     "description": "tool schema: integer maximum not enforced",
     "file": "scripts/stage20_tool_function_calling.py",
     "result": "KILLED",
-    "pytest": "1 failed, 435 passed, 1 warning, 18 subtests passed in 9.04s"
+    "pytest": "1 failed, 459 passed, 18 subtests passed in 16.62s"
   },
   {
     "id": "M12",
     "description": "tool schema: required arguments not enforced",
     "file": "scripts/stage20_tool_function_calling.py",
     "result": "KILLED",
-    "pytest": "1 failed, 435 passed, 1 warning, 18 subtests passed in 8.62s"
+    "pytest": "1 failed, 459 passed, 18 subtests passed in 17.46s"
+  },
+  {
+    "id": "M14",
+    "description": "exact-duplicate chunk drop disabled",
+    "file": "scripts/stage7_chunking.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 668 passed, 18 subtests passed in 24.94s"
+  },
+  {
+    "id": "M15",
+    "description": "heading-only chunk drop disabled",
+    "file": "scripts/stage7_chunking.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 672 passed, 18 subtests passed in 26.62s"
+  },
+  {
+    "id": "M16",
+    "description": "split no longer prefers sentence ends",
+    "file": "scripts/stage7_chunking.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 664 passed, 18 subtests passed in 26.71s"
+  },
+  {
+    "id": "M17",
+    "description": "repeated section ids not disambiguated",
+    "file": "scripts/stage5_structure.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 578 passed, 18 subtests passed in 24.79s"
+  },
+  {
+    "id": "M18",
+    "description": "inline HTML tags (<mark>, <u>) not stripped",
+    "file": "scripts/stage4_cleaning.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 525 passed, 18 subtests passed in 24.16s"
+  },
+  {
+    "id": "M19",
+    "description": "table-of-contents removal disabled",
+    "file": "scripts/stage4_cleaning.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 529 passed, 18 subtests passed in 22.51s"
+  },
+  {
+    "id": "M20",
+    "description": "stage 6 failure code reverts to FATAL_UNREADABLE",
+    "file": "scripts/stage6_validation.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 634 passed, 18 subtests passed in 22.88s"
+  },
+  {
+    "id": "M21",
+    "description": "local embedder no longer L2-normalises",
+    "file": "scripts/embedding_provider_local.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 105 passed, 18 subtests passed in 7.13s"
   }
 ]
