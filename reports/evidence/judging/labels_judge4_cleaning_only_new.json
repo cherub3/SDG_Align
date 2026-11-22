@@ -1,0 +1,22 @@
+{
+ "judge": "Judge 4 (fresh sub-agent, sonnet), 4 new passages of the cleaning-only comparison",
+ "source": "raw/judge4_cleaning_only_new.json",
+ "labels": {
+  "C0001": {
+   "label": 1,
+   "reason": "Title mentions Indigenous Peoples and Local Communities in Boumba Bek, Cameroon, but no specific named communities are listed."
+  },
+  "C0002": {
+   "label": 0,
+   "reason": "Describes Tropical Dry Forest landscape in Manabi and Santa Elena; no marine protected areas named."
+  },
+  "C0003": {
+   "label": 1,
+   "reason": "Taxonomy lists 'Gender Mainstreaming', 'Women groups', 'Gender-sensitive indicators' as tags only, with no description of how it will be done."
+  },
+  "C0004": {
+   "label": 1,
+   "reason": "States '60,312 hectares of landscapes under improved management' (CI 4.1), but it may be one project's figure and also lists marine habitat hectares, so it is not a clean single answer."
+  }
+ }
+}
