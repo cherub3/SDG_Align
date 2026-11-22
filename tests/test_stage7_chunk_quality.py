@@ -135,3 +135,77 @@ def test_when_no_boundary_exists_it_still_cuts_at_the_maximum():
     pieces = s7._split_text_at_boundaries(text, s7.MAX_CHUNK_CHARS, s7.TARGET_CHUNK_CHARS)
     _check_cover(text, pieces)
     assert pieces[0][1] == s7.MAX_CHUNK_CHARS
+
+
+# ---- exact duplicates -----------------------------------------------------------------------
+
+def _chunk(cid, start, end, text):
+    return {"chunk_id": cid, "text": text, "char_start": start, "char_end": end, "page_start": 1, "page_end": 1,
+            "section_ids": ["1"]}
+
+
+def test_exact_duplicate_span_is_dropped_first_copy_kept_and_range_reported():
+    a, dup, b = "Same paragraph.\n\n" + BODY, "Same   paragraph.\n\n" + BODY, "Different text. " * 30
+    full, bounds = text_for(a, b, dup)                        # the duplicate comes last
+    spans = [span(*bounds[0], "1"), span(*bounds[1], "2"), span(*bounds[2], "3")]
+    kept, dropped = s7.drop_duplicate_spans(spans, full)
+    assert [s["anchor_section_id"] for s in kept] == ["1", "2"]
+    assert dropped == [bounds[2]]
+
+
+def test_similar_but_not_identical_text_is_kept():
+    full, bounds = text_for("Alpha beta gamma.", "Alpha beta gamma!", "alpha beta gamma.")
+    spans = [span(*bounds[i], str(i)) for i in range(3)]
+    kept, dropped = s7.drop_duplicate_spans(spans, full)
+    assert len(kept) == 3 and dropped == []
+
+
+def test_validation_accepts_a_gap_only_when_it_is_a_recorded_duplicate():
+    clean = {"full_text_char_count": 30, "pages": [{"page_number": 1}], "section_tree": [{"section_id": "1"}]}
+    chunks = [_chunk("c0", 0, 10, "x" * 10), _chunk("c1", 20, 30, "y" * 10)]       # gap 10..20
+    findings, outcome = s7.validate_chunks(chunks, clean)
+    assert any(f["code"] == "CHUNK_COVERAGE_EXACT" for f in findings)
+    findings, outcome = s7.validate_chunks(chunks, clean, [(10, 20)])
+    assert not any(f["code"] == "CHUNK_COVERAGE_EXACT" for f in findings)
+    findings, outcome = s7.validate_chunks(chunks, clean, [(10, 19)])                # recorded range too small
+    assert any(f["code"] == "CHUNK_COVERAGE_EXACT" for f in findings)
+
+
+def test_validation_accepts_two_consecutive_dropped_ranges_and_a_dropped_tail():
+    clean = {"full_text_char_count": 40, "pages": [{"page_number": 1}], "section_tree": [{"section_id": "1"}]}
+    chunks = [_chunk("c0", 0, 10, "x" * 10), _chunk("c1", 30, 35, "y" * 5)]
+    findings, _ = s7.validate_chunks(chunks, clean, [(10, 20), (20, 30), (35, 40)])
+    assert not any(f["code"] == "CHUNK_COVERAGE_EXACT" for f in findings)
+
+
+# ---- end to end: a repeated section is dropped and the document still validates ------------------
+
+def test_chunk_document_drops_a_repeated_section_and_still_passes_validation(tmp_path, monkeypatch):
+    import json
+    from src.ingestion_types import ManifestRecord, DocumentStatus
+    monkeypatch.setattr(s7, "CHUNKS_DIR", tmp_path / "chunks")
+    body = "The same repeated section describes the project approach in detail. " * 12
+    page1 = "# Approach\n\n" + body + "\n\n"
+    page2 = "# Approach\n\n" + body + "\n\n"                       # identical text, so identical chunk
+    page3 = "# Results\n\n" + "A different section reports the project results clearly. " * 14 + "\n\n"
+    pages, cursor = [], 0
+    for i, txt in enumerate([page1, page2, page3], start=1):
+        pages.append({"page_number": i, "text": txt, "char_start": cursor, "char_end": cursor + len(txt),
+                      "is_excluded": False, "headings": []})
+        cursor += len(txt)
+    metadata = {"classification": {"category": "climate", "doc_type": None}, "title": "T"}
+    section_tree = [
+        {"section_id": "1", "section_level": 1, "parent_section": None, "title": "Approach", "start_page": 1},
+        {"section_id": "2", "section_level": 1, "parent_section": None, "title": "Approach", "start_page": 2},
+        {"section_id": "3", "section_level": 1, "parent_section": None, "title": "Results", "start_page": 3},
+    ]
+    clean = {"doc_id": "doc_dup", "full_text_char_count": cursor, "section_tree": section_tree, "pages": pages}
+    record = ManifestRecord(doc_id="doc_dup", category="climate", status=DocumentStatus.READY_FOR_CHUNKING,
+                            artifact_paths={})
+    s7.chunk_document(record, clean, metadata)
+    assert record.status == DocumentStatus.READY_FOR_CHUNKING, record.error_code
+    report = json.loads((tmp_path / "chunks" / "doc_dup" / "chunk_validation_report.json").read_text(encoding="utf-8"))
+    chunks = json.loads((tmp_path / "chunks" / "doc_dup" / "chunks.json").read_text(encoding="utf-8"))["chunks"]
+    assert len(report["dropped_duplicate_ranges"]) == 1
+    assert report["overall_status"] in ("PASS", "WARNING")
+    assert len(chunks) == 2

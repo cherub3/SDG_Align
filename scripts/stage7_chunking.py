@@ -19,7 +19,7 @@ import logging
 import re
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 src_path = Path(__file__).parent.parent
 sys.path.append(str(src_path))
@@ -463,6 +463,28 @@ def merge_undersized_spans(spans: List[Dict], full_text: Optional[str] = None) -
     return result
 
 
+def _norm_text(text: str) -> str:
+    return " ".join(text.split())
+
+
+def drop_duplicate_spans(spans: List[Dict], full_text: str) -> Tuple[List[Dict], List[Tuple[int, int]]]:
+    """Drops a span whose text (whitespace-normalised, case kept) equals an earlier span's text
+    in the same document; the first occurrence stays. Returns (kept spans, dropped (start, end)
+    ranges). The ranges are reported so chunk validation can still prove that every character
+    of the document is either in a chunk or in a recorded duplicate."""
+    seen = set()
+    kept: List[Dict] = []
+    dropped: List[Tuple[int, int]] = []
+    for s in spans:
+        key = _norm_text(full_text[s["char_start"]:s["char_end"]])
+        if key and key in seen:
+            dropped.append((s["char_start"], s["char_end"]))
+            continue
+        seen.add(key)
+        kept.append(s)
+    return kept, dropped
+
+
 # ===========================================================================
 # STEP 5 — structural chunk identity
 # ===========================================================================
@@ -528,7 +550,8 @@ def assemble_chunk_records(
 # STEP 7 — chunk-set validation
 # ===========================================================================
 
-def validate_chunks(chunks: List[Dict], clean_text: Dict) -> Tuple[List[Dict], str]:
+def validate_chunks(chunks: List[Dict], clean_text: Dict,
+                    dropped_ranges: Sequence[Tuple[int, int]] = ()) -> Tuple[List[Dict], str]:
     """Runs the full chunk-set validation suite (no fail-fast) and returns
     (findings, outcome), where outcome is FAIL/WARNING/PASS by finding severity."""
     findings: List[Dict] = []
@@ -568,13 +591,22 @@ def validate_chunks(chunks: List[Dict], clean_text: Dict) -> Tuple[List[Dict], s
                                       f"chunks {prev['chunk_id']} and {cur['chunk_id']} overlap"))
 
     if not overlap_found:
+        skip = {}
+        for s_, e_ in dropped_ranges:
+            skip[s_] = e_
+        def _skip_dropped(pos: int) -> int:
+            while pos in skip:
+                pos = skip.pop(pos)
+            return pos
         cursor = 0
         gap_or_mismatch = False
         for c in ordered:
+            cursor = _skip_dropped(cursor)
             if c["char_start"] != cursor:
                 gap_or_mismatch = True
                 break
             cursor = c["char_end"]
+        cursor = _skip_dropped(cursor)
         if cursor != full_len:
             gap_or_mismatch = True
         if gap_or_mismatch:
@@ -666,7 +698,8 @@ def write_chunks(doc_id: str, chunks: List[Dict]) -> Path:
     return out_path
 
 
-def write_chunk_validation_report(doc_id: str, findings: List[Dict], outcome: str, chunks: List[Dict]) -> Path:
+def write_chunk_validation_report(doc_id: str, findings: List[Dict], outcome: str, chunks: List[Dict],
+                                  dropped_ranges: Sequence[Tuple[int, int]] = ()) -> Path:
     error_count = sum(1 for f in findings if f["severity"] == SEVERITY_ERROR)
     warning_count = sum(1 for f in findings if f["severity"] == SEVERITY_WARNING)
     out_path = CHUNKS_DIR / doc_id / "chunk_validation_report.json"
@@ -681,6 +714,7 @@ def write_chunk_validation_report(doc_id: str, findings: List[Dict], outcome: st
             "fail": error_count,
         },
         "findings": findings,
+        "dropped_duplicate_ranges": [list(r) for r in dropped_ranges],
         "stats": _compute_stats(chunks),
     })
     return out_path
@@ -732,19 +766,20 @@ def chunk_document(record: ManifestRecord, clean_text: Dict, metadata: Dict) -> 
     for s in spans:
         _recompute_page_range(s, pages_sorted)
     spans = merge_undersized_spans(spans, full_text)
+    spans, dropped_ranges = drop_duplicate_spans(spans, full_text)
     for s in spans:
         _recompute_page_range(s, pages_sorted)
     spans = assign_chunk_ids(spans, record.doc_id)
 
     chunks = assemble_chunk_records(spans, record.doc_id, full_text, metadata)
 
-    chunk_findings, outcome = validate_chunks(chunks, clean_text)
+    chunk_findings, outcome = validate_chunks(chunks, clean_text, dropped_ranges)
     all_findings = offset_findings + chunk_findings
     has_error = any(f["severity"] == SEVERITY_ERROR for f in all_findings)
     has_warning = any(f["severity"] == SEVERITY_WARNING for f in all_findings)
     outcome = "FAIL" if has_error else ("WARNING" if has_warning else "PASS")
 
-    report_path = write_chunk_validation_report(record.doc_id, all_findings, outcome, chunks)
+    report_path = write_chunk_validation_report(record.doc_id, all_findings, outcome, chunks, dropped_ranges)
     logger.info(f"Stage 7 validation report written: {report_path} [outcome={outcome}]")
 
     chunks_path: Optional[Path] = None
