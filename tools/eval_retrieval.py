@@ -93,7 +93,7 @@ def summarize(rows):
     return out
 
 
-def build_retriever(top_k=TOP_K):
+def build_retriever(top_k=TOP_K, hybrid=None):
     """Real stage-10 retrieve() over the local index (same as tools/retrieval_eval.py): fn(query) -> [(doc_id,start,end,score)]."""
     os.chdir(REPO)
     from scripts.embedding_provider_local import LocalEmbeddingAdapter
@@ -118,7 +118,7 @@ def build_retriever(top_k=TOP_K):
                 spans[c["chunk_id"]] = (c["doc_id"], c["char_start"], c["char_end"])
 
     def run(q):
-        r = retrieve({"query": q, "index_fingerprints": fps, "top_k": top_k}, manifest,
+        r = retrieve({"query": q, "index_fingerprints": fps, "top_k": top_k, "hybrid": hybrid}, manifest,
                      lambda p, m, v: ad, lambda m: FAISSAdapter(m))
         return [(*spans[x["chunk_id"]], x["score"]) for x in r["results"]]
     return run
@@ -214,13 +214,14 @@ if __name__ == "__main__":
     ap.add_argument("--label")
     ap.add_argument("--out")
     ap.add_argument("--compare", nargs=2)
+    ap.add_argument("--hybrid", help="JSON dict of hybrid params, e.g. '{\"rrf_k\":60,\"w_bm25\":1,\"depth\":50}'; omit for dense only")
     a = ap.parse_args()
     if a.compare:
         c = compare(*a.compare)
         print(json.dumps(c, indent=1))
         print(compare_table(c, *[os.path.basename(p) for p in a.compare]))
     else:
-        res = evaluate(a.split, build_retriever(), a.label)
+        res = evaluate(a.split, build_retriever(hybrid=json.loads(a.hybrid) if a.hybrid else None), a.label)
         os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
         json.dump(res, open(a.out, "w", encoding="utf-8", newline="\n"), indent=1)
         print(table(res))

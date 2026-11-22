@@ -69,12 +69,13 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--split", default="test")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--hybrid", help="JSON dict of hybrid fusion params; omit for dense only")
     ap.add_argument("--baseline", default=os.path.join(fg.gc.REPO, "eval", "results", "baseline.json"))
     a = ap.parse_args()
     bad = fg.check_frozen()
     if bad:
         raise SystemExit("REFUSING TO RUN, frozen inputs differ: " + "; ".join(bad))
-    retr = ev.build_retriever(top_k=max(KS))
+    retr = ev.build_retriever(top_k=max(KS), hybrid=json.loads(a.hybrid) if a.hybrid else None)
     rows = [depth_scores(it, retr(it["question"])) for it in ev.load_items(a.split) if it["type"] != "unanswerable"]
     rng = np.random.default_rng(1)
     summ = {"n": len(rows)}

@@ -26,6 +26,7 @@ from src.ingestion_types import ManifestRecord, DocumentStatus
 RETRIEVAL_PIPELINE_VERSION = "1.0.0"
 DEFAULT_TOP_K = 10
 MAX_TOP_K = 100
+FULL_SEARCH_K = 10 ** 6    # "search everything": search_index caps this at the index's vector count
 OVERFETCH_MULTIPLIER = 3
 L2_SCORE_EPSILON = 1e-8
 
@@ -225,6 +226,7 @@ def assemble_results(candidates: List[Dict], chunks_by_doc: Dict[str, Dict], ind
             
         assembled.append({
             "score": c["score"],
+            **{k: c[k] for k in ("dense_score", "bm25_score") if k in c},
             "index_fingerprint": c["index_fingerprint"],
             "embedding_id": c["embedding_id"],
             "chunk_id": c["chunk_id"],
@@ -343,6 +345,7 @@ def retrieve(
     top_k = request.get("top_k", DEFAULT_TOP_K)
     top_k = min(max(1, top_k), MAX_TOP_K)
     k_search = top_k * OVERFETCH_MULTIPLIER
+    hybrid = request.get("hybrid")          # None/False = dense only; True or a dict of hybrid_search.DEFAULT_PARAMS overrides
     
     # group by provider config
     groups = {}
@@ -384,7 +387,8 @@ def retrieve(
             try:
                 # Indexes built with L2 normalisation (all of them, today) need a unit-length query.
                 search_vector = unit_query_vector if h.metadata.get("normalization") == "l2" else np.asarray(query_vector, dtype=np.float32)
-                candidates = search_index(h, search_vector, k_search, index_adapter_factory)
+                # Hybrid fusion needs the dense score of every chunk BM25 might surface, so search the whole (flat) index.
+                candidates = search_index(h, search_vector, FULL_SEARCH_K if hybrid else k_search, index_adapter_factory)
                 for c in candidates:
                     c["score"] = normalize_score(c["distance"], c["metric"])
                     
@@ -461,6 +465,13 @@ def retrieve(
         val = filters["doc_type"]
         if not any(metadata_by_doc.get(c["doc_id"], {}).get("doc_type") == val for c in all_candidates):
             findings.append({"severity": "WARNING", "code": "FILTER_VALUE_UNKNOWN", "message": f"Doc type filter {val} not found in candidates"})
+
+    if hybrid:
+        from scripts import hybrid_search
+        from scripts.stage8_embedding_generation import embedding_text
+        pool = [c for d in chunks_by_doc.values() for c in d.values()]
+        all_candidates = hybrid_search.fuse_candidates(
+            all_candidates, hybrid_search.build_bm25(pool, embedding_text), query, hybrid if isinstance(hybrid, dict) else None)
 
     filtered_candidates = apply_metadata_filters(all_candidates, filters, chunks_by_doc)
     

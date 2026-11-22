@@ -362,3 +362,31 @@ def test_retrieve_searches_the_matching_index_and_flags_the_mismatched_one(mock_
     assert [r["chunk_id"] for r in res["results"]] == ["a1"]
     assert mock_search.call_count == 1
 
+
+
+@patch('scripts.stage10_retrieval.resolve_index_fingerprints')
+@patch('scripts.stage10_retrieval.search_index')
+def test_retrieve_hybrid_promotes_the_lexical_match_and_keeps_the_cosine(mock_search, mock_resolve, tmp_path):
+    """dense alone ranks a1 first; BM25 finds the rare words only in a2, so hybrid puts a2 first. Dense mode is untouched."""
+    path = tmp_path / "dA.json"
+    path.write_text(json.dumps({"chunks": [
+        {"chunk_id": "a1", "text": "general background text", "category": "c", "doc_type": "d"},
+        {"chunk_id": "a2", "text": "zebra quagga okapi", "category": "c", "doc_type": "d"}]}), encoding="utf-8")
+    manifest = {"dA": ManifestRecord(doc_id="dA", category="c", status=DocumentStatus.READY_FOR_CHUNKING,
+                                     artifact_paths={"vector_index": "x", "chunks": str(path)})}
+    mock_resolve.return_value = [IndexHandle("idx", {"provider": "p", "embedding_dimension": 2}, Path("p"))]
+    mock_search.return_value = [
+        {"index_fingerprint": "idx", "distance": 0.9, "metric": "cosine", "embedding_id": "e1", "chunk_id": "a1", "doc_id": "dA"},
+        {"index_fingerprint": "idx", "distance": 0.2, "metric": "cosine", "embedding_id": "e2", "chunk_id": "a2", "doc_id": "dA"}]
+    provider = MagicMock()
+    provider.embed_batch.return_value = [[1.0, 0.0]]
+
+    dense = retrieve({"query": "zebra quagga", "index_fingerprints": ["idx"]}, manifest, lambda *a: provider, lambda *a: None)
+    assert [r["chunk_id"] for r in dense["results"]] == ["a1", "a2"]
+    assert "dense_score" not in dense["results"][0]
+
+    hyb = retrieve({"query": "zebra quagga", "index_fingerprints": ["idx"], "hybrid": {"rrf_k": 1, "w_bm25": 2.0}},
+                   manifest, lambda *a: provider, lambda *a: None)
+    assert [r["chunk_id"] for r in hyb["results"]] == ["a2", "a1"]
+    assert hyb["results"][0]["dense_score"] == pytest.approx(0.2) and hyb["results"][0]["bm25_score"] > 0
+    assert mock_search.call_args.args[2] >= 10 ** 6          # hybrid searches the whole index
