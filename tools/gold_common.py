@@ -12,6 +12,8 @@ MANIFEST = os.path.join(REPO, "data", "proposals", "manifest.json")
 
 def doc_names():
     """name (file stem) -> doc_id, for documents that have a stage-4 clean text."""
+    if not os.path.exists(MANIFEST):        # a fresh clone has no corpus (data/ is gitignored)
+        return {}
     man = json.load(open(MANIFEST, encoding="utf-8"))
     recs = man if isinstance(man, dict) else {r["doc_id"]: r for r in man}
     out = {}
