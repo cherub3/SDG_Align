@@ -17,7 +17,7 @@ from scripts.stage9_vector_indexing import (
     load_rows_for_fingerprint, revalidate_rows, IndexWorkload, determine_index_workload,
     apply_workload_to_staging, validate_index, persist_index_atomic,
     write_index_validation_report, update_manifest_for_fingerprint, run_stage9,
-    INDEX_DIR, STAGING_DIR_SUFFIX, INDEX_PIPELINE_VERSION
+    INDEX_DIR, STAGING_DIR_SUFFIX, INDEX_PIPELINE_VERSION, _rename_with_retry
 )
 from src.ingestion_types import ManifestRecord, DocumentStatus
 
@@ -253,3 +253,42 @@ def test_real_corpus_run_no_op(save_mock, load_mock, tmp_path):
             
     finally:
         scripts.stage9_vector_indexing.INDEX_DIR = original_index_dir
+
+
+def _flaky_rename(real_rename, fail_times):
+    state = {"calls": 0}
+
+    def fake(src, dst):
+        state["calls"] += 1
+        if state["calls"] <= fail_times:
+            raise PermissionError(5, "Access is denied")
+        return real_rename(src, dst)
+
+    return fake, state
+
+
+def test_rename_with_retry_recovers_from_transient_permission_error(tmp_path):
+    src, dst = tmp_path / "a", tmp_path / "b"
+    src.mkdir()
+    fake, state = _flaky_rename(os.rename, fail_times=2)
+    with patch("scripts.stage9_vector_indexing.os.rename", fake),          patch("scripts.stage9_vector_indexing.time.sleep"):
+        _rename_with_retry(src, dst)
+    assert dst.exists() and not src.exists()
+    assert state["calls"] == 3  # two failures, then success
+
+
+def test_rename_with_retry_gives_up_and_reraises(tmp_path):
+    src, dst = tmp_path / "a", tmp_path / "b"
+    src.mkdir()
+    fake, state = _flaky_rename(os.rename, fail_times=99)
+    with patch("scripts.stage9_vector_indexing.os.rename", fake),          patch("scripts.stage9_vector_indexing.time.sleep"):
+        with pytest.raises(PermissionError):
+            _rename_with_retry(src, dst, attempts=4)
+    assert state["calls"] == 4
+    assert src.exists() and not dst.exists()
+
+
+def test_rename_with_retry_does_not_swallow_other_errors(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        _rename_with_retry(tmp_path / "missing", tmp_path / "dst")
+

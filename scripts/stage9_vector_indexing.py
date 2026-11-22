@@ -13,6 +13,7 @@ import hashlib
 import math
 import os
 import shutil
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Set
 
@@ -585,6 +586,24 @@ def validate_index(
 
     return findings
 
+def _rename_with_retry(src: Path, dst: Path, attempts: int = 6, delay_seconds: float = 0.1) -> None:
+    """os.rename with a short retry on PermissionError.
+
+    On Windows a directory that was written to milliseconds ago can be briefly locked by the
+    search indexer / antivirus, making os.rename raise PermissionError (WinError 5) even though
+    nothing is wrong. Retrying a few times clears it. Any other OSError, and a PermissionError
+    that persists across all attempts, is re-raised unchanged.
+    """
+    for attempt in range(1, attempts + 1):
+        try:
+            os.rename(src, dst)
+            return
+        except PermissionError:
+            if attempt == attempts:
+                raise
+            time.sleep(delay_seconds * attempt)
+
+
 def persist_index_atomic(
     index_fingerprint: str, 
     index: IndexAdapter, 
@@ -616,11 +635,12 @@ def persist_index_atomic(
             backup_dir = INDEX_DIR / f"{index_fingerprint}.backup"
             if backup_dir.exists():
                 shutil.rmtree(backup_dir)
-            os.rename(live_dir, backup_dir)
-            os.rename(staging_dir, live_dir)
-            shutil.rmtree(backup_dir)
+            _rename_with_retry(live_dir, backup_dir)
+            _rename_with_retry(staging_dir, live_dir)
+            # The swap already succeeded; a leftover backup is removed on the next build.
+            shutil.rmtree(backup_dir, ignore_errors=True)
         else:
-            os.rename(staging_dir, live_dir)
+            _rename_with_retry(staging_dir, live_dir)
             
     except Exception as e:
         if staging_dir.exists():
