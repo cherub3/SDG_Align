@@ -1,0 +1,994 @@
+{
+ "rule": "majority of J1 frozen, J2, J3; all differ -> P (unresolved); Q14/Q15 -> 0",
+ "unresolved": [],
+ "labels": {
+  "B01c83": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B0b327": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B0ce54": {
+   "label": 0,
+   "source": "majority",
+   "j1": 1,
+   "j2": 0,
+   "j3": 0
+  },
+  "B0e3da": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B0f549": {
+   "label": 0,
+   "source": "majority",
+   "j1": 0,
+   "j2": 1,
+   "j3": 0
+  },
+  "B10009": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B10cc5": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B11ee0": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B16835": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B1805e": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B1823f": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B1a67e": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B1c309": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B1d205": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B1d2b5": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B1fb6d": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B20998": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B20ebe": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B25dc5": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B297e8": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B2a49e": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B2af42": {
+   "label": 2,
+   "source": "majority",
+   "j1": 2,
+   "j2": 1,
+   "j3": 2
+  },
+  "B2b3dc": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B2dfe0": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B2ebbc": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B2f9ef": {
+   "label": 0,
+   "source": "majority",
+   "j1": 0,
+   "j2": 1,
+   "j3": 0
+  },
+  "B2faa1": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B31e76": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B32c69": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B33ad8": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B35ec7": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B389b4": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B38ae6": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B3a1fe": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B3cacf": {
+   "label": 1,
+   "source": "majority",
+   "j1": 1,
+   "j2": 2,
+   "j3": 1
+  },
+  "B3cd44": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B3d03e": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B3d325": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B3e184": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B41750": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B427a5": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B4390e": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B45847": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B4713d": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B4ac0a": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B4e7e6": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B4f5ff": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B5108b": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B51db6": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B520c3": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B54bfa": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B566bb": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B57442": {
+   "label": 1,
+   "source": "majority",
+   "j1": 0,
+   "j2": 1,
+   "j3": 1
+  },
+  "B5bc4c": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B5dae7": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B5f16b": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B60359": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B62a50": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B658c4": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B67734": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B6b786": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B6cf6e": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B6e2fd": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B6e5c8": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B72602": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B747dd": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B75477": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B7763f": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B7bca7": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B7c783": {
+   "label": 2,
+   "source": "majority",
+   "j1": 2,
+   "j2": 1,
+   "j3": 2
+  },
+  "B7d9bf": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B7f5c1": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B7fa11": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B8199b": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B859b7": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B87523": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B87aaf": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B89ae2": {
+   "label": 1,
+   "source": "majority",
+   "j1": 0,
+   "j2": 1,
+   "j3": 1
+  },
+  "B8a538": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B8a9a8": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B8d9d3": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B902bf": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B910eb": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B927cc": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B93372": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B935ab": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "B9364b": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B94009": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B94bde": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B95036": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "B9ab5c": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "B9b2ae": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B9cb1e": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "B9d4af": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Ba0cb8": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Ba21eb": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Ba2aa0": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "Ba2e81": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Ba5f11": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Ba6635": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Ba8ab1": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "Bab2bd": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Bac419": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Bb3f65": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Bb470c": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Bb53b0": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Bb87a6": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Bb9099": {
+   "label": 1,
+   "source": "majority",
+   "j1": 1,
+   "j2": 2,
+   "j3": 1
+  },
+  "Bb9727": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "Bbc317": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "Bc1787": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Bc353b": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Bc4ca2": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Bc5eff": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Bc61b6": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Bc68a1": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Bc7ab4": {
+   "label": 1,
+   "source": "majority",
+   "j1": 1,
+   "j2": 2,
+   "j3": 1
+  },
+  "Bc7afc": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Bc953b": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Bca8a0": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Bcac25": {
+   "label": 0,
+   "source": "majority",
+   "j1": 1,
+   "j2": 0,
+   "j3": 0
+  },
+  "Bce337": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Bce4a8": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Bd3a4f": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "Bd412a": {
+   "label": 1,
+   "source": "majority",
+   "j1": 1,
+   "j2": 2,
+   "j3": 1
+  },
+  "Bd652a": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Bd6c6f": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Bd7c80": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Bd9fe5": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Bdd7d7": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Bddcfa": {
+   "label": 1,
+   "source": "majority",
+   "j1": 1,
+   "j2": 2,
+   "j3": 1
+  },
+  "Bdf246": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Be1159": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Be181a": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Be5487": {
+   "label": 0,
+   "source": "frozen rule: Q14/Q15 scored 0",
+   "j1": 0,
+   "j2": 0
+  },
+  "Be5545": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Be5cda": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Becc68": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Bf1b27": {
+   "label": 1,
+   "source": "J1=J2",
+   "j1": 1,
+   "j2": 1,
+   "j3": null
+  },
+  "Bf9179": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Bfae90": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  },
+  "Bfc205": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Bfcaa0": {
+   "label": 2,
+   "source": "J1=J2",
+   "j1": 2,
+   "j2": 2,
+   "j3": null
+  },
+  "Bfe12c": {
+   "label": 0,
+   "source": "J1=J2",
+   "j1": 0,
+   "j2": 0,
+   "j3": null
+  }
+ }
+}

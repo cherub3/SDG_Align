@@ -1,0 +1,58 @@
+{
+ "judge": "Judge 3 (fresh sub-agent, sonnet), disputed ids only",
+ "source": "raw/judge3_disputed.json",
+ "labels": {
+  "B7c783": {
+   "label": 2,
+   "reason": "States residual risk ratings and mitigation measures such as 'continued consultations, co-design... grievance mechanisms' and adaptive management."
+  },
+  "Bd412a": {
+   "label": 1,
+   "reason": "Says project aligns with 'updated Nationally Determined Contribution (NDC 3.0)' but is about coordination with other initiatives, not NDC contribution."
+  },
+  "Bddcfa": {
+   "label": 1,
+   "reason": "Mentions alignment with NDC 3.0 and Tarea Vida, mostly coordination text with no specific contribution."
+  },
+  "Bc7ab4": {
+   "label": 1,
+   "reason": "Notes alignment with Tarea Vida and 'NDC 3.0' as framing instruments, but no explicit contribution described."
+  },
+  "B89ae2": {
+   "label": 1,
+   "reason": "Describes planetGOLD programme approach (formalization, finance, mercury-free tech) but does not list Mozambique project components."
+  },
+  "B57442": {
+   "label": 1,
+   "reason": "Describes planetGOLD programme approach and Mozambique complementarity, not a list of components."
+  },
+  "Bb9099": {
+   "label": 1,
+   "reason": "Mentions 'repowering of the Gibara I Wind Farm' and 'future wind and solar PV parks' but focused on climate resilience measures."
+  },
+  "B2f9ef": {
+   "label": 0,
+   "reason": "Stakeholder consultation table; only passing mention of wind parks and renewable energy sources."
+  },
+  "B0f549": {
+   "label": 0,
+   "reason": "Consultation notes on climate resilience and shifting energy matrix; no technologies to be deployed."
+  },
+  "B3cacf": {
+   "label": 1,
+   "reason": "Mentions Gibara I Wind Farm repowering and wind and solar PV parks, but is about resilience rather than deployment."
+  },
+  "B0ce54": {
+   "label": 0,
+   "reason": "Only 'Indigenous Peoples and Local Communities: Yes'; no groups identified."
+  },
+  "Bcac25": {
+   "label": 0,
+   "reason": "Only a Yes consultation checkbox for IPLC; no groups named."
+  },
+  "B2af42": {
+   "label": 2,
+   "reason": "Lists actions: 'guarantee the reduction and/or elimination of mercury use in ASGM', formalization, capacity building, awareness."
+  }
+ }
+}
