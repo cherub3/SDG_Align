@@ -77,6 +77,40 @@ def repair_encoding(text: str) -> str:
     return text
 
 
+_PAGE_MARKER_LINE_RE = re.compile(r"^\s*(?:Official Use Only\s*)?Page \d+ of \d+\s*$", re.IGNORECASE)
+_OFFICIAL_USE_LINE_RE = re.compile(r"^\s*Official Use Only\s*$", re.IGNORECASE)
+
+
+def remove_page_markers(text: str) -> str:
+    """Drops lines that are only a page marker ("Page 3 of 31", optionally prefixed by
+    "Official Use Only"). The generic repeated-line rule cannot catch them because the
+    page number makes every line different."""
+    kept = [ln for ln in text.split("\n")
+            if not (_PAGE_MARKER_LINE_RE.match(ln) or _OFFICIAL_USE_LINE_RE.match(ln))]
+    return "\n".join(kept)
+
+
+_BR_TAG_RE = re.compile(r"<br\s*/?>", re.IGNORECASE)
+_BLOCK_TAG_RE = re.compile(r"</?p\b[^>]*>", re.IGNORECASE)
+_INLINE_TAG_RE = re.compile(r"</?(?:mark|b|u|i|span|div|sup|sub|a|strong|em)\b[^>]*>", re.IGNORECASE)
+_HTML_ENTITIES = {"&nbsp;": " ", "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'"}
+
+
+def strip_html_markup(text: str) -> str:
+    """Removes the HTML the PDF-to-Markdown converter leaves behind: <br> becomes a space
+    (a line break inside a table cell), <p> becomes a paragraph break, inline tags such as
+    <mark> and <u> are dropped and their content kept, and the common entities are decoded."""
+    text = _BR_TAG_RE.sub(" ", text)
+    # a paragraph tag must not split a table row (a line starting with "|") across two lines
+    text = "\n".join(
+        _BLOCK_TAG_RE.sub(" " if ln.lstrip().startswith("|") else "\n", ln) for ln in text.split("\n")
+    )
+    text = _INLINE_TAG_RE.sub("", text)
+    for entity, replacement in _HTML_ENTITIES.items():
+        text = text.replace(entity, replacement)
+    return text
+
+
 def remove_headers_footers(page_texts: List[str], excluded_flags: List[bool]) -> List[str]:
     """Strips lines that repeat as the first or last non-empty line across enough pages."""
     def _first_last_lines(text: str):
@@ -166,6 +200,9 @@ def build_clean_text(raw_extraction: Dict) -> Dict:
         text = normalize_whitespace(text)
         text = repair_dehyphenation(text)
         text = repair_encoding(text)
+        text = remove_page_markers(text)
+        text = strip_html_markup(text)
+        text = normalize_whitespace(text)
         stage_one_texts.append(text)
         excluded_flags.append(bool(page.get("excluded", False)))
         page_numbers.append(page["page_number"])
