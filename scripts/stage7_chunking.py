@@ -241,9 +241,20 @@ def build_section_spans(clean_text: Dict, resolved: List[Dict]) -> List[Dict]:
 # STEP 3 — oversized span splitting
 # ===========================================================================
 
+_SENTENCE_END_RE = re.compile(r"[.!?][\"')\]*”’]*\s*$")
+LINE_RE = re.compile(r"\n")
+
+
+def _ends_sentence(text: str) -> bool:
+    return bool(_SENTENCE_END_RE.search(text[-12:]))
+
+
 def _split_text_at_boundaries(text: str, max_len: int, target_len: int) -> List[Tuple[int, int]]:
-    """Splits text into (start, end) offset pairs <= max_len, preferring paragraph ->
-    sub-heading -> list-item -> sentence -> fixed-length boundaries in that order."""
+    """Splits text into (start, end) offset pairs <= max_len. A cut is chosen, in order, at a
+    paragraph / sub-heading / list-item / sentence boundary where the text before it ends on
+    a sentence terminator and the piece is at least MIN_CHUNK_CHARS; else at any such boundary
+    with a piece of that size; else at any such boundary; else at a line break; else at
+    max_len. Within a tier the cut is as close below target_len as possible."""
     if len(text) <= max_len:
         return [(0, len(text))]
 
@@ -253,6 +264,13 @@ def _split_text_at_boundaries(text: str, max_len: int, target_len: int) -> List[
         [m.start() for m in LIST_ITEM_RE.finditer(text)],
         [m.end() for m in SENTENCE_RE.finditer(text)],
     ]
+    line_points = [m.end() for m in LINE_RE.finditer(text)]
+
+    def pick(candidates: List[int], pos: int) -> Optional[int]:
+        if not candidates:
+            return None
+        under_target = [p for p in candidates if p - pos <= target_len]
+        return max(under_target) if under_target else min(candidates, key=lambda p: abs((p - pos) - target_len))
 
     offsets: List[Tuple[int, int]] = []
     pos = 0
@@ -264,16 +282,25 @@ def _split_text_at_boundaries(text: str, max_len: int, target_len: int) -> List[
             break
 
         window_end = pos + max_len
+        in_window = [[p for p in pts if pos < p <= window_end] for pts in tiers]
+        # 1. a boundary after which the text so far ends on a sentence terminator, and the piece
+        #    is not itself a fragment; 2. any tier boundary, piece not a fragment; 3. any tier
+        #    boundary; 4. a line break (keeps a table row whole); 5. fixed length.
+        attempts = (
+            [[p for p in c if p - pos >= MIN_CHUNK_CHARS and _ends_sentence(text[max(0, p - 12):p])] for c in in_window],
+            [[p for p in c if p - pos >= MIN_CHUNK_CHARS] for c in in_window],
+            in_window,
+        )
         cut = None
-        for tier_points in tiers:
-            candidates = [p for p in tier_points if pos < p <= window_end]
-            if candidates:
-                under_target = [p for p in candidates if p - pos <= target_len]
-                cut = max(under_target) if under_target else min(
-                    candidates, key=lambda p: abs((p - pos) - target_len)
-                )
+        for tier_candidates in attempts:
+            for candidates in tier_candidates:
+                cut = pick(candidates, pos)
+                if cut is not None:
+                    break
+            if cut is not None:
                 break
-
+        if cut is None:
+            cut = pick([p for p in line_points if pos < p <= window_end], pos)
         if cut is None:
             cut = window_end
 

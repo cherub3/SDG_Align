@@ -89,3 +89,49 @@ def test_remaining_small_span_merges_forward_into_the_same_branch():
     assert len(merged) == 2
     assert merged[1]["char_start"] == b[1][0] and merged[1]["char_end"] == len(full)
     assert all(m["char_end"] - m["char_start"] <= s7.MAX_CHUNK_CHARS for m in merged)
+
+
+# ---- splitting: prefer sentence ends, keep table rows whole, avoid tiny pieces ------------------
+
+def _check_cover(text, pieces):
+    assert pieces[0][0] == 0 and pieces[-1][1] == len(text)
+    assert all(a[1] == b[0] for a, b in zip(pieces, pieces[1:]))
+    assert all(e - s <= s7.MAX_CHUNK_CHARS for s, e in pieces)
+
+
+def test_cut_prefers_a_sentence_end_over_a_paragraph_break_after_an_unfinished_line():
+    sentence = "The project will train miners in safer processing. "
+    first = sentence * 24                                       # about 1200 characters, ends on a full stop
+    unfinished = "A heading-like line without a full stop\n\n"
+    rest = sentence * 40
+    text = first + unfinished + rest
+    pieces = s7._split_text_at_boundaries(text, s7.MAX_CHUNK_CHARS, s7.TARGET_CHUNK_CHARS)
+    _check_cover(text, pieces)
+    first_end = pieces[0][1]
+    assert text[:first_end].rstrip().endswith("."), text[first_end - 30:first_end]
+
+
+def test_table_rows_are_split_between_rows_never_inside_one():
+    row = "Component: Component 1; Budget: 500,000; Outcome: Policy adopted and published"
+    text = "\n".join(f"{row} number {i}" for i in range(80))          # one block, no punctuation, no blank lines
+    pieces = s7._split_text_at_boundaries(text, s7.MAX_CHUNK_CHARS, s7.TARGET_CHUNK_CHARS)
+    _check_cover(text, pieces)
+    assert len(pieces) >= 2
+    for s, e in pieces[:-1]:
+        assert text[e - 1] == "\n" or text[e] == "\n" or text[e - 1].isdigit() and text[e] == "\n"
+        assert not text[s:e].rstrip().endswith("number") and text[s:e].count("Component: ") == text[s:e].count("number")
+
+
+def test_a_piece_is_not_cut_tiny_when_a_larger_boundary_exists():
+    sentence = "Mercury use will be reduced through better practices. "
+    text = "Short intro paragraph.\n\n" + sentence * 120               # a paragraph break after 24 characters
+    pieces = s7._split_text_at_boundaries(text, s7.MAX_CHUNK_CHARS, s7.TARGET_CHUNK_CHARS)
+    _check_cover(text, pieces)
+    assert pieces[0][1] - pieces[0][0] >= s7.MIN_CHUNK_CHARS
+
+
+def test_when_no_boundary_exists_it_still_cuts_at_the_maximum():
+    text = "x" * (s7.MAX_CHUNK_CHARS * 2 + 10)
+    pieces = s7._split_text_at_boundaries(text, s7.MAX_CHUNK_CHARS, s7.TARGET_CHUNK_CHARS)
+    _check_cover(text, pieces)
+    assert pieces[0][1] == s7.MAX_CHUNK_CHARS
