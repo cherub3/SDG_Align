@@ -542,6 +542,10 @@ def retrieve(
     }
     if rerank_info:
         res["rerank"] = rerank_info
+    advisory = request.get("confidence_advisory")      # None/False = off (default); True or {"threshold": t}: add a hint, never refuse
+    if advisory:
+        from scripts import confidence
+        res["confidence"] = confidence.confidence_advisory(results, advisory.get("threshold") if isinstance(advisory, dict) else None)
     
     validate_retrieval_result(res)
     return res

@@ -138,3 +138,11 @@ def test_vectorised_bm25_matches_the_textbook_formula():
         assert got.keys() == want.keys()
         for k in want:
             assert got[k] == pytest.approx(want[k], rel=1e-12)
+
+
+def test_fuse_candidates_uses_the_given_k_and_bm25_weight_exactly():
+    idx = hs.BM25Index([("a", "alpha"), ("b", "beta"), ("c", "unique rare token")])
+    dense = [_cand("a", 0.9), _cand("b", 0.8), _cand("c", 0.1)]
+    out = {c["chunk_id"]: c["score"] for c in hs.fuse_candidates(dense, idx, "unique rare token", {"rrf_k": 10, "w_bm25": 2.0, "depth": 50})}
+    assert out["a"] == pytest.approx(1 / 11) and out["b"] == pytest.approx(1 / 12)
+    assert out["c"] == pytest.approx(1 / 13 + 2 / 11)           # dense rank 3, BM25 rank 1 weighted 2
