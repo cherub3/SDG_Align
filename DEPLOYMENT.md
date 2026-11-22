@@ -37,6 +37,7 @@ HF_API_KEY=<your hf key>
 
 # Embedding provider identity — must match the index you actually built (see §5).
 # Note: Groq does not support embeddings.
+# For a local, network-free embedder set EMBEDDING_PROVIDER=local (pip install -r requirements-local.txt first).
 # If using Hugging Face, change EMBEDDING_PROVIDER to 'huggingface' and model to 'BAAI/bge-small-en-v1.5' (with version 'v1.5').
 EMBEDDING_PROVIDER_EXTRA_MODEL_NAME=text-embedding-004
 EMBEDDING_PROVIDER_EXTRA_MODEL_VERSION=004

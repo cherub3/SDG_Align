@@ -187,3 +187,11 @@ def run_stage4() -> None:
    of per-page text lengths, no `section_tree`/`headings` keys present, excluded pages carry
    `is_excluded: true` with zero-width offsets.
 3. Confirm `raw_extraction.json` for that same document is byte-identical to before the run.
+
+## Phase 1 additions (2026-11-23)
+
+Added after the original freeze, each with tests that fail on the old code: removal of `Page x of y` markers, HTML residue
+(`<br>` to space, `<mark>`/`<u>` dropped, entities decoded), table-of-contents blocks (dot leaders, needs 3+ on a page), the GEF
+template instruction text (explicit opener list), footers glued into sentences, and Markdown tables rewritten as
+`Header: value; Header: value` row text. The rules were written by reading the same 5 GEF documents they are measured on, so the
+automatic boilerplate metric is partly circular (see `reports/PHASE_1_REPORT.md`, section 7).

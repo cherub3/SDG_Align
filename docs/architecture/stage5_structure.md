@@ -266,3 +266,9 @@ Test 7 (`test_detect_headings_font_emphasis_requires_correlation`) exercises thi
 23. `test_raw_extraction_not_mutated` — fixture byte-identical on disk before/after
 24. `test_rerun_produces_identical_output` — calling `tag_document()` twice produces identical `section_tree` and per-page `headings`, no accumulation
 25. `test_missing_raw_extraction_degrades_gracefully` — missing/absent `raw_extraction` artifact path still succeeds using non-font-emphasis tiers, no quarantine
+
+## Phase 1 addition: repeated section ids (2026-11-23)
+
+`generate_section_ids` keeps `section_id` unique. The 2nd, 3rd ... occurrence of an id gets the suffix `-2`, `-3` (`3`, `3-2`, `3-3`);
+children of a suffixed section take its (suffixed) id as parent. Documents without repeats keep exactly their old ids
+(`reports/evidence/section_ids_unchanged_check.txt`). Before this, stage 6 rejected such a document with `DUPLICATE_SECTION_ID`.

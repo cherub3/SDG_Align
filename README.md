@@ -19,7 +19,7 @@ goal-level alignment features are intended to be built.
 | | Status |
 |---|---|
 | Stages 0–21 pipeline (ingestion → RAG → agent orchestration) | ✅ Implemented & frozen |
-| Test suite | ✅ 736 tests passing, ~83% line+branch coverage (`python -m pytest --cov`) |
+| Test suite | ✅ 813 tests passing, 85% line+branch coverage (`python -m pytest --cov`) |
 | Ingestion (Stages 0–9) verified on a real 13-document corpus | ✅ |
 | Query/agent stages (10–21) verified via unit tests over abstract adapters | ✅ |
 | Track B backend (FastAPI) + frontend (React dashboard), Mode A (Live) | ✅ Implemented & verified — see [`DEPLOYMENT.md`](DEPLOYMENT.md) |
@@ -189,18 +189,18 @@ SDKs (`google-genai`, `groq`, `openai`, `requests`) and the API server (`fastapi
 The dev file adds `pytest`, `pytest-cov` and `httpx`.
 
 **The test suite needs no credentials and no network.** Running the ingestion pipeline on real documents
-needs an embedding provider at Stage 8 (Hugging Face Inference API or Gemini: a hosted, rate- or
-quota-limited service), and answering questions through the backend needs an LLM/planner provider key.
+needs an embedding provider at Stage 8 (the local provider, or a hosted, rate- or quota-limited service such as
+the Hugging Face Inference API or Gemini), and answering questions through the backend needs an LLM/planner provider key.
 
 Currently supported implementations:
 - **Planner:** Gemini, Groq, OpenRouter
 - **LLM:** Gemini, Groq, OpenRouter
-- **Embeddings:** Gemini, Hugging Face
+- **Embeddings:** Gemini, Hugging Face, local (sentence-transformers on CPU, no network: `EMBEDDING_PROVIDER=local`, needs `requirements-local.txt`)
 
 Recommended Configuration:
 - **Planner:** OpenRouter
 - **LLM:** OpenRouter
-- **Embeddings:** Hugging Face
+- **Embeddings:** local (`BAAI/bge-small-en-v1.5`; its vectors matched the Hugging Face API vectors on a 10-chunk sample, cosine 1.000000)
 
 *Important:* If you switch embedding providers (e.g., from Gemini to Hugging Face), you MUST regenerate the FAISS index (Stages 8 and 9) because the generated vectors will have different dimensions and characteristics. Stage 10 will actively prevent mismatched dimensions.
 
@@ -293,7 +293,7 @@ Expected: **All tests passing**. Run a single stage's tests with, e.g.,
   groundedness → quality) exposed as a single `APIResponse`.
 - An agent layer: conversation memory, structured tool invocation, and a deterministic top-level
   planner.
-- A comprehensive test suite (736 tests) and per-stage reproducibility of content (see Determinism above).
+- A comprehensive test suite (813 tests) and per-stage reproducibility of content (see Determinism above).
 
 ## Known limitations
 

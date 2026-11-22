@@ -425,3 +425,15 @@ orchestrator, reload outputs):
 49. Run against the up-to-6 real documents — spot-check chunk count plausibility per page count,
     `CHUNK_COVERAGE_EXACT` passes with `coverage_percent == 100.0`, real appendix/references
     correctly tagged, and a handful of resolved heading offsets spot-checked by eye.
+
+## Phase 1 additions (2026-11-23)
+
+* Merge: a heading-only span merges forward into the content it introduces (even across a top-level branch); other undersized
+  spans merge forward within their branch.
+* Split: cuts are made at sentence ends where possible, a piece is at least `MIN_CHUNK_CHARS`, and a line-break tier keeps table rows whole.
+* `drop_duplicate_spans`: a span whose whitespace-normalised text equals an earlier span of the same document is dropped (first copy kept).
+* `drop_heading_only_spans`: a span under `MIN_CHUNK_CHARS` whose every non-empty line is a Markdown heading is dropped.
+* Both drops record their `(start, end)` ranges in the chunk validation report (`dropped_duplicate_ranges`), and `CHUNK_COVERAGE_EXACT`
+  accepts a gap only if it is a recorded range, so coverage of the document is still proved.
+* Known effect: merging a heading into the next chunk can lower that chunk's retrieval score for questions the passage answers
+  (`reports/evidence/judging/rank1_investigation.txt`).

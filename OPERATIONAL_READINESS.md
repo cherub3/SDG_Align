@@ -16,7 +16,7 @@ verification steps below against a real deployment — it is a snapshot, not a l
 | Mode A auto-detection | ✅ Implemented and verified (Phase 16) |
 | Mode A query flow (Pipeline Explorer, home demo) | ✅ Fixed and verified (Phase 16) — see below |
 | `ExecutionTimeline` empty-stages crash | ✅ Fixed and verified (Phase 16) |
-| Full pytest suite | ✅ 736 passed, 0 failures (re-run 2026-11-23 on the Phase 0 branch; 633 at the original Phase 16 snapshot) |
+| Full pytest suite | ✅ 813 passed, 0 failures (re-run 2026-11-23 on the Phase 1 branch; 633 at the original Phase 16 snapshot) |
 | Frontend type-check / lint / build | ✅ Clean |
 | Gemini planner/LLM calls (real answers) | ❌ Blocked — quota (external, see below) |
 | Retrieval-backed queries | ⚠️ A 384-dim Hugging Face index exists only in the author's local working copy (corpus data is git-ignored); rebuild per [`DEPLOYMENT.md` §5](DEPLOYMENT.md#5-retrieval-index). Not run end-to-end through the backend |
@@ -54,7 +54,7 @@ FastAPI backend — not mocked, not inferred from source reading alone.
 
 ## Runtime validation performed (this session)
 
-- `python -m pytest` → 633 passed, 0 failures (Phase 16 snapshot; 736 passed on 2026-11-23, see summary table).
+- `python -m pytest` → 633 passed, 0 failures (Phase 16 snapshot; 813 passed on 2026-11-23, see summary table).
 - `npx tsc -b && npm run lint && npm run build` → clean, 0 errors.
 - Backend started via `python -m uvicorn scripts.backend_server:app`, with a real `.env` and real
   (but quota-exhausted) `GEMINI_API_KEY` — bootstrap, `compose_application()`, provider wiring all
@@ -107,8 +107,8 @@ this blocker; only the underlying model call itself cannot complete.
 This repository contains **no index and no corpus** (`data/proposals/` is git-ignored because the PDFs'
 redistribution licence is unconfirmed). History: at the Phase 16 snapshot only a 4-dimensional stub index
 was available, which is why retrieval was reported blocked. On 2026-07-25 a real 384-dimensional index
-(`BAAI/bge-small-en-v1.5` via Hugging Face, 429 vectors from 5 documents) was built locally; it is not
-committed. Real Gemini embeddings would be 768-dimensional.
+(`BAAI/bge-small-en-v1.5` via Hugging Face, 429 vectors from 5 documents) was built locally. In Phase 1 (2026-11-23) it was
+rebuilt with the local embedding provider (same model, 497 vectors from 6 documents); neither is committed. Real Gemini embeddings would be 768-dimensional.
 
 **Operator action required:** run Stages 8–9 (`stage8_embedding_generation.py`,
 `stage9_vector_indexing.py`) against a Gemini key with usable quota — see
