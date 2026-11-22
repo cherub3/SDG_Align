@@ -686,7 +686,8 @@ class TestUpdateManifest(unittest.TestCase):
         rec = _record()
         rec.error_code = None
         update_manifest(rec, "FAIL", Path("/tmp/r.json"), None, "2026-01-01T00:00:00Z")
-        self.assertIsNotNone(rec.error_code)
+        self.assertEqual(rec.error_code, "FAILED_VALIDATION")
+        self.assertNotEqual(rec.error_code, "FATAL_UNREADABLE")
 
     def test_validation_report_path_recorded_in_artifact_paths(self):
         rec = _record()

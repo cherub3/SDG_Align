@@ -325,6 +325,7 @@ A deliberately **leaner** subset of `metadata.json`, to avoid metadata bloat in 
 - **Levels:** INFO (stage entry/exit per doc), WARNING (recoverable anomalies — excluded pages, uncertain header/footer heuristic, encoding repair), ERROR (quarantine event, with reason code). No document *content* logged above DEBUG (consistent with the app's own logging rule, even though these are public documents — habit consistency over marginal, near-zero privacy risk).
 - **Shared failure vocabulary** (used identically in logs, `reason.json`, and the batch summary):
   - `FATAL_UNREADABLE` — PDF won't open / corrupt
+  - `FAILED_VALIDATION` — stage 6 found a Critical structural/offset finding (readable, but inconsistent); counts as a failure (exit 1)
   - `FATAL_NO_TEXT` — zero extractable text (fully scanned doc)
   - `FATAL_EMPTY_FILE` — 0-byte / unreadable file
   - `FATAL_DUPLICATE` — sha256 matches an already-ingested doc_id

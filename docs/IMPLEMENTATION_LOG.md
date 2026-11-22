@@ -52,7 +52,7 @@ full current suite across all stages (0–21) is **481 passing tests** (`python 
 - Tests: 75/75 passing
 - Manifest fields touched: `artifact_paths["metadata"]`, `artifact_paths["validation_report"]`,
   `doc_type`, `started_at`/`completed_at`/`pipeline_version`; `status` stays `REGISTERED` on
-  PASS/WARNING, `QUARANTINED` + `error_code="FATAL_VALIDATION_FAILED"` only on a Critical finding
+  PASS/WARNING, `QUARANTINED` + `error_code="FAILED_VALIDATION"` only on a Critical finding
 - Revisions:
   - Severity model changed from an implicit near-all-FAIL default to an explicit two-tier
     Critical/Recoverable split (round 2) — a review's guiding principle ("only quarantine when

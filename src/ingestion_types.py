@@ -2,6 +2,12 @@ from enum import Enum
 from dataclasses import dataclass, field
 from typing import Dict, Optional
 
+# Manifest error codes that more than one module needs to name. (Other codes are plain strings.)
+# FAILED_VALIDATION: stage 6 ran and found a Critical finding (document is readable but its
+# structure/offsets are inconsistent). Distinct from FATAL_UNREADABLE (a file would not open or parse).
+ERROR_FAILED_VALIDATION = "FAILED_VALIDATION"
+
+
 class DocumentStatus(str, Enum):
     REGISTERED = "registered"
     QUARANTINED = "quarantined"

@@ -23,7 +23,7 @@ sys.path.append(str(src_path))
 
 from scripts.stage0_register import load_manifest, save_manifest
 from scripts.stage1_integrity import get_now_iso, PIPELINE_VERSION
-from src.ingestion_types import ManifestRecord, DocumentStatus
+from src.ingestion_types import ManifestRecord, DocumentStatus, ERROR_FAILED_VALIDATION
 from src.stage_summary import StageRun, StageSummary, cli_main
 
 EXTRACTED_DIR = Path("data/proposals/extracted")
@@ -609,9 +609,10 @@ def update_manifest(
         # FAIL
         record.status = DocumentStatus.QUARANTINED
         record.artifact_paths["validation_report"] = str(validation_report_path).replace("\\", "/")
-        # Preserve any error_code set by earlier stages; assign default only if absent.
+        # A stage 6 FAIL means "readable but failed validation", so it is FAILED_VALIDATION, not
+        # FATAL_UNREADABLE. An error_code already set by an earlier stage is kept.
         if not record.error_code:
-            record.error_code = "FATAL_UNREADABLE"
+            record.error_code = ERROR_FAILED_VALIDATION
 
 
 # ===========================================================================

@@ -176,13 +176,13 @@ derived whole-document summary stat, never itself used as a citation anchor (cit
 {
   "doc_id": "doc_...",
   "quarantined_at": "2026-07-19T12:00:00Z",
-  "error_code": "FATAL_VALIDATION_FAILED",
+  "error_code": "FAILED_VALIDATION",
   "failing_checks": ["OFFSET_CONTIGUOUS", "PAGE_NUMBERING_MONOTONIC"],
   "validation_report_path": "data/proposals/validation_reports/<doc_id>_validation.json"
 }
 ```
 
-New manifest-level `error_code`: `FATAL_VALIDATION_FAILED` — "one or more Critical structural/
+New manifest-level `error_code`: `FAILED_VALIDATION` — "one or more Critical structural/
 offset invariants failed" (distinct from `FATAL_UNREADABLE`, which means the PDF/JSON won't open at
 all). A closed, enumerated addition, matching the existing code table's granularity — specific
 failing checks live in `reason.json`/`validation_report.json`, not the manifest itself. Per the
@@ -252,7 +252,7 @@ detail:
   precedence result; `record.status` stays `REGISTERED`; `record.error_code` stays `None`.
 - On failure (FAIL): `record.artifact_paths["validation_report"]` is set (always written);
   `record.artifact_paths["metadata"]` is never set; `record.status = QUARANTINED`;
-  `record.error_code = "FATAL_VALIDATION_FAILED"`.
+  `record.error_code = "FAILED_VALIDATION"`.
 
 ## Functions
 
@@ -294,7 +294,7 @@ def write_quarantine_reason(record: ManifestRecord, findings: List[Dict], valida
     """Writes quarantine/<doc_id>/reason.json, only on FAIL. Structured (error_code + failing_checks), never free text."""
 
 def validate_document(record: ManifestRecord) -> None:
-    """Orchestrates one document per Pipeline above; the sole function that mutates `record`. Unexpected exception -> QUARANTINED, error_code='FATAL_UNREADABLE' (distinct from 'FATAL_VALIDATION_FAILED')."""
+    """Orchestrates one document per Pipeline above; the sole function that mutates `record`. Unexpected exception -> QUARANTINED, error_code='FATAL_UNREADABLE' (distinct from 'FAILED_VALIDATION')."""
 
 def run_stage6() -> None:
     """Loads manifest, processes every REGISTERED record with 'clean_text' in artifact_paths, saves manifest once at the end."""
@@ -406,7 +406,7 @@ dicts and `ManifestRecord` instances matching real Stage 0–5 output shapes.
 **Manifest update**
 - `test_manifest_status_stays_registered_on_pass` — status unchanged after a clean PASS run
 - `test_manifest_status_stays_registered_on_warning_only` — status unchanged after a WARNING-only run
-- `test_manifest_quarantined_on_critical_fail` — status `QUARANTINED`, error_code `FATAL_VALIDATION_FAILED`
+- `test_manifest_quarantined_on_critical_fail` — status `QUARANTINED`, error_code `FAILED_VALIDATION`
 - `test_manifest_artifact_paths_updated_on_pass_or_warning` — `metadata` and `validation_report` keys added
 - `test_manifest_metadata_path_absent_on_fail` — `metadata` key never added when quarantined
 - `test_validators_do_not_mutate_record` — every validator leaves `ManifestRecord` unchanged; only `validate_document` mutates it

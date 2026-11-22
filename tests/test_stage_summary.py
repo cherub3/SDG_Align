@@ -243,3 +243,11 @@ def test_stage1_process_exit_code_is_0_when_every_document_is_readable(tmp_path)
     result = _run_stage("scripts.stage1_integrity", project)
     assert result.returncode == 0, result.stdout + result.stderr
     assert "attempted=1 succeeded=1 failed=0" in result.stdout
+
+
+def test_failed_validation_is_a_failure_not_an_expected_quarantine():
+    run = StageRun("stage6")
+    run.attempt("doc")
+    s = run.summarize({"doc": _rec("doc", DocumentStatus.QUARANTINED, "FAILED_VALIDATION")})
+    assert s.failed == [("doc", "FAILED_VALIDATION")] and s.expected_quarantines == []
+    assert s.exit_code() == 1
