@@ -19,7 +19,7 @@ goal-level alignment features are intended to be built.
 | | Status |
 |---|---|
 | Stages 0–21 pipeline (ingestion → RAG → agent orchestration) | ✅ Implemented & frozen |
-| Test suite | ✅ Passing (`python -m pytest`) |
+| Test suite | ✅ 736 tests passing, ~83% line+branch coverage (`python -m pytest --cov`) |
 | Ingestion (Stages 0–9) verified on a real 13-document corpus | ✅ |
 | Query/agent stages (10–21) verified via unit tests over abstract adapters | ✅ |
 | Track B backend (FastAPI) + frontend (React dashboard), Mode A (Live) | ✅ Implemented & verified — see [`DEPLOYMENT.md`](DEPLOYMENT.md) |
@@ -58,8 +58,9 @@ consistent, and **evidence-backed** — every machine-made claim traceable to ex
 
 The engineering thesis of Phase 1 is **"deterministic before probabilistic"**: everything that can be
 a fixed, recitable rule (validation, chunking, retrieval bookkeeping, caching, orchestration) is
-plain, testable code with byte-identical output; the LLM is confined to the narrow steps where
-judgment is genuinely required, behind explicit adapter contracts.
+plain, testable code with reproducible output (see [Determinism](#determinism-what-is-and-is-not-guaranteed)
+for exactly what that does and does not cover); the LLM is confined to the narrow steps where judgment is
+genuinely required, behind explicit adapter contracts.
 
 ## High-level overview
 
@@ -109,10 +110,10 @@ shared set of conventions is defined once in [`docs/pipeline_principles.md`](doc
 | 11 | Context Assembly | Ordered, budgeted context package |
 | 12 | Prompt Construction | Deterministic prompt/template rendering |
 | 13 | LLM Execution | LLM invocation via `LLMAdapter` (retry policy, latency) |
-| 14 | Citation Extraction | Extract & match citations to source chunks |
-| 15 | Groundedness Validation | Verify answer claims against context |
-| 16 | Answer Quality Evaluation | Structural answer-quality scoring |
-| 17 | Response Caching | Cache-wrapped LLM execution via `CacheAdapter` |
+| 14 | Citation Extraction | Match answer sentences to source chunks by word-n-gram overlap (lexical, not semantic) |
+| 15 | Groundedness Validation | Score each cited sentence by longest-common-subsequence overlap with its source chunk (lexical: it rewards copying and cannot detect a wrong-but-quoted answer) |
+| 16 | Answer Quality Evaluation | Structural score (0.7 x groundedness + 0.3 x citation presence); it does **not** measure whether the answer is correct |
+| 17 | Response Caching | Cache-wrapped LLM execution via `CacheAdapter` (the shipped backend is in-memory, per process) |
 | 18 | API / Response Serving | Orchestrates 10–17 into one `APIResponse` |
 | 19 | Conversation Memory | Multi-turn memory selection & lifecycle |
 | 20 | Tool / Function Calling | Structured single-tool invocation via `ToolAdapter` |
@@ -179,17 +180,15 @@ pip install -r requirements.txt
 
 ### Dependencies
 
-| Package | Used by |
-|---------|---------|
-| `pymupdf`, `pymupdf4llm` | PDF extraction (Stages 1–2) |
-| `pyarrow` | Parquet artifacts (embeddings, id maps) |
-| `faiss-cpu` | Vector index (Stage 9) |
-| `pytest` | Test suite |
+[`requirements.txt`](requirements.txt) is the single, exactly-pinned source of truth (CI installs from it
+and runs `pip check`; `pyproject.toml` deliberately holds no second list). It covers PDF extraction
+(`pymupdf`, `pymupdf4llm`), artifacts and search (`pyarrow`, `pandas`, `numpy`, `faiss-cpu`), the provider
+SDKs (`google-genai`, `groq`, `openai`, `requests`), the API server (`fastapi`, `uvicorn`, `pydantic`) and
+the test tools (`pytest`, `pytest-cov`, `httpx`).
 
-No paid services or API keys are required to run the ingestion pipeline or the test suite. A concrete
-`LLMAdapter`/`PlannerLLMAdapter` (e.g. for a real LLM provider like Gemini, Groq, or OpenRouter) is only needed when wiring the
-real pipeline inside `scripts/pipeline_deps_factory.py` — the tests use in-memory adapters, so **no credentials are needed
-to build or verify the project**.
+**The test suite needs no credentials and no network.** Running the ingestion pipeline on real documents
+needs an embedding provider at Stage 8 (Hugging Face Inference API or Gemini: a hosted, rate- or
+quota-limited service), and answering questions through the backend needs an LLM/planner provider key.
 
 Currently supported implementations:
 - **Planner:** Gemini, Groq, OpenRouter
@@ -205,10 +204,36 @@ Recommended Configuration:
 
 ### Configuration
 
-Phase 1 has no required environment variables. Per-stage tunables (thresholds, budgets, ceilings) are
-module-level constants documented in each stage's architecture doc and source file. When a real LLM
-adapter is later wired in, its credentials are owned by that adapter and supplied at wiring time — the
-pipeline core never reads them.
+* **Tests and library use:** no environment variables.
+* **Running the backend** (`scripts/backend_server.py`): copy [`.env.example`](.env.example) to `.env` and set
+  the provider selection (`LLM_PROVIDER`, `PLANNER_LLM_PROVIDER`, `EMBEDDING_PROVIDER`), the matching
+  credential variable (`GEMINI_API_KEY`, `GROQ_API_KEY`, `OPENROUTER_API_KEY` or `HF_API_KEY`), and
+  optionally `REQUEST_TIMEOUT_SECONDS` (default 60), `MAX_QUERY_CHARS` (default 4000; longer queries get
+  HTTP 422) and `FRONTEND_ORIGIN` (CORS). The backend refuses to start without valid provider settings.
+* **Embedding model consistency:** at query time Stage 10 only searches an index built with the *same*
+  embedding provider, model and version as the wired adapter, and reports
+  `INDEX_EMBEDDING_MODEL_MISMATCH` otherwise.
+* Per-stage tunables (thresholds, budgets, ceilings) are module-level constants documented in each
+  stage's architecture doc and source file.
+
+### Process-local state
+
+The backend keeps **conversation memory, the response cache and the request observation records in
+process memory**. They are per instance, lost on restart and not shared between instances (observation
+records are capped at 1000). Nothing here makes the server stateless; moving this state behind the
+existing `ConversationStore` / `CacheAdapter` seams is future work.
+
+### Determinism: what is and is not guaranteed
+
+* **Deterministic** (identical inputs and an identical embedding source give identical output): chunk
+  text and chunk ids, vector values, the `index.bin` file, retrieval ordering (ties broken by
+  `chunk_id`), prompt rendering and cache keys. Verified on 2026-11-23 by rebuilding stages 0-9 twice with
+  a local stub embedder: chunk text, ids, vectors and `index.bin` were identical.
+* **Not byte-identical:** the JSON/parquet artifacts carry wall-clock fields (`generated_at`,
+  `indexed_at`, `*_at`), so the files differ between runs even though their content does not.
+* **Outside the guarantee:** hosted embedding and LLM APIs. A provider can change a model without notice
+  and generation is not guaranteed reproducible even at temperature 0. The index fingerprint records the
+  configured `model_version`; it cannot detect a silent provider-side change.
 
 ## Running the pipeline
 
@@ -226,6 +251,11 @@ python scripts/stage7_chunking.py          # semantic chunking
 python scripts/stage8_embedding_generation.py   # generate embeddings
 python scripts/stage9_vector_indexing.py   # build faiss index
 ```
+
+Each stage CLI prints a one-line summary and **exits non-zero when a document it attempted fails**
+(unreadable, extraction/chunking/embedding failure, aborted index build). A scanned PDF quarantined as
+`FATAL_NO_TEXT` is an expected outcome and exits 0 unless you pass `--strict`, which fails on any
+quarantine. This lets a script or CI stop on a broken run.
 
 The query/agent stages (10–21) are libraries, invoked programmatically. See
 [`docs/END_TO_END_EXAMPLE.md`](docs/END_TO_END_EXAMPLE.md) for a full Stage 0 → 21 walkthrough,
@@ -261,7 +291,7 @@ Expected: **All tests passing**. Run a single stage's tests with, e.g.,
   groundedness → quality) exposed as a single `APIResponse`.
 - An agent layer: conversation memory, structured tool invocation, and a deterministic top-level
   planner.
-- Comprehensive passing tests; byte-identical output guarantees documented per stage.
+- A comprehensive test suite (736 tests) and per-stage reproducibility of content (see Determinism above).
 
 ## Known limitations
 
@@ -272,6 +302,12 @@ Expected: **All tests passing**. Run a single stage's tests with, e.g.,
   against a live LLM; real-provider behaviour depends on the adapter supplied at wiring time.
 - **No plan/response caching across requests** beyond Stage 17's per-call LLM cache.
 - **`eval/gold_set` and `pages/` are reserved directories**, currently empty.
+- **Retrieval and answer quality are unmeasured.** There is no gold set; an informal 15-question
+  retrieval check (2026-11-23) found the right document ranked first for 9/9 document-specific
+  questions but many chunk-level misses, and no answer-level evaluation has been run.
+- **7 of 13 source PDFs are scanned** and are quarantined at Stage 3 (`FATAL_NO_TEXT`); there is no OCR
+  path yet. One further document fails Stage 6 (`DUPLICATE_SECTION_ID`).
+- **Windows:** directory swaps in Stage 9 retry a transient `PermissionError` (antivirus/indexer locks).
 
 ## License
 

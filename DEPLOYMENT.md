@@ -22,7 +22,6 @@ together, in Mode A (Live). For the pipeline-only (Stages 0–21, no backend/fro
 Copy the example file and fill in your credentials:
 
 ```bash
-cd sdg-align
 cp .env.example .env
 ```
 
@@ -51,6 +50,10 @@ See [`.env.example`](.env.example) for the full annotated list, including why `I
 commented out (no provider registration exists for that seam — `FAISSAdapter` is constructed
 directly by `scripts/pipeline_deps_factory.py`).
 
+**Request limits** (backend): `MAX_QUERY_CHARS` (default 4000) bounds the query length and
+`REQUEST_TIMEOUT_SECONDS` (default 60) bounds one request. Blank or over-long queries get HTTP 422.
+Note the timeout stops the *wait*, not the underlying LLM call.
+
 **Frontend → backend origin** (only needed if not using the defaults): the frontend reads
 `VITE_BACKEND_URL` (default `http://localhost:8000`); the backend reads `FRONTEND_ORIGIN` for CORS
 (default `http://localhost:5173`). Set both in your respective `.env`/build environment if you
@@ -61,7 +64,6 @@ deploy them on different hosts/ports.
 ## 3. Backend startup
 
 ```bash
-cd sdg-align
 pip install -r requirements.txt
 python -m uvicorn scripts.backend_server:app --host 127.0.0.1 --port 8000
 ```
@@ -115,16 +117,16 @@ npm run preview     # serve the production build locally
 
 ## 5. Retrieval index
 
-A fresh checkout ships **only a 4-dimensional stub FAISS index**
-(`data/proposals/vector_index/477879bb.../`, `provider: stub_provider`), incompatible with real
-production embeddings (e.g. 384-dim Hugging Face or 768-dim Gemini). Retrieval-backed queries will fail with a dimension mismatch
-until a real index is built.
+A fresh checkout contains **no corpus and no vector index** (`data/proposals/` is git-ignored; see the
+README's "Source corpus" section and `scripts/download_corpus.py --check`). Retrieval-backed queries return
+no results until you place the source PDFs and build an index with your embedding provider. An index built
+with a different provider/model/version than the one in `.env` is **refused at query time**
+(`INDEX_EMBEDDING_MODEL_MISMATCH`), and a dimension mismatch is reported as `EMBEDDING_DIMENSION_MISMATCH`.
 
 **To regenerate a production index**, run the ingestion pipeline's embedding and indexing stages
 against your configured provider, in order, from the repository root, with `.env` populated:
 
 ```bash
-cd sdg-align
 python scripts/stage0_register.py
 python scripts/stage1_integrity.py
 python scripts/stage2_extraction.py
@@ -144,16 +146,16 @@ embeddings/index files — they must come from a real provider run so `index_met
 
 **Important Note on Provider Switching**: A Hugging Face embedding model produces vectors (e.g. 384 dimensions) incompatible with an index generated using Gemini embeddings (768 dimensions). Do NOT attempt to reuse a Gemini FAISS index if you switch to Hugging Face or vice versa. You must regenerate the production index from scratch using the pipeline commands above when you change embedding providers.
 
-The 8 documents currently `quarantined` in `data/proposals/manifest.json` (`FATAL_UNREADABLE`)
-will not produce embeddings via this pipeline and need separate attention (alternative extraction
-or replacement source PDFs) before they can be indexed.
+Documents the pipeline cannot index (as of the last run on the 13-document corpus): 7 scanned PDFs
+quarantined at Stage 3 as `FATAL_NO_TEXT` (they need an OCR step, not yet implemented) and 1 document that
+fails Stage 6 with `DUPLICATE_SECTION_ID`. Each stage CLI exits non-zero when a document fails; scanned
+PDFs exit 0 unless you pass `--strict`.
 
 ---
 
 ## 6. Verification checklist
 
 ```bash
-cd sdg-align
 python -m pytest                       # full backend/pipeline suite
 cd frontend
 npx tsc -b && npm run lint             # frontend type-check + lint

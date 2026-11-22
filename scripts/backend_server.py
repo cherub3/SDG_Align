@@ -56,8 +56,8 @@ def _max_query_chars() -> int:
 
 
 def _build_registrations() -> List[Any]:
-    """Reuses the three existing, ready-made Gemini provider registrations — no new factory
-    wiring is written here."""
+    """Every available provider registration (Gemini, Groq, OpenRouter, Hugging Face); the
+    configured LLM_PROVIDER / PLANNER_LLM_PROVIDER / EMBEDDING_PROVIDER decide which are used."""
     return [
         get_llm_registration(),
         get_embedding_registration(),
@@ -92,8 +92,9 @@ async def lifespan(app: FastAPI):
     try:
         yield
     finally:
-        # Stateless (Decision 3) — no held connections or resources to release. Nothing beyond
-        # this log line is needed for a graceful shutdown.
+        # No held connections or resources to release, so nothing beyond this log line is needed
+        # for a graceful shutdown. (Application state - conversation memory, response cache,
+        # observation records - lives in process memory and is simply discarded with the process.)
         logger.info("Backend foundation shutting down.")
 
 

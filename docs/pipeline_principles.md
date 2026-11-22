@@ -7,7 +7,10 @@ file by section name instead of restating.
 
 1. **Deterministic.** Every stage's output is a pure function of its inputs. No randomness, no
    wall-clock dependence in content (timestamps are the one exception, excluded from every
-   rerun-determinism comparison). Identical input always produces byte-identical output.
+   rerun-determinism comparison). Identical input produces byte-identical *content*: the wall-clock
+   fields (`generated_at`, `indexed_at`, `*_at`) differ between runs, so artifact files are not
+   byte-identical. Hosted embedding and LLM APIs are outside this guarantee (see the README's
+   "Determinism" section).
 2. **Read-only on artifacts a stage doesn't own.** A stage only writes the artifact(s) it produces.
    Upstream artifacts are opened read-only. Grandfathered exceptions: Stage 3 mutates Stage 2's
    `raw_extraction.json` in place; Stage 5 mutates `clean_text.json` in place (its own artifact,

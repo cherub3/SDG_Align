@@ -92,7 +92,7 @@ def compose_application(
     def append_turn_fn(conversation_id, turn):
         # Stage 19's start_conversation() derives its own id from a session seed, so a
         # client-supplied conversation_id can never pre-exist in the store. The transport
-        # accepts arbitrary conversation ids (stateless, Decision 3), so the composition
+        # accepts arbitrary conversation ids (no server-side session registry, Decision 3), so the composition
         # root creates the conversation lazily on the first append under that id.
         from scripts.stage19_conversation_memory import (
             CONVERSATION_MEMORY_VERSION,
