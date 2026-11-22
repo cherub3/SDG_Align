@@ -314,3 +314,18 @@ def test_determinism_hashes():
     
     assert "ap_" in expected_id
     assert len(expected_id) == 19
+
+
+def test_now_is_utc_z_timestamp_without_deprecation_warning():
+    import re
+    import warnings
+    from datetime import datetime
+    from scripts.stage21_agent_planning import _now
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")  # any DeprecationWarning becomes a failure
+        stamp = _now()
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?Z", stamp), stamp
+    parsed = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+    assert abs((datetime.now(parsed.tzinfo) - parsed).total_seconds()) < 5
+

@@ -2,7 +2,7 @@ import hashlib
 import json
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Callable, Dict, List, Optional
 
 
@@ -97,7 +97,8 @@ def _canonical_json(data: Any) -> str:
 
 
 def _now() -> str:
-    return datetime.utcnow().isoformat() + "Z"
+    # Same "...Z" UTC format as before; datetime.utcnow() is deprecated since Python 3.12.
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 # =================================================================================================
