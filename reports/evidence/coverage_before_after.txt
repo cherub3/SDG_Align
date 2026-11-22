@@ -1,5 +1,5 @@
 Coverage (line+branch, coverage.py) for the modules that were at or below 80% in REVIEW.md section 2.2
-before = REVIEW.md run on the parent repo (667 tests, TOTAL 83%); after = fresh clone of the Phase 0 branch (738 tests)
+before = REVIEW.md run on the parent repo (667 tests, TOTAL 83%); after = fresh clone of the Phase 0 branch (744 tests)
 source of 'after': reports/evidence/fresh_clone_pytest.log
 
 module                                        before  after
