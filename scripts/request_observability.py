@@ -1,6 +1,7 @@
 import time
 import uuid
-from typing import Dict, Any, List
+from collections import deque
+from typing import Deque, Dict, Any, List
 from scripts.application_bootstrap import ApplicationInstance
 from scripts.runtime_orchestration import execute_request
 
@@ -26,10 +27,14 @@ class ObservationRecord:
     def duration(self) -> float:
         return self._duration
 
-# In-memory-only observation record store (Track B Phase 6). Cleared on every process restart,
-# unbounded, and not synchronized beyond CPython's GIL guarantee on list.append/list(...) copies —
-# a demo-grade store, not a production observability backend.
-_observation_records: List[ObservationRecord] = []
+# Maximum number of ObservationRecords kept in memory; the oldest are dropped first.
+MAX_OBSERVATION_RECORDS = 1000
+
+# In-memory-only, per-process observation record store (Track B Phase 6). Cleared on every process
+# restart and NOT shared between instances. Bounded (oldest records are discarded) so it cannot
+# grow without limit. deque.append and list(deque) are safe under CPython's GIL for this usage.
+# A demo-grade store, not a production observability backend.
+_observation_records: Deque[ObservationRecord] = deque(maxlen=MAX_OBSERVATION_RECORDS)
 
 
 def get_observation_records() -> List[ObservationRecord]:

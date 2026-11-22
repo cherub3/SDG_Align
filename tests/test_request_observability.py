@@ -7,7 +7,10 @@ from pathlib import Path
 src_path = Path(__file__).parent.parent
 sys.path.append(str(src_path))
 
-from scripts.request_observability import observe_request, ObservationRecord
+from scripts import request_observability
+from scripts.request_observability import (
+    observe_request, ObservationRecord, get_observation_records, MAX_OBSERVATION_RECORDS,
+)
 
 class TestRequestObservability(unittest.TestCase):
     def setUp(self):
@@ -96,3 +99,29 @@ class TestRequestObservability(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestObservationStoreIsBounded(unittest.TestCase):
+    def setUp(self):
+        request_observability._observation_records.clear()
+        self.addCleanup(request_observability._observation_records.clear)
+
+    @patch('scripts.request_observability.execute_request', return_value={"ok": True})
+    def test_store_never_exceeds_cap_and_keeps_newest(self, _mock_execute):
+        total = MAX_OBSERVATION_RECORDS + 25
+        ids = []
+        with patch('scripts.request_observability.uuid.uuid4', side_effect=[f"id-{i}" for i in range(total)]):
+            for _ in range(total):
+                observe_request({}, {"q": "x"})
+        records = get_observation_records()
+        self.assertEqual(len(records), MAX_OBSERVATION_RECORDS)
+        # oldest 25 were dropped, newest retained, order preserved
+        self.assertEqual(records[0].correlation_id, "id-25")
+        self.assertEqual(records[-1].correlation_id, f"id-{total - 1}")
+
+    @patch('scripts.request_observability.execute_request', return_value={"ok": True})
+    def test_snapshot_is_a_copy(self, _mock_execute):
+        observe_request({}, {"q": "x"})
+        snapshot = get_observation_records()
+        snapshot.clear()
+        self.assertEqual(len(get_observation_records()), 1)
