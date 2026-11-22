@@ -25,7 +25,7 @@ from typing import Any, Dict, List, Optional
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from scripts.application_bootstrap import ApplicationInstance, bootstrap_application
 from scripts.embedding_provider_gemini import get_provider_registration as get_embedding_registration
@@ -37,10 +37,22 @@ from scripts.embedding_provider_huggingface import get_provider_registration as 
 from scripts.llm_provider_openrouter import get_provider_registration as get_openrouter_llm_registration
 from scripts.planner_provider_openrouter import get_provider_registration as get_openrouter_planner_registration
 from scripts.request_observability import get_observation_records, observe_request
+from scripts.stage21_agent_planning import AgentPlanningInputError
 
 logger = logging.getLogger("backend_server")
 
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 60.0
+DEFAULT_MAX_QUERY_CHARS = 4000
+
+
+def _max_query_chars() -> int:
+    """Upper bound on query length (characters), read per request so it can be set via the
+    MAX_QUERY_CHARS environment variable. An invalid or non-positive value falls back to the default."""
+    try:
+        value = int(os.environ.get("MAX_QUERY_CHARS", DEFAULT_MAX_QUERY_CHARS))
+    except ValueError:
+        return DEFAULT_MAX_QUERY_CHARS
+    return value if value > 0 else DEFAULT_MAX_QUERY_CHARS
 
 
 def _build_registrations() -> List[Any]:
@@ -105,6 +117,24 @@ class RunQueryRequest(BaseModel):
     query: str
     conversation_id: Optional[str] = None
 
+    @field_validator("query")
+    @classmethod
+    def _query_not_blank_and_bounded(cls, value: str) -> str:
+        # Client errors are rejected here (HTTP 422) before any planner/LLM work starts.
+        if not value.strip():
+            raise ValueError("query must not be empty or whitespace-only")
+        limit = _max_query_chars()
+        if len(value) > limit:
+            raise ValueError(f"query is too long ({len(value)} characters; maximum is {limit})")
+        return value
+
+    @field_validator("conversation_id")
+    @classmethod
+    def _conversation_id_not_blank(cls, value: Optional[str]) -> Optional[str]:
+        if value is not None and not value.strip():
+            raise ValueError("conversation_id must not be empty when provided")
+        return value
+
 
 def _timeout_response() -> JSONResponse:
     return JSONResponse(status_code=504, content={"category": "timeout"})
@@ -136,6 +166,10 @@ async def run_query(payload: RunQueryRequest, request: Request) -> JSONResponse:
         # appended later), consistent with Decision 7 (no cancellation exists at this layer).
         logger.warning("run-query exceeded %.1fs timeout; underlying thread not cancelled.", timeout_seconds)
         return _timeout_response()
+    except AgentPlanningInputError as exc:
+        # Invalid input detected downstream (e.g. unknown or closed conversation) is a client
+        # error, not a server failure.
+        return JSONResponse(status_code=422, content={"category": "invalid_request", "message": str(exc)})
     except Exception as exc:
         # Every other failure (AgentPlanningInputError, AgentPlanningInternalError, or any
         # unexpected exception) folds into the single "execution failure" category per Decision

@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import time
@@ -11,7 +12,7 @@ sys.path.append(str(src_path))
 from fastapi.testclient import TestClient
 
 from scripts import backend_server
-from scripts.stage21_agent_planning import AgentDependencies, PlannerLLMAdapter
+from scripts.stage21_agent_planning import AgentDependencies, AgentPlanningInputError, PlannerLLMAdapter
 
 
 class _ScriptedPlannerAdapter(PlannerLLMAdapter):
@@ -98,16 +99,55 @@ class TestBackendServer(unittest.TestCase):
         codes = [f["code"] for f in step["step_findings"]]
         self.assertIn("PLAN_STEP_EXECUTION_FAILED", codes)
 
-    def test_malformed_request_returns_execution_failure(self):
-        # An empty query passes FastAPI's own pydantic type check (still a str) but fails
-        # validate_agent_request's non-empty check inside plan_and_execute, raising
-        # AgentPlanningInputError uncaught — the genuine "execution_failure" (500) path.
+    def _post(self, body, **kw):
         planner = _ScriptedPlannerAdapter([{"decision": "COMPLETE"}])
-        with self._client_with_planner(planner) as client:
-            resp = client.post("/run-query", json={"query": ""})
+        with self._client_with_planner(planner, **kw) as client:
+            return client.post("/run-query", json=body)
 
+    def test_empty_query_is_a_client_error_422(self):
+        resp = self._post({"query": ""})
+        self.assertEqual(resp.status_code, 422)
+
+    def test_whitespace_only_query_is_422(self):
+        for blank in ("   ", chr(10) + chr(9) + " ", chr(160)):
+            with self.subTest(blank=repr(blank)):
+                self.assertEqual(self._post({"query": blank}).status_code, 422)
+
+    def test_query_at_the_limit_is_accepted_and_one_over_is_rejected(self):
+        limit = backend_server.DEFAULT_MAX_QUERY_CHARS
+        self.assertEqual(limit, 4000)
+        self.assertEqual(self._post({"query": "a" * limit}).status_code, 200)
+        resp = self._post({"query": "a" * (limit + 1)})
+        self.assertEqual(resp.status_code, 422)
+        self.assertIn("too long", json.dumps(resp.json()))
+
+    def test_max_query_chars_is_configurable_via_environment(self):
+        with patch.dict(os.environ, {"MAX_QUERY_CHARS": "10"}):
+            self.assertEqual(self._post({"query": "a" * 10}).status_code, 200)
+            self.assertEqual(self._post({"query": "a" * 11}).status_code, 422)
+
+    def test_invalid_max_query_chars_falls_back_to_default(self):
+        for bad in ("abc", "0", "-5"):
+            with self.subTest(value=bad), patch.dict(os.environ, {"MAX_QUERY_CHARS": bad}):
+                self.assertEqual(backend_server._max_query_chars(), backend_server.DEFAULT_MAX_QUERY_CHARS)
+
+    def test_empty_conversation_id_is_422(self):
+        self.assertEqual(self._post({"query": "hi", "conversation_id": ""}).status_code, 422)
+
+    def test_planning_input_error_maps_to_422_not_500(self):
+        with patch.object(backend_server, "observe_request",
+                          side_effect=AgentPlanningInputError("CONVERSATION_CLOSED")):
+            resp = self._post({"query": "hi"})
+        self.assertEqual(resp.status_code, 422)
+        self.assertEqual(resp.json()["category"], "invalid_request")
+        self.assertIn("CONVERSATION_CLOSED", resp.json()["message"])
+
+    def test_unexpected_exception_is_still_500_and_hides_details(self):
+        with patch.object(backend_server, "observe_request", side_effect=RuntimeError("secret detail")):
+            resp = self._post({"query": "hi"})
         self.assertEqual(resp.status_code, 500)
         self.assertEqual(resp.json()["category"], "execution_failure")
+        self.assertNotIn("secret detail", resp.text)
 
     def test_timeout_returns_504_without_claiming_cancellation(self):
         planner = _SlowPlannerAdapter(delay_seconds=0.4)
