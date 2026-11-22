@@ -285,7 +285,6 @@ def _split_text_at_boundaries(text: str, max_len: int, target_len: int) -> List[
 def split_oversized_spans(spans: List[Dict], full_text: str) -> List[Dict]:
     """Splits any span exceeding MAX_CHUNK_CHARS via _split_text_at_boundaries; pieces
     inherit their originating span's metadata and never cross a section boundary."""
-    pages_sorted: List[Dict] = []  # page recompute handled by caller via char offsets already on parent span
     result: List[Dict] = []
 
     for span in spans:
@@ -555,8 +554,6 @@ def _compute_stats(chunks: List[Dict]) -> Dict:
         }
     lengths = [len(c["text"]) for c in chunks]
     chunks_per_section: Dict[str, int] = defaultdict(int)
-    for c in chunks:
-        anchor = c["chunk_id"].rsplit("_", 2)[-2] if False else None
     for c in chunks:
         # anchor is not stored directly on the chunk record; recover it from section_ids/preamble
         key = c["section_ids"][0] if c["section_ids"] else "preamble"

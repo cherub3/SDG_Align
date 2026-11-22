@@ -165,8 +165,6 @@ def gemini_planner_factory(settings: ProviderSettings, raw_credential: Optional[
     Factory invoked by Phase 1.1 wire_dependencies().
     Consumes raw_credential exactly once to build the client.
     """
-    extra = settings.get("extra", {})
-
     # Construction-time validation
     if not raw_credential:
         raise ValueError("Gemini Planner provider requires a credential (API key)")

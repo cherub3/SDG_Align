@@ -721,7 +721,6 @@ def run_stage9(adapter_factory, metric: str = "cosine") -> None:
         
     adapter_stub = adapter_factory(metric=metric)
     backend_name = adapter_stub.backend_name
-    backend_version = adapter_stub.backend_version
     
     for config_fingerprint in sorted(list(config_fingerprints)):
         index_fingerprint = compute_index_fingerprint(config_fingerprint, backend_name, metric)

@@ -260,7 +260,7 @@ def validate_api_response(
          raise APIResponseInternalError("REQUEST_ID_MISSING_OR_MALFORMED")
          
     try:
-        uuid_obj = uuid.UUID(request_id, version=4)
+        uuid.UUID(request_id, version=4)  # raises ValueError if malformed
     except ValueError:
         raise APIResponseInternalError("REQUEST_ID_MISSING_OR_MALFORMED")
         

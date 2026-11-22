@@ -608,7 +608,6 @@ def run_stage8(provider: ProviderAdapter) -> None:
     # provider calls while preserving the "discover from first returned vector"
     # contract for actual generation runs.
     dim: Optional[int] = _discover_dimension_from_parquet(manifest, provider)
-    dim_discovered_from_provider = False
 
     for doc_id, record in manifest.items():
         if "chunks" not in record.artifact_paths:
@@ -634,7 +633,6 @@ def run_stage8(provider: ProviderAdapter) -> None:
                 try:
                     dummy_vec = provider.embed_batch(["dummy"])[0]
                     dim = len(dummy_vec)
-                    dim_discovered_from_provider = True
                 except Exception as exc:
                     logger.error(f"FATAL_EMBEDDING_PROVIDER_UNAVAILABLE: {exc}")
                     return

@@ -314,7 +314,7 @@ def execute_tool(tool_request: ToolRequest, tool_registry: ToolRegistry, tool_ad
         latency_ms = raw_result.get("execution_metadata", {}).get("latency_ms")
     except ToolExecutionError as e:
         error_code = e.code
-    except Exception as e:
+    except Exception:
         error_code = "UNEXPECTED_ADAPTER_ERROR"
         
     record = build_tool_execution_record(tool_request, tool_definition, raw_result, error_code, latency_ms)
