@@ -4,18 +4,14 @@ version = "0.1.0"
 description = "Retrieval-Augmented Generation (RAG) + agent-orchestration pipeline for SDG alignment."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = [
-    "pymupdf==1.28.0",
-    "pymupdf4llm==1.28.0",
-    "pyarrow==24.0.0",
-    "faiss-cpu==1.14.3",
-    "google-genai==2.10.0",
-    "fastapi>=0.120",
-    "uvicorn>=0.46",
-]
+# Dependencies are intentionally NOT listed here: requirements.txt is the single source of truth
+# (this is an application, not an installable library). Keeping one list prevents drift.
 
-[project.optional-dependencies]
-dev = [
-    "pytest==9.0.3",
-    "httpx>=0.28",
-]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Puts the repo root on sys.path so `scripts.*` / `src.*` import under a bare `pytest` as well.
+pythonpath = ["."]
+
+[tool.coverage.run]
+source = ["scripts", "src"]
+branch = true

@@ -1,12 +1,29 @@
-# Ingestion pipeline (Stages 1-9)
-# As an application (not a library), dependencies are strictly pinned to guarantee reproducible deployments.
+# Single source of truth for dependencies (used by CI and by pyproject.toml).
+# As an application (not a library) every direct dependency is pinned exactly. Transitive
+# dependencies are resolved by pip; CI runs `pip check` to catch conflicts.
+# Verified install: CPython 3.12 (CI) and 3.14 (local development).
+
+# --- Ingestion pipeline (stages 0-9) ---
 pymupdf==1.28.0
 pymupdf4llm==1.28.0
 pyarrow==24.0.0
+pandas==2.3.3            # stage 10 reads id_map.parquet via .to_pandas()
+numpy==2.4.6
 faiss-cpu==1.14.3
-google-genai==2.10.0
-groq>=0.13.0
-openai>=1.0.0
 
-# Testing
+# --- Providers (LLM / planner / embeddings) ---
+google-genai==2.10.0
+groq==1.6.0
+openai==2.48.0
+requests==2.34.2         # Hugging Face embedding provider
+python-dotenv==1.2.2
+
+# --- API server ---
+fastapi==0.139.2
+uvicorn==0.51.0
+pydantic==2.13.4
+
+# --- Tests ---
 pytest==9.0.3
+pytest-cov==6.0.0
+httpx==0.28.1            # fastapi.testclient
