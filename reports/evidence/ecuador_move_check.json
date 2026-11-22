@@ -1,0 +1,58 @@
+2026-11-23 01:23:04,502 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c is already registered.
+2026-11-23 01:23:04,568 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a is already registered.
+2026-11-23 01:23:04,597 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4 is already registered.
+2026-11-23 01:23:04,624 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f is already registered.
+2026-11-23 01:23:04,673 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_6cbb8ab79a146d77455357f0895abcf8769f235ea5c899ea712c08ca2c0b6969 is already registered.
+2026-11-23 01:23:04,719 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_49578294e00a7ff5f4d9f945ffe15a4f23b603ed1733b3db088a9edbb38eb4bc is already registered.
+2026-11-23 01:23:04,768 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_559ccd15c023e037e1bb47af88729606b3be08ea695d7f818bcb213ed7746297 is already registered.
+2026-11-23 01:23:04,814 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_5e4674e8f6c7829e829c8894b6f98eef96e3dd9da2f329ed7a77c1e154861e3b is already registered.
+2026-11-23 01:23:04,848 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_14346ab83b31206cda560ba53daa18a5791245f62391e412e15f3e6ec46096cc is already registered.
+2026-11-23 01:23:04,893 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_dc746aa33f34cfe672faec1d2c3b471d002d451a1ad3e35be227a6026cf05b27 is already registered.
+2026-11-23 01:23:04,921 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354 is already registered.
+2026-11-23 01:23:04,961 - manifest_registration - WARNING - Duplicate skipped: Document with doc_id doc_8e9df83dc7002dc54065994745b70c5c532203690723fe37a9a2581e20639d59 is already registered.
+{
+ "before": {
+  "manifest": "climate",
+  "source_path": "data/proposals/raw/climate/ecuador_biodiversity.pdf",
+  "chunks": [
+   "climate"
+  ],
+  "chunk_count": 91,
+  "metadata": null
+ },
+ "index_bin_before": {
+  "477879bbe2e1": "8cba4268e7e18c3e21fd2350440ddbe70231c9d92f661882c2e51d766854c0a6",
+  "afcb8eee107b": "5843331e9c62a2094a624cd3e3c8c95f954f84eec6475a65fa3cfdcba77bdddf"
+ },
+ "embedding_api_calls": 0,
+ "after": {
+  "manifest": "biodiversity",
+  "source_path": "data/proposals/raw/biodiversity/ecuador_biodiversity.pdf",
+  "chunks": [
+   "biodiversity"
+  ],
+  "chunk_count": 91,
+  "metadata": null
+ },
+ "index_bin_after": {
+  "477879bbe2e1": "8cba4268e7e18c3e21fd2350440ddbe70231c9d92f661882c2e51d766854c0a6",
+  "afcb8eee107b": "5843331e9c62a2094a624cd3e3c8c95f954f84eec6475a65fa3cfdcba77bdddf"
+ },
+ "chunk_text_identical": true,
+ "chunk_ids_identical": true,
+ "exit_codes": {
+  "stage0": 0,
+  "stage6": 0,
+  "stage7": 0,
+  "stage8": 0,
+  "stage9": 0
+ },
+ "strict_exit_codes": {
+  "stage0": 0,
+  "stage6": 0,
+  "stage7": 0,
+  "stage8": 0,
+  "stage9": 0
+ },
+ "failures": {}
+}

@@ -1,0 +1,5 @@
+commit under test: d4b2224  (tests: cover scripts/download_corpus.py (was 0%))
+python: Python 3.12.10
+pip check: No broken requirements found.
+installed distributions: 60
+pip install -r requirements.txt into a brand-new venv: exit 0, 240 s (measured on the first fresh-clone run; requirements.txt unchanged since)

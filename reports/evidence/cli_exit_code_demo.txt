@@ -1,0 +1,21 @@
+$ python -m scripts.stage0_register    -> exit code 0  (0.2s)
+    [stage0] attempted=3 succeeded=3 failed=0 expected_quarantine=0 stage_failures=0
+    [stage0] exit code 0
+$ python -m scripts.stage1_integrity    -> exit code 1  (0.3s)
+    [stage1] attempted=3 succeeded=2 failed=1 expected_quarantine=0 stage_failures=0
+      FAILED       doc_0272e71577a6ad74047bdb8621b88c0503273e45d8f7da722803e460e5782169 (FATAL_UNREADABLE)
+    [stage1] exit code 1
+$ python -m scripts.stage2_extraction    -> exit code 0  (2.5s)
+    [stage2] attempted=2 succeeded=2 failed=0 expected_quarantine=0 stage_failures=0
+    [stage2] exit code 0
+$ python -m scripts.stage3_detection    -> exit code 0  (0.3s)
+    [stage3] attempted=2 succeeded=1 failed=0 expected_quarantine=1 stage_failures=0
+      quarantined   doc_fabe66984c655ffa3695547853db8f7fa98cef379507927d03a0546c03562d63 (FATAL_NO_TEXT)
+    [stage3] exit code 0
+
+--- same stage 3 run again with --strict (scanned PDF counts as failure) ---
+$ python -m scripts.stage3_detection --strict   -> exit code 1  (0.3s)
+    [stage3] attempted=1 succeeded=1 failed=0 expected_quarantine=0 stage_failures=0
+      FAILED (strict, in manifest) doc_0272e71577a6ad74047bdb8621b88c0503273e45d8f7da722803e460e5782169 (FATAL_UNREADABLE)
+      FAILED (strict, in manifest) doc_fabe66984c655ffa3695547853db8f7fa98cef379507927d03a0546c03562d63 (FATAL_NO_TEXT)
+    [stage3] exit code 1 (--strict)

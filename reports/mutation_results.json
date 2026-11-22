@@ -4,90 +4,90 @@
     "description": "chunk split threshold halved",
     "file": "scripts/stage7_chunking.py",
     "result": "KILLED",
-    "pytest": "1 failed, 624 passed, 1 warning, 18 subtests passed in 15.31s"
+    "pytest": "1 failed, 624 passed, 1 warning, 18 subtests passed in 16.37s"
   },
   {
     "id": "M2",
     "description": "forward merge ignores MAX_CHUNK_CHARS",
     "file": "scripts/stage7_chunking.py",
     "result": "KILLED",
-    "pytest": "1 failed, 631 passed, 1 warning, 18 subtests passed in 16.04s"
+    "pytest": "1 failed, 631 passed, 1 warning, 18 subtests passed in 15.72s"
   },
   {
     "id": "M13",
     "description": "backward merge ignores MAX_CHUNK_CHARS",
     "file": "scripts/stage7_chunking.py",
     "result": "KILLED",
-    "pytest": "1 failed, 635 passed, 1 warning, 18 subtests passed in 15.73s"
+    "pytest": "1 failed, 635 passed, 1 warning, 18 subtests passed in 16.41s"
   },
   {
     "id": "M3",
     "description": "retrieval top-k off by one",
     "file": "scripts/stage10_retrieval.py",
     "result": "KILLED",
-    "pytest": "1 failed, 199 passed, 1 warning, 18 subtests passed in 9.09s"
+    "pytest": "1 failed, 199 passed, 1 warning, 18 subtests passed in 8.22s"
   },
   {
     "id": "M4",
     "description": "retrieval sorts worst-first",
     "file": "scripts/stage10_retrieval.py",
     "result": "KILLED",
-    "pytest": "1 failed, 199 passed, 1 warning, 18 subtests passed in 9.19s"
+    "pytest": "1 failed, 199 passed, 1 warning, 18 subtests passed in 8.76s"
   },
   {
     "id": "M5",
     "description": "retrieval category filter disabled",
     "file": "scripts/stage10_retrieval.py",
     "result": "KILLED",
-    "pytest": "1 failed, 208 passed, 1 warning, 18 subtests passed in 8.61s"
+    "pytest": "1 failed, 208 passed, 1 warning, 18 subtests passed in 8.16s"
   },
   {
     "id": "M6",
     "description": "citation threshold >= -> > 0",
     "file": "scripts/stage14_citation_extraction.py",
     "result": "KILLED",
-    "pytest": "1 failed, 274 passed, 1 warning, 18 subtests passed in 9.04s"
+    "pytest": "1 failed, 274 passed, 1 warning, 18 subtests passed in 8.70s"
   },
   {
     "id": "M7",
     "description": "groundedness threshold ignored",
     "file": "scripts/stage15_groundedness_validation.py",
     "result": "KILLED",
-    "pytest": "1 failed, 297 passed, 1 warning, 18 subtests passed in 9.33s"
+    "pytest": "1 failed, 297 passed, 1 warning, 18 subtests passed in 8.51s"
   },
   {
     "id": "M8",
     "description": "cache key drops model_name",
     "file": "scripts/stage17_response_caching.py",
     "result": "KILLED",
-    "pytest": "1 failed, 353 passed, 1 warning, 18 subtests passed in 10.07s"
+    "pytest": "1 failed, 353 passed, 1 warning, 18 subtests passed in 8.32s"
   },
   {
     "id": "M9",
     "description": "planner step limit off by one",
     "file": "scripts/stage21_agent_planning.py",
     "result": "KILLED",
-    "pytest": "1 failed, 458 passed, 1 warning, 18 subtests passed in 10.22s"
+    "pytest": "1 failed, 458 passed, 1 warning, 18 subtests passed in 8.76s"
   },
   {
     "id": "M10",
     "description": "context budget never cuts off",
     "file": "scripts/stage11_context_assembly.py",
     "result": "KILLED",
-    "pytest": "1 failed, 230 passed, 1 warning, 18 subtests passed in 9.18s"
+    "pytest": "1 failed, 230 passed, 1 warning, 18 subtests passed in 9.56s"
   },
   {
     "id": "M11",
     "description": "tool schema: integer maximum not enforced",
     "file": "scripts/stage20_tool_function_calling.py",
     "result": "KILLED",
-    "pytest": "1 failed, 435 passed, 1 warning, 18 subtests passed in 9.74s"
+    "pytest": "1 failed, 435 passed, 1 warning, 18 subtests passed in 9.04s"
   },
   {
     "id": "M12",
     "description": "tool schema: required arguments not enforced",
     "file": "scripts/stage20_tool_function_calling.py",
     "result": "KILLED",
-    "pytest": "1 failed, 435 passed, 1 warning, 18 subtests passed in 9.89s"
+    "pytest": "1 failed, 435 passed, 1 warning, 18 subtests passed in 8.62s"
   }
 ]

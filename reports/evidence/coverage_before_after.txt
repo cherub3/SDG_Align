@@ -1,0 +1,37 @@
+Coverage (line+branch, coverage.py) for the modules that were at or below 80% in REVIEW.md section 2.2
+before = REVIEW.md run on the parent repo (667 tests, TOTAL 83%); after = fresh clone of the Phase 0 branch (738 tests)
+source of 'after': reports/evidence/fresh_clone_pytest.log
+
+module                                        before  after
+scripts/stage10_retrieval.py                     58%  74%
+scripts/composition_root.py                      67%  76%
+scripts/stage0_register.py                       62%  69%
+scripts/stage3_detection.py                      66%  76%
+scripts/stage9_vector_indexing.py                70%  71%
+scripts/stage2_extraction.py                     70%  68%
+scripts/stage1_integrity.py                      71%  69%
+scripts/llm_provider_groq.py                     67%  67%
+scripts/llm_provider_openrouter.py               67%  67%
+scripts/planner_provider_groq.py                 68%  68%
+scripts/planner_provider_openrouter.py           63%  63%
+scripts/stage4_cleaning.py                       79%  78%
+scripts/stage20_tool_function_calling.py         78%  80%
+scripts/stage18_api_response_serving.py          80%  80%
+
+TOTAL: before 83%  after 85%  (pytest-cov reports 84.60%)
+
+modules still under 80% after Phase 0:
+  scripts/composition_root.py: 76%
+  scripts/llm_provider_groq.py: 67%
+  scripts/llm_provider_openrouter.py: 67%
+  scripts/planner_provider_groq.py: 68%
+  scripts/planner_provider_openrouter.py: 63%
+  scripts/stage0_register.py: 69%
+  scripts/stage10_retrieval.py: 74%
+  scripts/stage1_integrity.py: 69%
+  scripts/stage2_extraction.py: 68%
+  scripts/stage3_detection.py: 76%
+  scripts/stage4_cleaning.py: 78%
+  scripts/stage9_vector_indexing.py: 71%
+
+new module: src/stage_summary.py: 100%
