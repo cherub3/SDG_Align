@@ -1,0 +1,1775 @@
+{
+ "seed": 20261123,
+ "items": {
+  "B2af42": {
+   "question_no": 2,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "mozambique_planetgold",
+     "score": 0.7814,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_1_0"
+    }
+   ]
+  },
+  "Ba0cb8": {
+   "question_no": 10,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "cuba_clean_energy",
+     "score": 0.7099,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s1c_0"
+    }
+   ]
+  },
+  "B41750": {
+   "question_no": 8,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.861,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_3.1fba_0"
+    }
+   ]
+  },
+  "B3d03e": {
+   "question_no": 8,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7906,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_3.1fbb_0"
+    },
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7906,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_3.1fbb_0"
+    }
+   ]
+  },
+  "Bab2bd": {
+   "question_no": 7,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7917,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_3.1fba_0"
+    }
+   ]
+  },
+  "B60359": {
+   "question_no": 10,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.722,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s1c_0"
+    }
+   ]
+  },
+  "Ba6635": {
+   "question_no": 9,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7867,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s7e_0"
+    }
+   ]
+  },
+  "Bd652a": {
+   "question_no": 4,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7582,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4abe_5"
+    },
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7582,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4abe_5"
+    }
+   ]
+  },
+  "Ba2aa0": {
+   "question_no": 15,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.643,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s1c_0"
+    }
+   ]
+  },
+  "B2f9ef": {
+   "question_no": 5,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "cuba_clean_energy",
+     "score": 0.7541,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3jdb_4"
+    }
+   ]
+  },
+  "B7d9bf": {
+   "question_no": 4,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7461,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_C_0"
+    }
+   ]
+  },
+  "B0ce54": {
+   "question_no": 3,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7134,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s9_0"
+    }
+   ]
+  },
+  "B62a50": {
+   "question_no": 11,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "cuba_clean_energy",
+     "score": 0.8046,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s7_0"
+    }
+   ]
+  },
+  "B93372": {
+   "question_no": 13,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "ecuador_biodiversity",
+     "score": 0.8299,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ab_3"
+    }
+   ]
+  },
+  "B1d205": {
+   "question_no": 9,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7796,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s7h_0"
+    }
+   ]
+  },
+  "B2ebbc": {
+   "question_no": 4,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7598,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4abb_0"
+    }
+   ]
+  },
+  "B8a9a8": {
+   "question_no": 11,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7515,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s5_2"
+    }
+   ]
+  },
+  "B6e2fd": {
+   "question_no": 1,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "mozambique_planetgold",
+     "score": 0.8051,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_preamble_0"
+    }
+   ]
+  },
+  "Bdd7d7": {
+   "question_no": 1,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "mozambique_planetgold",
+     "score": 0.8334,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s1b_0"
+    }
+   ]
+  },
+  "B389b4": {
+   "question_no": 12,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "ecuador_jaguar_landscape_connectivity",
+     "score": 0.713,
+     "chunk_id": "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_78_0"
+    }
+   ]
+  },
+  "B3d325": {
+   "question_no": 9,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7712,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3ao_0"
+    }
+   ]
+  },
+  "Bc68a1": {
+   "question_no": 3,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7216,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s6_0"
+    }
+   ]
+  },
+  "Bddcfa": {
+   "question_no": 6,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "cuba_clean_energy",
+     "score": 0.7279,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3g_0"
+    }
+   ]
+  },
+  "B6b786": {
+   "question_no": 12,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "ecuador_jaguar_landscape_connectivity",
+     "score": 0.7118,
+     "chunk_id": "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_78_1"
+    }
+   ]
+  },
+  "B902bf": {
+   "question_no": 10,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "ecuador_jaguar_landscape_connectivity",
+     "score": 0.74,
+     "chunk_id": "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_31a_12"
+    }
+   ]
+  },
+  "B0b327": {
+   "question_no": 4,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7484,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s8bpa_0"
+    }
+   ]
+  },
+  "B94bde": {
+   "question_no": 14,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "ecuador_jaguar_landscape_connectivity",
+     "score": 0.6084,
+     "chunk_id": "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_31a_1"
+    }
+   ]
+  },
+  "Bd412a": {
+   "question_no": 6,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "cuba_clean_energy",
+     "score": 0.732,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3g_0"
+    }
+   ]
+  },
+  "B45847": {
+   "question_no": 2,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "mozambique_planetgold",
+     "score": 0.7824,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_7a_0"
+    }
+   ]
+  },
+  "B5f16b": {
+   "question_no": 1,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "mozambique_planetgold",
+     "score": 0.8012,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s1e_0"
+    }
+   ]
+  },
+  "B8a538": {
+   "question_no": 6,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "cuba_clean_energy",
+     "score": 0.7275,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3g_1"
+    }
+   ]
+  },
+  "B520c3": {
+   "question_no": 1,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "mozambique_planetgold",
+     "score": 0.8209,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s2c_0"
+    }
+   ]
+  },
+  "Be181a": {
+   "question_no": 13,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "ecuador_biodiversity",
+     "score": 0.8648,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ab_0"
+    }
+   ]
+  },
+  "B4ac0a": {
+   "question_no": 4,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7658,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4c_9"
+    }
+   ]
+  },
+  "B87523": {
+   "question_no": 10,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7332,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_3.1c_0"
+    }
+   ]
+  },
+  "Bb3f65": {
+   "question_no": 4,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7717,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4abh_0"
+    }
+   ]
+  },
+  "B72602": {
+   "question_no": 1,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "mozambique_planetgold",
+     "score": 0.8077,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s7c_0"
+    }
+   ]
+  },
+  "Bfae90": {
+   "question_no": 13,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "ecuador_biodiversity",
+     "score": 0.8233,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ab_0"
+    }
+   ]
+  },
+  "B8199b": {
+   "question_no": 11,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "mozambique_planetgold",
+     "score": 0.7535,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s5_1"
+    }
+   ]
+  },
+  "Bb87a6": {
+   "question_no": 9,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "cuba_clean_energy",
+     "score": 0.7957,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s9o_0"
+    }
+   ]
+  },
+  "B9b2ae": {
+   "question_no": 10,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "cuba_clean_energy",
+     "score": 0.7595,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3d_0"
+    }
+   ]
+  },
+  "B7bca7": {
+   "question_no": 14,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.5644,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4bci_0"
+    }
+   ]
+  },
+  "Ba5f11": {
+   "question_no": 11,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7454,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4c_0"
+    }
+   ]
+  },
+  "Bcac25": {
+   "question_no": 3,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7141,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s4_0"
+    }
+   ]
+  },
+  "Bce337": {
+   "question_no": 12,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "ecuador_biodiversity",
+     "score": 0.763,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1afa_0"
+    }
+   ]
+  },
+  "B9d4af": {
+   "question_no": 9,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "mozambique_planetgold",
+     "score": 0.7797,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_7l_0"
+    }
+   ]
+  },
+  "B7fa11": {
+   "question_no": 2,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "mozambique_planetgold",
+     "score": 0.7824,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_7a_0"
+    }
+   ]
+  },
+  "B11ee0": {
+   "question_no": 12,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "ecuador_biodiversity",
+     "score": 0.6979,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ad_23"
+    }
+   ]
+  },
+  "B87aaf": {
+   "question_no": 6,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "cuba_clean_energy",
+     "score": 0.7208,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3g_1"
+    }
+   ]
+  },
+  "B7f5c1": {
+   "question_no": 7,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7345,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ab_0"
+    }
+   ]
+  },
+  "Bc7afc": {
+   "question_no": 13,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "ecuador_biodiversity",
+     "score": 0.8229,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3a_7"
+    }
+   ]
+  },
+  "B2dfe0": {
+   "question_no": 15,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.655,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s1ca_0"
+    }
+   ]
+  },
+  "B5bc4c": {
+   "question_no": 15,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "ecuador_biodiversity",
+     "score": 0.6367,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ad_13"
+    }
+   ]
+  },
+  "B747dd": {
+   "question_no": 8,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7517,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ab_2"
+    }
+   ]
+  },
+  "B3cacf": {
+   "question_no": 5,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "cuba_clean_energy",
+     "score": 0.7977,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s5c_5"
+    }
+   ]
+  },
+  "B54bfa": {
+   "question_no": 2,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "mozambique_planetgold",
+     "score": 0.7959,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s1efs_0"
+    },
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "mozambique_planetgold",
+     "score": 0.7959,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s4fs_0"
+    }
+   ]
+  },
+  "B4f5ff": {
+   "question_no": 8,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.8327,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_3.1fba_0"
+    }
+   ]
+  },
+  "Bd6c6f": {
+   "question_no": 2,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "mozambique_planetgold",
+     "score": 0.7909,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s1d_0"
+    }
+   ]
+  },
+  "B2faa1": {
+   "question_no": 9,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7825,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s5e_0"
+    }
+   ]
+  },
+  "Bca8a0": {
+   "question_no": 3,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "ecuador_jaguar_landscape_connectivity",
+     "score": 0.7182,
+     "chunk_id": "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_31a_20"
+    }
+   ]
+  },
+  "B33ad8": {
+   "question_no": 15,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.6337,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_9ea_2"
+    }
+   ]
+  },
+  "B658c4": {
+   "question_no": 13,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "ecuador_biodiversity",
+     "score": 0.8356,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_s1da_0"
+    }
+   ]
+  },
+  "B6e5c8": {
+   "question_no": 5,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "cuba_clean_energy",
+     "score": 0.766,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s5c_4"
+    }
+   ]
+  },
+  "Be5487": {
+   "question_no": 14,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.5664,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_3.1fbb_0"
+    }
+   ]
+  },
+  "Bb9727": {
+   "question_no": 14,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "cuba_clean_energy",
+     "score": 0.5725,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3ih_0"
+    }
+   ]
+  },
+  "B57442": {
+   "question_no": 1,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "mozambique_planetgold",
+     "score": 0.8131,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s1efz_0"
+    }
+   ]
+  },
+  "B38ae6": {
+   "question_no": 11,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7554,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4c_2"
+    }
+   ]
+  },
+  "B01c83": {
+   "question_no": 3,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7136,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4abh_0"
+    }
+   ]
+  },
+  "B0e3da": {
+   "question_no": 7,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7756,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_3.1fba_0"
+    }
+   ]
+  },
+  "Bfe12c": {
+   "question_no": 13,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "ecuador_biodiversity",
+     "score": 0.8535,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_s2_0"
+    }
+   ]
+  },
+  "Bf9179": {
+   "question_no": 3,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "mozambique_planetgold",
+     "score": 0.7175,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s1efb_5"
+    }
+   ]
+  },
+  "B427a5": {
+   "question_no": 3,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7173,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s3a_3"
+    }
+   ]
+  },
+  "Be5545": {
+   "question_no": 10,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "cuba_clean_energy",
+     "score": 0.8025,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3jc_0"
+    }
+   ]
+  },
+  "Ba8ab1": {
+   "question_no": 14,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.5749,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_1.1a_0"
+    }
+   ]
+  },
+  "B9ab5c": {
+   "question_no": 7,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7072,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ad_2"
+    }
+   ]
+  },
+  "B10cc5": {
+   "question_no": 15,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "cuba_clean_energy",
+     "score": 0.6437,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s1a_2"
+    }
+   ]
+  },
+  "B1823f": {
+   "question_no": 6,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "cuba_clean_energy",
+     "score": 0.7307,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s9a_1"
+    }
+   ]
+  },
+  "B7763f": {
+   "question_no": 1,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "mozambique_planetgold",
+     "score": 0.8124,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s4_0"
+    }
+   ]
+  },
+  "Be5cda": {
+   "question_no": 13,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.8261,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s1c_0"
+    }
+   ]
+  },
+  "B566bb": {
+   "question_no": 14,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.575,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_1.1a_0"
+    }
+   ]
+  },
+  "B16835": {
+   "question_no": 7,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7004,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_9c_0"
+    }
+   ]
+  },
+  "Bc5eff": {
+   "question_no": 10,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7319,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s5_0"
+    }
+   ]
+  },
+  "Bdf246": {
+   "question_no": 5,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "cuba_clean_energy",
+     "score": 0.7843,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s1edc_8"
+    },
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "cuba_clean_energy",
+     "score": 0.7843,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s5c_8"
+    }
+   ]
+  },
+  "B4713d": {
+   "question_no": 13,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "ecuador_biodiversity",
+     "score": 0.8301,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ab_4"
+    }
+   ]
+  },
+  "Bd7c80": {
+   "question_no": 2,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "mozambique_planetgold",
+     "score": 0.7861,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s3_0"
+    }
+   ]
+  },
+  "B859b7": {
+   "question_no": 5,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "cuba_clean_energy",
+     "score": 0.7548,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s4a_0"
+    }
+   ]
+  },
+  "B75477": {
+   "question_no": 5,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "cuba_clean_energy",
+     "score": 0.7618,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s3_0"
+    }
+   ]
+  },
+  "Bc953b": {
+   "question_no": 4,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7667,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s11apa_0"
+    }
+   ]
+  },
+  "Bd3a4f": {
+   "question_no": 15,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.684,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4ad_0"
+    }
+   ]
+  },
+  "B1c309": {
+   "question_no": 11,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7527,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4c_3"
+    }
+   ]
+  },
+  "Bc1787": {
+   "question_no": 7,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "ecuador_jaguar_landscape_connectivity",
+     "score": 0.7387,
+     "chunk_id": "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3-2_0"
+    }
+   ]
+  },
+  "B3a1fe": {
+   "question_no": 8,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7559,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ab_0"
+    }
+   ]
+  },
+  "B297e8": {
+   "question_no": 13,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "ecuador_biodiversity",
+     "score": 0.8294,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_s1c_0"
+    }
+   ]
+  },
+  "Bb53b0": {
+   "question_no": 12,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.6989,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_1.1a_0"
+    }
+   ]
+  },
+  "B3cd44": {
+   "question_no": 6,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "cuba_clean_energy",
+     "score": 0.7081,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s1b_0"
+    }
+   ]
+  },
+  "Bc7ab4": {
+   "question_no": 6,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "cuba_clean_energy",
+     "score": 0.7247,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3ja_1"
+    }
+   ]
+  },
+  "B4e7e6": {
+   "question_no": 9,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7815,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s8bj_0"
+    }
+   ]
+  },
+  "Bce4a8": {
+   "question_no": 8,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7582,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ad_1"
+    }
+   ]
+  },
+  "Bbc317": {
+   "question_no": 15,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.6471,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s1da_0"
+    }
+   ]
+  },
+  "B5108b": {
+   "question_no": 8,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7569,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ab_0"
+    }
+   ]
+  },
+  "Bac419": {
+   "question_no": 6,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "cuba_clean_energy",
+     "score": 0.7204,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s1edc_12"
+    }
+   ]
+  },
+  "Bb470c": {
+   "question_no": 6,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "cuba_clean_energy",
+     "score": 0.7245,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s5c_12"
+    }
+   ]
+  },
+  "Bfc205": {
+   "question_no": 11,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "cuba_clean_energy",
+     "score": 0.7787,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3j_0"
+    }
+   ]
+  },
+  "B94009": {
+   "question_no": 14,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "ecuador_biodiversity",
+     "score": 0.5656,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_s1da_0"
+    }
+   ]
+  },
+  "Bfcaa0": {
+   "question_no": 9,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "cuba_clean_energy",
+     "score": 0.7946,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3jo_0"
+    }
+   ]
+  },
+  "B910eb": {
+   "question_no": 10,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7646,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s3a_1"
+    }
+   ]
+  },
+  "Be1159": {
+   "question_no": 2,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "mozambique_planetgold",
+     "score": 0.8019,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s4fb_0"
+    }
+   ]
+  },
+  "B2a49e": {
+   "question_no": 9,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "ecuador_biodiversity",
+     "score": 0.78,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1a_0"
+    }
+   ]
+  },
+  "B5dae7": {
+   "question_no": 7,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7408,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_3.1fbb_0"
+    },
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7408,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_3.1fbb_0"
+    }
+   ]
+  },
+  "B10009": {
+   "question_no": 10,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7701,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s5_1"
+    }
+   ]
+  },
+  "B1a67e": {
+   "question_no": 12,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7115,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_25ca_0"
+    }
+   ]
+  },
+  "B32c69": {
+   "question_no": 14,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "ecuador_biodiversity",
+     "score": 0.5773,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ad_13"
+    }
+   ]
+  },
+  "Becc68": {
+   "question_no": 4,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7711,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4abh_0"
+    }
+   ]
+  },
+  "B95036": {
+   "question_no": 14,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.5668,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4bci_0"
+    }
+   ]
+  },
+  "B927cc": {
+   "question_no": 15,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.6381,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4ada_0"
+    }
+   ]
+  },
+  "B1fb6d": {
+   "question_no": 12,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7076,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ab_13"
+    },
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7076,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ab_12"
+    }
+   ]
+  },
+  "B1805e": {
+   "question_no": 12,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7528,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1afa_0"
+    }
+   ]
+  },
+  "B20ebe": {
+   "question_no": 7,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7383,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s1b_0"
+    }
+   ]
+  },
+  "Bc61b6": {
+   "question_no": 1,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "mozambique_planetgold",
+     "score": 0.8473,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s1d_0"
+    }
+   ]
+  },
+  "Bc353b": {
+   "question_no": 4,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7584,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s1b_0"
+    }
+   ]
+  },
+  "B35ec7": {
+   "question_no": 11,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7669,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_s5_2"
+    }
+   ]
+  },
+  "B1d2b5": {
+   "question_no": 15,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.6535,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4a_0"
+    }
+   ]
+  },
+  "B20998": {
+   "question_no": 13,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "ecuador_biodiversity",
+     "score": 0.8299,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_C_2"
+    }
+   ]
+  },
+  "B89ae2": {
+   "question_no": 1,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "mozambique_planetgold",
+     "score": 0.8137,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s4fz_0"
+    }
+   ]
+  },
+  "B0f549": {
+   "question_no": 5,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "cuba_clean_energy",
+     "score": 0.7475,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3jdb_1"
+    }
+   ]
+  },
+  "Bd9fe5": {
+   "question_no": 9,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "mozambique_planetgold",
+     "score": 0.7803,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s8a_0"
+    }
+   ]
+  },
+  "B6cf6e": {
+   "question_no": 7,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.7358,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s1c_0"
+    }
+   ]
+  },
+  "B8d9d3": {
+   "question_no": 10,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 1,
+     "doc": "cuba_clean_energy",
+     "score": 0.7556,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3d_0"
+    }
+   ]
+  },
+  "B9364b": {
+   "question_no": 8,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7749,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3.1ad_2"
+    }
+   ]
+  },
+  "B935ab": {
+   "question_no": 2,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 2,
+     "doc": "mozambique_planetgold",
+     "score": 0.783,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s1efb_0"
+    }
+   ]
+  },
+  "Ba21eb": {
+   "question_no": 3,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 0,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7255,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4c_9"
+    }
+   ]
+  },
+  "Bf1b27": {
+   "question_no": 8,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.764,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s1c_0"
+    }
+   ]
+  },
+  "B9cb1e": {
+   "question_no": 12,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "ecuador_marine_biodiversity",
+     "score": 0.719,
+     "chunk_id": "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_25ca_0"
+    }
+   ]
+  },
+  "B4390e": {
+   "question_no": 3,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "mozambique_planetgold",
+     "score": 0.7189,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s4fb_4"
+    }
+   ]
+  },
+  "Ba2e81": {
+   "question_no": 2,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 3,
+     "doc": "mozambique_planetgold",
+     "score": 0.7841,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s4fk_1"
+    }
+   ]
+  },
+  "B31e76": {
+   "question_no": 1,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "mozambique_planetgold",
+     "score": 0.8428,
+     "chunk_id": "doc_e2fd661744c7c3b66a02391da610a266a80068a43997a5e0d2568b4a9f404354_s3_0"
+    }
+   ]
+  },
+  "Bc4ca2": {
+   "question_no": 6,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 4,
+     "doc": "cuba_clean_energy",
+     "score": 0.7142,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s4a_0"
+    }
+   ]
+  },
+  "B7c783": {
+   "question_no": 11,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "ecuador_biodiversity",
+     "score": 0.7667,
+     "chunk_id": "doc_e72e747170fa21c7f40d0c27e77cbf7ec23ea66b9448a13cd3548a69ad802eec_3a_4"
+    }
+   ]
+  },
+  "B25dc5": {
+   "question_no": 11,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 2,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7597,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s5_0"
+    }
+   ]
+  },
+  "B3e184": {
+   "question_no": 15,
+   "sources": [
+    {
+     "version": "after",
+     "rank": 0,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.6807,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4ad_0"
+    }
+   ]
+  },
+  "B67734": {
+   "question_no": 3,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 4,
+     "doc": "cameroon_biodiversity_iplc_conservation",
+     "score": 0.7167,
+     "chunk_id": "doc_2bfb8f4c19d6f3c9d77f18e545b3a7e55745a2a96c91dbe5f73822fc6bd2ad6c_s4abh_0"
+    }
+   ]
+  },
+  "Bb9099": {
+   "question_no": 5,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 3,
+     "doc": "cuba_clean_energy",
+     "score": 0.7475,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s1edc_5"
+    }
+   ]
+  },
+  "B51db6": {
+   "question_no": 5,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "cuba_clean_energy",
+     "score": 0.7768,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s1edc_4"
+    }
+   ]
+  },
+  "B2b3dc": {
+   "question_no": 14,
+   "sources": [
+    {
+     "version": "before",
+     "rank": 1,
+     "doc": "cuba_clean_energy",
+     "score": 0.5693,
+     "chunk_id": "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_3ih_0"
+    }
+   ]
+  }
+ }
+}
