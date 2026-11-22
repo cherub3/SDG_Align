@@ -306,10 +306,18 @@ class TestValidateTextVolume(unittest.TestCase):
         ]
         ct = _clean_text(pages=pages)
         findings = validate_text_volume(ct)
-        for f in findings:
-            self.assertIn("origin_stage", f)
-            self.assertEqual(f["origin_stage"], "Stage 3",
-                             f"Expected origin_stage='Stage 3', got {f['origin_stage']!r}")
+        # The assertions below must actually run: an empty list would otherwise pass vacuously.
+        self.assertEqual([f["code"] for f in findings], ["FATAL_NO_TEXT"])
+        self.assertEqual(findings[0]["origin_stage"], "Stage 3")
+
+        # Same contract for the WARNING branch (a few characters, below MIN_DOC_TOTAL_CHARS).
+        short_pages = [
+            {"page_number": 1, "text": "x" * 10, "char_start": 0, "char_end": 10,
+             "is_excluded": False, "headings": []},
+        ]
+        warn = validate_text_volume(_clean_text(pages=short_pages))
+        self.assertEqual([f["code"] for f in warn], ["LOW_TOTAL_CHAR_COUNT"])
+        self.assertEqual(warn[0]["origin_stage"], "Stage 3")
 
     def test_excluded_pages_not_counted(self):
         """Excluded pages must not contribute to the usable char total."""
@@ -532,12 +540,21 @@ class TestResolveMetadata(unittest.TestCase):
     def test_resolve_metadata_never_writes_files(self):
         """Finding 1: resolve_metadata is computation only; it must not create files."""
         import os
+        import tempfile
         ct = _clean_text()
         rec = _record()
-        before = set(os.listdir("."))
-        resolve_metadata(rec, ct)
-        after = set(os.listdir("."))
-        self.assertEqual(before, after, "resolve_metadata wrote files to disk")
+        # All pipeline paths are relative to the working directory, so run inside an empty temp
+        # directory and require that the whole tree (not just its top level) is still empty.
+        original_cwd = os.getcwd()
+        with tempfile.TemporaryDirectory() as tmp:
+            os.chdir(tmp)
+            try:
+                resolve_metadata(rec, ct)
+                created = [os.path.join(root, name)
+                           for root, dirs, files in os.walk(".") for name in dirs + files]
+            finally:
+                os.chdir(original_cwd)
+        self.assertEqual(created, [], "resolve_metadata wrote files or directories to disk")
 
 
 # ===========================================================================

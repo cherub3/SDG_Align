@@ -333,10 +333,27 @@ def test_invariant_arguments_mismatch(sample_tool_request, sample_tool_definitio
             execute_tool(sample_tool_request, registry, adapter)
         assert exc.value.code == "RECORD_ARGUMENTS_MISMATCH"
 
-def test_record_immutability_is_documented_not_enforced(sample_tool_request, registry, adapter):
-    # The architecture states the record is immutable after validation.
-    # We verify this is a documented contract, not a runtime stricture (Python dicts are mutable).
+def test_records_are_independent_deterministic_and_self_validating(sample_tool_request, registry, adapter):
+    first = execute_tool(sample_tool_request, registry, adapter)
+    second = execute_tool(sample_tool_request, registry, adapter)
+
+    # Identical request -> identical record id (content-addressed), and each record validates.
+    assert first["tool_execution_record_id"] == second["tool_execution_record_id"]
+    validate_tool_execution_record(first)
+    validate_tool_execution_record(second)
+
+    # A different argument set yields a different id.
+    other_request = dict(sample_tool_request, arguments={"query": "another query", "limit": 10})
+    assert execute_tool(other_request, registry, adapter)["tool_execution_record_id"] != first["tool_execution_record_id"]
+
+    # Records are separate objects: editing one cannot change the other.
+    first["status"] = "FAIL"
+    assert second["status"] == "PASS"
+
+
+def test_tampered_record_is_rejected_by_the_validator(sample_tool_request, registry, adapter):
     record = execute_tool(sample_tool_request, registry, adapter)
-    
-    record["status"] = "FAIL"
-    assert record["status"] == "FAIL"  # Mutation succeeds, confirming it's not enforced natively
+    record["status"] = "FAIL"  # FAIL with a non-null output is inconsistent
+    with pytest.raises(ToolInvocationInternalError) as exc:
+        validate_tool_execution_record(record)
+    assert exc.value.code == "RECORD_STATUS_OUTPUT_MISMATCH"

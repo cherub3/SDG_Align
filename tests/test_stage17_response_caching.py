@@ -9,7 +9,8 @@ from scripts.stage13_llm_execution import (
     LLMAdapter, 
     RawLLMResult, 
     LLMExecutionInputError,
-    LLMExecutionInternalError
+    LLMExecutionInternalError,
+    LLMContentPolicyError,
 )
 from scripts.stage17_response_caching import (
     CacheAdapter,
@@ -171,31 +172,44 @@ def test_ttl_expiration():
     assert llm.invoke_count == 2 # Called again because of expiry
 
 def test_non_cacheable_status():
-    pkg = get_mock_prompt_package(status="FAIL")
+    """A response that FAILED at the LLM (content-policy block) must never be written to the cache."""
+    pkg = get_mock_prompt_package()  # a healthy package, so Stage 13 really does call the LLM
     config = get_mock_execution_config()
-    llm = StubLLMAdapter(get_success_raw_result())
     cache = InMemoryCacheAdapter()
-    
-    # Assuming Stage 13 execute_prompt passes through the prompt package status if it fails validation?
-    # Actually, Stage 13 generates a response and if the model fails, status becomes FAIL. 
-    # For testing, we just need execute_prompt to return a FAIL status. 
-    # Stage 13 returns status="PASS" for a successful invoke.
-    # To mock a FAIL status from Stage 13 without rewriting execute_prompt, 
-    # we can pass a malformed prompt package that Stage 13 fails on? 
-    # But Stage 13 execute_prompt raises exceptions for malformed packages. 
-    # Stage 13 sets status=FAIL if `invoke()` raises LLMContentPolicyError or LLMInvalidRequestError.
-    
-    class FailedStubLLMAdapter(StubLLMAdapter):
+
+    class BlockedLLMAdapter(StubLLMAdapter):
         def invoke(self, sys_p, usr_p, conf):
             self.invoke_count += 1
             raise LLMContentPolicyError("Blocked")
-            
-    res = execute_with_cache(pkg, FailedStubLLMAdapter(get_success_raw_result()), cache, config)
-    
+
+    llm = BlockedLLMAdapter(get_success_raw_result())
+    res = execute_with_cache(pkg, llm, cache, config)
+
+    assert llm.invoke_count == 1  # the exception path was genuinely exercised
+    assert res["status"] == "FAIL"
     assert res["cache_hit"] is False
-    assert res["status"] == "SKIPPED"
+    assert [f["code"] for f in res["llm_response"]["findings"]] == ["LLM_INVOCATION_CONTENT_POLICY_ERROR"]
     assert any(f["code"] == "CACHE_WRITE_SKIPPED_NON_CACHEABLE_STATUS" for f in res["findings"])
-    assert cache.put_count == 0 # No write attempted
+    assert cache.put_count == 0  # no write attempted
+
+    # Because nothing was cached, an identical request calls the LLM again instead of replaying the failure.
+    res2 = execute_with_cache(pkg, llm, cache, config)
+    assert res2["cache_hit"] is False
+    assert llm.invoke_count == 2
+
+
+def test_upstream_failed_prompt_package_skips_the_llm_entirely():
+    """A FAIL prompt package short-circuits: the LLM is never invoked and nothing is cached."""
+    pkg = get_mock_prompt_package(status="FAIL")
+    llm = StubLLMAdapter(get_success_raw_result())
+    cache = InMemoryCacheAdapter()
+
+    res = execute_with_cache(pkg, llm, cache, get_mock_execution_config())
+
+    assert llm.invoke_count == 0
+    assert res["status"] == "SKIPPED"
+    assert [f["code"] for f in res["llm_response"]["findings"]] == ["LLM_INVOCATION_SKIPPED_UPSTREAM_FAIL"]
+    assert cache.put_count == 0
 
 def test_cache_backend_failures():
     pkg = get_mock_prompt_package()
