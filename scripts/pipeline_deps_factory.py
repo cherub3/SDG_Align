@@ -16,10 +16,30 @@ from typing import Any, Dict
 
 from scripts.stage0_register import load_manifest
 from scripts.stage9_vector_indexing import FAISSAdapter, IndexAdapter
-from scripts.stage10_retrieval import retrieve
+from scripts.stage10_retrieval import EmbeddingModelMismatchError, retrieve
 from scripts.stage13_llm_execution import LLMAdapter
 from scripts.stage17_response_caching import CacheAdapter
 from scripts.stage18_api_response_serving import PipelineDependencies
+
+
+def make_provider_adapter_factory(embedding_adapter: Any):
+    """Returns the (provider, model, version) -> adapter callable that Stage 10 uses at query time.
+
+    The wired embedding adapter is returned only when the index's embedding identity matches it
+    exactly. Otherwise EmbeddingModelMismatchError is raised and retrieval refuses to search that
+    index (finding INDEX_EMBEDDING_MODEL_MISMATCH) instead of silently comparing vectors that
+    belong to different embedding spaces."""
+    wired = (embedding_adapter.provider_name, embedding_adapter.model_name, embedding_adapter.model_version)
+
+    def _provider_adapter_factory(provider: str, model: str, version: str):
+        if (provider, model, version) != wired:
+            raise EmbeddingModelMismatchError(
+                f"index was built with {provider}/{model}/{version} but the wired embedding "
+                f"adapter is {wired[0]}/{wired[1]}/{wired[2]}"
+            )
+        return embedding_adapter
+
+    return _provider_adapter_factory
 
 
 def build_pipeline_deps(
@@ -41,10 +61,7 @@ def build_pipeline_deps(
     """
     manifest = load_manifest()
 
-    def _provider_adapter_factory(provider: str, model: str, version: str):
-        # Single-provider deployment: return the wired adapter regardless of
-        # the index metadata's (provider, model, version) discriminator.
-        return embedding_adapter
+    _provider_adapter_factory = make_provider_adapter_factory(embedding_adapter)
 
     def _index_adapter_factory(metric: str) -> IndexAdapter:
         return FAISSAdapter(metric)

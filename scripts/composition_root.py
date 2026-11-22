@@ -43,6 +43,7 @@ def _discover_index_fingerprints(embedding_adapter: Any) -> List[str]:
         if (
             meta.get("provider") == embedding_adapter.provider_name
             and meta.get("model_name") == embedding_adapter.model_name
+            and meta.get("model_version") == embedding_adapter.model_version
         ):
             fp = meta.get("index_fingerprint")
             if fp:

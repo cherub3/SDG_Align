@@ -36,6 +36,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger("stage10_retrieval")
 
+class EmbeddingModelMismatchError(Exception):
+    """Raised by a provider_adapter_factory when an index was built with a different
+    (provider, model, version) than the embedding adapter that is wired for queries.
+    Searching such an index would compare vectors from different embedding spaces."""
+
+
 class RetrievalInternalError(Exception):
     pass
 
@@ -125,6 +131,24 @@ def resolve_index_fingerprints(requested: List[str], manifest: Dict[str, Manifes
 
 def embed_query(query: str, provider_adapter: ProviderAdapter) -> np.ndarray:
     return provider_adapter.embed_batch([query])[0]
+
+
+def normalize_query_vector(vector) -> np.ndarray:
+    """Returns the query vector as a float32, L2-normalised (unit length) 1-D array.
+
+    Stage 9 L2-normalises every stored vector, so the inner-product search is only a true cosine
+    similarity if the query is unit length too. Providers usually already return unit vectors, but
+    that is a property of the provider, not something this pipeline may assume.
+    Raises ValueError for a vector that cannot be normalised (wrong shape, non-finite, zero norm)."""
+    arr = np.asarray(vector, dtype=np.float32)
+    if arr.ndim != 1 or arr.size == 0:
+        raise ValueError("query vector must be a non-empty 1-D array")
+    if not np.all(np.isfinite(arr)):
+        raise ValueError("query vector contains NaN or infinity")
+    norm = float(np.linalg.norm(arr))
+    if norm == 0.0:
+        raise ValueError("query vector has zero norm")
+    return (arr / norm).astype(np.float32)
 
 def search_index(index_handle: IndexHandle, query_vector: np.ndarray, k: int, index_adapter_factory: Callable[[str], IndexAdapter]) -> List[Dict]:
     metric = index_handle.metadata.get("metric", "cosine")
@@ -341,6 +365,13 @@ def retrieve(
         try:
             adapter = provider_adapter_factory(prov, mod, ver)
             query_vector = embed_query(query, adapter)
+            unit_query_vector = normalize_query_vector(query_vector)
+        except EmbeddingModelMismatchError as e:
+            for h in group_handles:
+                findings.append({"severity": "FAIL", "code": "INDEX_EMBEDDING_MODEL_MISMATCH",
+                                 "index_fingerprint": h.fingerprint,
+                                 "message": f"Refusing to search: {str(e)}"})
+            continue
         except Exception as e:
             findings.append({"severity": "FAIL", "code": "QUERY_EMBEDDING_FAILED", "message": f"Embedding failed: {str(e)}"})
             continue
@@ -351,7 +382,9 @@ def retrieve(
                 continue
                 
             try:
-                candidates = search_index(h, query_vector, k_search, index_adapter_factory)
+                # Indexes built with L2 normalisation (all of them, today) need a unit-length query.
+                search_vector = unit_query_vector if h.metadata.get("normalization") == "l2" else np.asarray(query_vector, dtype=np.float32)
+                candidates = search_index(h, search_vector, k_search, index_adapter_factory)
                 for c in candidates:
                     c["score"] = normalize_score(c["distance"], c["metric"])
                     

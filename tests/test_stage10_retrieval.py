@@ -13,6 +13,8 @@ from scripts.stage10_retrieval import (
     RetrievalInternalError,
     retrieve,
     apply_metadata_filters,
+    normalize_query_vector,
+    EmbeddingModelMismatchError,
     RETRIEVAL_PIPELINE_VERSION,
     DEFAULT_TOP_K
 )
@@ -234,4 +236,129 @@ def test_retrieve_applies_category_filter_end_to_end(mock_search, mock_resolve, 
     filtered = retrieve({"query": "q", "index_fingerprints": ["idx"], "filters": {"category": "health"}},
                         manifest, lambda *a: provider, lambda *a: None)
     assert [r["chunk_id"] for r in filtered["results"]] == ["b1"]
+
+
+# ---------------------------------------------------------------------------
+# Query vector normalisation
+# ---------------------------------------------------------------------------
+
+def test_normalize_query_vector_returns_unit_float32_and_keeps_direction():
+    out = normalize_query_vector([3, 4])
+    assert out.dtype == np.float32
+    assert out.shape == (2,)
+    assert float(np.linalg.norm(out)) == pytest.approx(1.0, abs=1e-6)
+    assert out.tolist() == pytest.approx([0.6, 0.8], abs=1e-6)
+
+
+def test_normalize_query_vector_leaves_unit_vectors_unchanged():
+    unit = np.array([0.0, 1.0, 0.0], dtype=np.float32)
+    assert normalize_query_vector(unit).tolist() == [0.0, 1.0, 0.0]
+
+
+@pytest.mark.parametrize("bad", [[0.0, 0.0, 0.0], [], [float("nan"), 1.0], [float("inf"), 1.0], [[1.0, 2.0], [3.0, 4.0]]])
+def test_normalize_query_vector_rejects_unusable_vectors(bad):
+    with pytest.raises(ValueError):
+        normalize_query_vector(bad)
+
+
+def _manifest_and_chunks(tmp_path):
+    path = tmp_path / "dA.json"
+    path.write_text(json.dumps({"chunks": [{"chunk_id": "a1", "text": "t", "category": "c", "doc_type": "d"}]}), encoding="utf-8")
+    return {"dA": ManifestRecord(doc_id="dA", category="c", status=DocumentStatus.READY_FOR_CHUNKING,
+                                 artifact_paths={"vector_index": "x", "chunks": str(path)})}
+
+
+_HIT = [{"index_fingerprint": "idx", "distance": 0.9, "metric": "cosine", "embedding_id": "e1", "chunk_id": "a1", "doc_id": "dA"}]
+
+
+@patch('scripts.stage10_retrieval.resolve_index_fingerprints')
+@patch('scripts.stage10_retrieval.search_index')
+def test_retrieve_normalises_the_query_for_an_l2_index(mock_search, mock_resolve, tmp_path):
+    mock_resolve.return_value = [IndexHandle("idx", {"provider": "p", "embedding_dimension": 2, "normalization": "l2"}, Path("p"))]
+    mock_search.return_value = _HIT
+    provider = MagicMock()
+    provider.embed_batch.return_value = [[3.0, 4.0]]  # NOT unit length
+
+    retrieve({"query": "q", "index_fingerprints": ["idx"]}, _manifest_and_chunks(tmp_path), lambda *a: provider, lambda *a: None)
+
+    searched_with = mock_search.call_args.args[1]
+    assert float(np.linalg.norm(searched_with)) == pytest.approx(1.0, abs=1e-6)
+    assert searched_with.tolist() == pytest.approx([0.6, 0.8], abs=1e-6)
+
+
+@patch('scripts.stage10_retrieval.resolve_index_fingerprints')
+@patch('scripts.stage10_retrieval.search_index')
+def test_retrieve_does_not_rescale_the_query_for_a_non_normalised_index(mock_search, mock_resolve, tmp_path):
+    mock_resolve.return_value = [IndexHandle("idx", {"provider": "p", "embedding_dimension": 2, "normalization": "none"}, Path("p"))]
+    mock_search.return_value = _HIT
+    provider = MagicMock()
+    provider.embed_batch.return_value = [[3.0, 4.0]]
+
+    retrieve({"query": "q", "index_fingerprints": ["idx"]}, _manifest_and_chunks(tmp_path), lambda *a: provider, lambda *a: None)
+
+    assert mock_search.call_args.args[1].tolist() == [3.0, 4.0]
+
+
+@patch('scripts.stage10_retrieval.resolve_index_fingerprints')
+@patch('scripts.stage10_retrieval.search_index')
+def test_retrieve_zero_query_vector_is_an_embedding_failure_not_a_nan_search(mock_search, mock_resolve):
+    mock_resolve.return_value = [IndexHandle("idx", {"provider": "p", "embedding_dimension": 2, "normalization": "l2"}, Path("p"))]
+    provider = MagicMock()
+    provider.embed_batch.return_value = [[0.0, 0.0]]
+
+    res = retrieve({"query": "q", "index_fingerprints": ["idx"]}, {}, lambda *a: provider, lambda *a: None)
+
+    assert res["status"] == "FAIL"
+    assert any(f["code"] == "QUERY_EMBEDDING_FAILED" for f in res["findings"])
+    mock_search.assert_not_called()
+
+
+# ---------------------------------------------------------------------------
+# Refuse to search an index built with a different embedding model
+# ---------------------------------------------------------------------------
+
+def _mismatch_factory(provider, model, version):
+    raise EmbeddingModelMismatchError(f"index built with {provider}/{model}/{version}")
+
+
+@patch('scripts.stage10_retrieval.resolve_index_fingerprints')
+@patch('scripts.stage10_retrieval.search_index')
+def test_retrieve_refuses_an_index_from_a_different_embedding_model(mock_search, mock_resolve):
+    mock_resolve.return_value = [IndexHandle("idx", {"provider": "gemini", "model_name": "m", "model_version": "1",
+                                                     "embedding_dimension": 2, "normalization": "l2"}, Path("p"))]
+    res = retrieve({"query": "q", "index_fingerprints": ["idx"]}, {}, _mismatch_factory, lambda *a: None)
+
+    assert res["status"] == "FAIL"
+    assert res["results"] == []
+    assert res["searched_index_fingerprints"] == []
+    finding = next(f for f in res["findings"] if f["code"] == "INDEX_EMBEDDING_MODEL_MISMATCH")
+    assert finding["severity"] == "FAIL"
+    assert finding["index_fingerprint"] == "idx"
+    mock_search.assert_not_called()  # the index file is never even opened
+
+
+@patch('scripts.stage10_retrieval.resolve_index_fingerprints')
+@patch('scripts.stage10_retrieval.search_index')
+def test_retrieve_searches_the_matching_index_and_flags_the_mismatched_one(mock_search, mock_resolve, tmp_path):
+    good = IndexHandle("idx", {"provider": "hf", "model_name": "bge", "model_version": "v1.5",
+                               "embedding_dimension": 2, "normalization": "l2"}, Path("p"))
+    stale = IndexHandle("old", {"provider": "gemini", "model_name": "emb", "model_version": "1",
+                                "embedding_dimension": 2, "normalization": "l2"}, Path("q"))
+    mock_resolve.return_value = [good, stale]
+    mock_search.return_value = _HIT
+    provider = MagicMock()
+    provider.embed_batch.return_value = [[1.0, 0.0]]
+
+    def factory(prov, mod, ver):
+        if (prov, mod, ver) != ("hf", "bge", "v1.5"):
+            raise EmbeddingModelMismatchError("different model")
+        return provider
+
+    res = retrieve({"query": "q", "index_fingerprints": ["idx", "old"]}, _manifest_and_chunks(tmp_path), factory, lambda *a: None)
+
+    assert res["status"] == "PARTIAL"
+    assert res["searched_index_fingerprints"] == ["idx"]
+    assert [f["index_fingerprint"] for f in res["findings"] if f["code"] == "INDEX_EMBEDDING_MODEL_MISMATCH"] == ["old"]
+    assert [r["chunk_id"] for r in res["results"]] == ["a1"]
+    assert mock_search.call_count == 1
 

@@ -6,7 +6,7 @@ from unittest.mock import patch, Mock
 src_path = Path(__file__).parent.parent
 sys.path.append(str(src_path))
 
-from scripts.composition_root import compose_application
+from scripts.composition_root import compose_application, _discover_index_fingerprints
 from scripts.phase1_1_configuration_layer import (
     ConfigurationInputError,
     ConfigurationWiringError,
@@ -146,3 +146,45 @@ class TestCompositionRoot(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestDiscoverIndexFingerprints(unittest.TestCase):
+    """Only indexes built by the SAME embedding provider, model AND version may be searched by default."""
+
+    class _Adapter:
+        provider_name = "huggingface"
+        model_name = "BAAI/bge-small-en-v1.5"
+        model_version = "v1.5"
+
+    def setUp(self):
+        import os
+        import tempfile
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self._cwd = os.getcwd()
+        os.chdir(self._tmp.name)
+        self.addCleanup(os.chdir, self._cwd)
+        self.root = Path("data/proposals/vector_index")
+
+    def _write_index(self, fp, **meta):
+        d = self.root / fp
+        d.mkdir(parents=True)
+        (d / "index_metadata.json").write_text(__import__("json").dumps({"index_fingerprint": fp, **meta}), encoding="utf-8")
+
+    def test_only_the_exactly_matching_index_is_returned(self):
+        self._write_index("good", provider="huggingface", model_name="BAAI/bge-small-en-v1.5", model_version="v1.5")
+        self._write_index("other_provider", provider="gemini", model_name="BAAI/bge-small-en-v1.5", model_version="v1.5")
+        self._write_index("other_model", provider="huggingface", model_name="BAAI/bge-base-en-v1.5", model_version="v1.5")
+        self._write_index("other_version", provider="huggingface", model_name="BAAI/bge-small-en-v1.5", model_version="v2.0")
+        self._write_index("stub", provider="stub_provider", model_name="stub-model", model_version="v1.0")
+        self.assertEqual(_discover_index_fingerprints(self._Adapter()), ["good"])
+
+    def test_missing_directory_no_adapter_and_corrupt_metadata_yield_nothing_or_are_skipped(self):
+        self.assertEqual(_discover_index_fingerprints(self._Adapter()), [])      # no vector_index dir yet
+        self._write_index("good", provider="huggingface", model_name="BAAI/bge-small-en-v1.5", model_version="v1.5")
+        bad = self.root / "corrupt"
+        bad.mkdir()
+        (bad / "index_metadata.json").write_text("{not json", encoding="utf-8")
+        self.assertEqual(_discover_index_fingerprints(self._Adapter()), ["good"])
+        self.assertEqual(_discover_index_fingerprints(None), [])
+
