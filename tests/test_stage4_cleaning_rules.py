@@ -43,3 +43,77 @@ def test_build_clean_text_applies_both_rules_and_keeps_offsets_consistent():
     assert clean["full_text_char_count"] == len(joined)
     for p in clean["pages"]:
         assert p["char_end"] - p["char_start"] == len(p["text"])
+
+
+# ---- table of contents -------------------------------------------------------------------
+
+DOTS = "." * 60
+
+
+def test_toc_block_is_removed_including_split_outline_markers_and_heading():
+    text = "\n".join([
+        "###### **TABLE OF CONTENTS**", "",
+        f"|**GENERAL PROJECT INFORMATION {DOTS}3**|", "|---|",
+        f"|Project Summary{DOTS}4|",
+        "|B.", f"PROJECT DESCRIPTION{DOTS}12",
+        "", "Real paragraph that must stay.",
+    ])
+    out = s4.remove_table_of_contents(text)
+    assert "TABLE OF CONTENTS" not in out and "PROJECT DESCRIPTION" not in out and "|B." not in out
+    assert "Project Summary" not in out
+    assert "Real paragraph that must stay." in out
+
+
+def test_a_single_dotted_line_in_prose_is_not_a_toc():
+    text = f"A sentence trailing off{DOTS} and then more words.\n\nNext paragraph."
+    assert s4.remove_table_of_contents(text) == text
+
+
+def test_toc_threshold_is_exactly_three_leader_lines():
+    two = f"a{DOTS}1\nb{DOTS}2\nkeep"
+    three = f"a{DOTS}1\nb{DOTS}2\nc{DOTS}3\nkeep"
+    assert s4.remove_table_of_contents(two) == two
+    assert s4.remove_table_of_contents(three) == "keep"
+
+
+# ---- GEF template instructions -------------------------------------------------------------
+
+def test_instruction_paragraphs_are_removed_and_real_content_kept():
+    text = "\n".join([
+        "###### Project Summary", "",
+        "Provide a brief summary description of the project, including: (i) the problem (max. 250 words, approximately 1/2 page)", "",
+        "This project will protect elephants in Boumba Bek National Park.", "",
+        "###### **<mark>Provide a brief summary and list of names and dates of consultations</mark>**",
+        "Please provide justification", "Yes",
+    ])
+    out = s4.remove_template_instructions(text)
+    assert "Provide a brief summary description" not in out
+    assert "Please provide justification" not in out
+    assert "Provide a brief summary and list" not in out         # also when wrapped in heading markup
+    assert "###### Project Summary" in out                        # the heading stays
+    assert "This project will protect elephants" in out
+    assert "Yes" in out
+
+
+def test_a_max_words_hint_marks_unlisted_instructions_too():
+    text = "Explain the theory of change of the project and the assumptions behind it (max. 500 words)\nIn practice the project works through three components."
+    out = s4.remove_template_instructions(text)
+    assert "Explain the theory of change" not in out
+    assert "three components" in out
+
+
+def test_heading_is_kept_when_instruction_text_follows_it_on_the_same_line():
+    line = "C. ALIGNMENT WITH GEF-8 PROGRAMMING STRATEGIES AND COUNTRY/REGIONAL PRIORITIES Describe how the proposed interventions are aligned with GEF-8 strategies"
+    out = s4.remove_template_instructions(line)
+    assert out == "C. ALIGNMENT WITH GEF-8 PROGRAMMING STRATEGIES AND COUNTRY/REGIONAL PRIORITIES"
+
+
+def test_ordinary_sentences_that_use_the_same_verbs_are_not_removed():
+    text = ("The project will provide a brief summary of results each year.\n"
+            "Partners describe how the project is aligned with national plans in the annex.")
+    assert s4.remove_template_instructions(text) == text           # only lines that START with an opener go
+
+
+def test_short_line_with_a_max_words_hint_is_left_alone():
+    text = "Summary (max. 250 words)"          # 24 chars: too short to be a template paragraph
+    assert s4.remove_template_instructions(text) == text

@@ -111,6 +111,83 @@ def strip_html_markup(text: str) -> str:
     return text
 
 
+_TOC_LEADER_RE = re.compile(r"\.{5,}")
+_TOC_HEADING_RE = re.compile(r"^[#*|\s]*(?:table of contents|contents)[#*|\s]*$", re.IGNORECASE)
+_OUTLINE_MARKER_RE = re.compile(r"^\s*\|?\s*[A-Z]\.\s*\|?\s*$")
+MIN_TOC_LEADER_LINES = 3
+
+
+def remove_table_of_contents(text: str) -> str:
+    """Removes a table-of-contents block: every line with a dot leader (5+ dots), the
+    one-letter outline marker ("B.") the converter leaves on the line before a split
+    entry, and a "Table of Contents" heading. Needs at least MIN_TOC_LEADER_LINES leader
+    lines on the page, so one stray dotted line in real prose is never touched.
+    Limit: a table of contents without dot leaders is not detected."""
+    lines = text.split("\n")
+    leader = [bool(_TOC_LEADER_RE.search(ln)) for ln in lines]
+    if sum(leader) < MIN_TOC_LEADER_LINES:
+        return text
+    drop = set()
+    for i, is_leader in enumerate(leader):
+        if is_leader:
+            drop.add(i)
+            if i > 0 and _OUTLINE_MARKER_RE.match(lines[i - 1]):
+                drop.add(i - 1)
+        elif _TOC_HEADING_RE.match(lines[i]):
+            drop.add(i)
+    return "\n".join(ln for i, ln in enumerate(lines) if i not in drop)
+
+
+# Instruction text the GEF project-identification-form template prints under each heading.
+# The openers were read from the corpus (5 GEF-8 PIF documents); the list is explicit on
+# purpose, so each removal is reviewable. A "(max. N words" hint marks any other instruction.
+GEF_TEMPLATE_OPENERS = (
+    "provide a brief summary",
+    "briefly describe the current situation",
+    "if so, please describe",
+    "for projects aiming to generate biodiversity benefits",
+    "(please upload to the portal",
+    "describe how the proposed interventions are aligned",
+    'describe how any "investment mobilized"',
+    "please provide geo-referenced",
+    "please provide justification",
+    "please refer to separate file",
+    "gef-8 project identification form",
+)
+_MAX_WORDS_HINT_RE = re.compile(r"\(max\.?\s*\d+\s*words", re.IGNORECASE)
+_LEADING_MARKUP_RE = re.compile(r"^[#*|\s]+")
+_ALL_CAPS_HEADING_RE = re.compile(r"^[A-Z][A-Z0-9 ,/&().:'\-]{7,}$")
+
+
+def _instruction_start(line: str) -> int:
+    """Index in `line` where template instruction text starts, or -1 if there is none.
+    Returns 0 for a line that is entirely instruction. A line that is an ALL-CAPS heading
+    followed by instruction text keeps its heading (the returned index is the cut point)."""
+    core = _LEADING_MARKUP_RE.sub("", line.replace("<mark>", "").replace("</mark>", ""))
+    lowered = core.lower()
+    if any(lowered.startswith(o) for o in GEF_TEMPLATE_OPENERS):
+        return 0
+    if _MAX_WORDS_HINT_RE.search(line) and len(line) > 60:
+        return 0
+    low_line = line.lower()
+    for opener in GEF_TEMPLATE_OPENERS:
+        at = low_line.find(" " + opener)
+        if at > 0 and _ALL_CAPS_HEADING_RE.match(line[:at].strip().lstrip("#*| ")):
+            return at + 1
+    return -1
+
+
+def remove_template_instructions(text: str) -> str:
+    """Drops the form's instruction lines, keeping any heading that precedes them on the line."""
+    kept = []
+    for ln in text.split("\n"):
+        cut = _instruction_start(ln)
+        if cut == 0:
+            continue
+        kept.append(ln[:cut].rstrip() if cut > 0 else ln)
+    return "\n".join(kept)
+
+
 def remove_headers_footers(page_texts: List[str], excluded_flags: List[bool]) -> List[str]:
     """Strips lines that repeat as the first or last non-empty line across enough pages."""
     def _first_last_lines(text: str):
@@ -202,6 +279,8 @@ def build_clean_text(raw_extraction: Dict) -> Dict:
         text = repair_encoding(text)
         text = remove_page_markers(text)
         text = strip_html_markup(text)
+        text = remove_table_of_contents(text)
+        text = remove_template_instructions(text)
         text = normalize_whitespace(text)
         stage_one_texts.append(text)
         excluded_flags.append(bool(page.get("excluded", False)))
