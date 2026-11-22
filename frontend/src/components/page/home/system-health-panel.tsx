@@ -13,12 +13,14 @@ interface HealthRow {
   detail: string
 }
 
+// Static snapshot, not a live health check. Verified 2026-11-23 against data/proposals/manifest.json and
+// the vector index metadata: 13 PDFs registered, 6 indexed, 7 quarantined (scanned), fingerprint 50987825.
 const rows: HealthRow[] = [
   { name: "Retrieval", status: "OPERATIONAL", detail: "faiss index loaded · 6 docs" },
-  { name: "Embedding", status: "OPERATIONAL", detail: "Gemini embedding adapter wired" },
+  { name: "Embedding", status: "OPERATIONAL", detail: "local bge-small-en-v1.5 (index built with it)" },
   { name: "LLM", status: "OPERATIONAL", detail: "Gemini LLM adapter wired" },
   { name: "Planner", status: "OPERATIONAL", detail: "PlannerLLMAdapter wired" },
-  { name: "Vector Index", status: "OPERATIONAL", detail: "477879bb… · 6 documents" },
+  { name: "Vector Index", status: "OPERATIONAL", detail: "50987825… · 6 documents · 497 chunks" },
   { name: "Observability", status: "OPERATIONAL", detail: "Phase 2.3 · observe_request()" },
   { name: "Pipeline", status: "OPERATIONAL", detail: "795 tests passing (local run)" },
   { name: "Gold Set Eval", status: "PENDING", detail: "evaluation.md not yet authored" },
