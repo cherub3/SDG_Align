@@ -117,3 +117,53 @@ def test_ordinary_sentences_that_use_the_same_verbs_are_not_removed():
 def test_short_line_with_a_max_words_hint_is_left_alone():
     text = "Summary (max. 250 words)"          # 24 chars: too short to be a template paragraph
     assert s4.remove_template_instructions(text) == text
+
+
+# ---- tables -------------------------------------------------------------------------------
+
+def test_table_with_header_becomes_header_value_rows_in_place():
+    text = "Before the table.\n\n|Component|Budget ($)|Outcome|\n|---|---|---|\n|Component 1|500,000|Policy adopted|\n|Component 2|750,000|Miners trained|\n\nAfter the table."
+    out = s4.convert_markdown_tables(text)
+    assert out == ("Before the table.\n\n"
+                   "Component: Component 1; Budget ($): 500,000; Outcome: Policy adopted\n"
+                   "Component: Component 2; Budget ($): 750,000; Outcome: Miners trained\n\n"
+                   "After the table.")
+    assert "|" not in out and "---" not in out
+
+
+def test_empty_cells_are_skipped_and_bold_markers_dropped():
+    out = s4.convert_markdown_tables("|**Risk**|Rating|Mitigation|\n|---|---|---|\n|Flooding||Early warning system|")
+    assert out == "Risk: Flooding; Mitigation: Early warning system"
+
+
+def test_extra_cells_without_a_header_keep_their_value():
+    out = s4.convert_markdown_tables("|A|B|\n|---|---|\n|1|2|3|")
+    assert out == "A: 1; B: 2; 3"
+
+
+def test_header_only_table_keeps_its_text():
+    assert s4.convert_markdown_tables("|Region|Project ID|\n|---|---|") == "Region; Project ID"
+
+
+def test_one_column_table_keeps_every_row_including_the_first():
+    out = s4.convert_markdown_tables("|Heading line|\n|---|\n|second row|\n|third row|")
+    assert out.split("\n") == ["Heading line", "second row", "third row"]
+
+
+def test_orphan_separator_row_is_dropped():
+    out = s4.convert_markdown_tables("intro\n|---|\nafter")
+    assert out == "intro\nafter"
+
+
+def test_table_without_separator_is_joined_per_row():
+    assert s4.convert_markdown_tables("|a|b|\n|c|d|") == "a; b\nc; d"
+
+
+def test_prose_and_blank_lines_are_untouched():
+    text = "No tables here.\n\nA value | with a pipe in the middle."
+    assert s4.convert_markdown_tables(text) == text
+
+
+def test_two_tables_stay_separate():
+    text = "|A|B|\n|---|---|\n|1|2|\n\n|C|D|\n|---|---|\n|3|4|"
+    assert s4.convert_markdown_tables(text) == "A: 1; B: 2\n\nC: 3; D: 4"

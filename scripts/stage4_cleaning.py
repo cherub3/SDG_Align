@@ -188,6 +188,72 @@ def remove_template_instructions(text: str) -> str:
     return "\n".join(kept)
 
 
+_TABLE_SEPARATOR_RE = re.compile(r"^\s*\|?(?:\s*:?-{3,}:?\s*\|)+\s*$")
+
+
+def _table_cells(line: str) -> List[str]:
+    inner = line.strip()
+    if inner.startswith("|"):
+        inner = inner[1:]
+    if inner.endswith("|"):
+        inner = inner[:-1]
+    return [c.replace("**", "").strip() for c in inner.split("|")]
+
+
+def _convert_table_block(block: List[str]) -> List[str]:
+    """One Markdown table (consecutive lines that start with a pipe) -> one text line per row.
+    A table with a header row becomes "Header: value; Header: value"; empty cells are skipped.
+    Without a header (or with a single column) each row is its cell texts joined by "; "."""
+    header = None
+    data = block
+    if len(block) >= 2 and _TABLE_SEPARATOR_RE.match(block[1]):
+        header = _table_cells(block[0])
+        data = block[2:]
+    rows = [ln for ln in data if not _TABLE_SEPARATOR_RE.match(ln)]
+    out: List[str] = []
+    if header is not None and len(header) >= 2 and rows:
+        for ln in rows:
+            cells = _table_cells(ln)
+            parts = []
+            for i, value in enumerate(cells):
+                if not value:
+                    continue
+                label = header[i] if i < len(header) else ""
+                parts.append(f"{label}: {value}" if label else value)
+            if parts:
+                out.append("; ".join(parts))
+        return out
+    if header is not None:            # header row only, or a one-column table: its first row is content
+        rows = [block[0]] + rows
+    for ln in rows:
+        parts = [c for c in _table_cells(ln) if c]
+        if parts:
+            out.append("; ".join(parts))
+    return out
+
+
+def convert_markdown_tables(text: str) -> str:
+    """Rewrites Markdown tables as readable "Header: value" rows kept in place, so a chunk
+    holds a table's cell values next to their column names instead of pipe-and-dash markup.
+    Separator rows that belong to no header (e.g. left over after a table of contents was
+    removed) are dropped."""
+    lines = text.split("\n")
+    out: List[str] = []
+    i = 0
+    while i < len(lines):
+        if lines[i].lstrip().startswith("|"):
+            j = i
+            while j < len(lines) and lines[j].lstrip().startswith("|"):
+                j += 1
+            converted = _convert_table_block(lines[i:j])
+            out.extend(converted)
+            i = j
+        else:
+            out.append(lines[i])
+            i += 1
+    return "\n".join(out)
+
+
 def remove_headers_footers(page_texts: List[str], excluded_flags: List[bool]) -> List[str]:
     """Strips lines that repeat as the first or last non-empty line across enough pages."""
     def _first_last_lines(text: str):
@@ -281,6 +347,7 @@ def build_clean_text(raw_extraction: Dict) -> Dict:
         text = strip_html_markup(text)
         text = remove_table_of_contents(text)
         text = remove_template_instructions(text)
+        text = convert_markdown_tables(text)
         text = normalize_whitespace(text)
         stage_one_texts.append(text)
         excluded_flags.append(bool(page.get("excluded", False)))

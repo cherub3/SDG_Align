@@ -205,9 +205,11 @@ class TestStage4Integration(unittest.TestCase):
         self.assertIn("2. Second", text)
 
     def test_table_text_preserved(self):
+        # Phase 1: Markdown tables are rewritten as readable row text; the cell values must survive
         data = self._run_and_load()
         text = data["pages"][0]["text"]
-        self.assertIn("| A | B |", text)
+        self.assertIn("A; B", text)
+        self.assertNotIn("| A | B |", text)
 
     def test_char_offsets_are_consistent(self):
         data = self._run_and_load()
