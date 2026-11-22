@@ -26,8 +26,9 @@ def main() -> None:
     ap.add_argument("--ids", default="ALL", help="ALL, or a JSON file with a list of ids")
     ap.add_argument("--order-seed", type=int, default=None, help="shuffle the order of passages inside each question")
     ap.add_argument("--question-order-seed", type=int, default=None)
+    ap.add_argument("--packet", default="packet.jsonl", help="packet file name inside reports/evidence/judging/")
     a = ap.parse_args()
-    packet = [json.loads(l) for l in open(os.path.join(J, "packet.jsonl"), encoding="utf-8")]
+    packet = [json.loads(l) for l in open(os.path.join(J, a.packet), encoding="utf-8")]
     if a.ids != "ALL":
         want = set(json.load(open(a.ids, encoding="utf-8")))
         packet = [p for p in packet if p["id"] in want]
