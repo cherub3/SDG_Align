@@ -1,0 +1,5 @@
+old 394 new 385 dropped 9
+dropped texts all heading-only (every line starts with #): True
+any dropped chunk with body text: []
+surviving chunks with changed text: 0
+dropped samples: ['#### ANNEX A: FINANCING TABLES', '##### ANNEX A: FINANCING TABLES', '##### ANNEX B: ENDORSEMENTS', '##### ANNEX C: PROJECT LOCATION', '###### ANNEX B: ENDORSEMENTS']

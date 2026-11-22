@@ -489,6 +489,28 @@ def drop_duplicate_spans(spans: List[Dict], full_text: str) -> Tuple[List[Dict],
 # STEP 5 — structural chunk identity
 # ===========================================================================
 
+def _is_markdown_heading_only(text: str) -> bool:
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+    return bool(lines) and all(ln.startswith("#") for ln in lines)
+
+
+def drop_heading_only_spans(spans: List[Dict], full_text: str) -> Tuple[List[Dict], List[Tuple[int, int]]]:
+    """Drops a span below MIN_CHUNK_CHARS whose every non-empty line is a Markdown heading (for
+    example '#### ANNEX A: FINANCING TABLES' with nothing after it). Such a span holds no body
+    text, so it can never answer a question. It survives the merge pass only when merging it
+    forward would cross an appendix boundary or the size limit. A span with any body line is kept.
+    Returns (kept spans, dropped (start, end) ranges) for coverage validation."""
+    kept: List[Dict] = []
+    dropped: List[Tuple[int, int]] = []
+    for s in spans:
+        text = full_text[s["char_start"]:s["char_end"]]
+        if _span_len(s) < MIN_CHUNK_CHARS and _is_markdown_heading_only(text):
+            dropped.append((s["char_start"], s["char_end"]))
+        else:
+            kept.append(s)
+    return kept, dropped
+
+
 def assign_chunk_ids(spans: List[Dict], doc_id: str) -> List[Dict]:
     """Assigns structural chunk_id, chunk_index_within_section, and section_chunk_count
     over the final (post split+merge) span set."""
@@ -767,6 +789,8 @@ def chunk_document(record: ManifestRecord, clean_text: Dict, metadata: Dict) -> 
         _recompute_page_range(s, pages_sorted)
     spans = merge_undersized_spans(spans, full_text)
     spans, dropped_ranges = drop_duplicate_spans(spans, full_text)
+    spans, heading_only = drop_heading_only_spans(spans, full_text)
+    dropped_ranges = sorted(dropped_ranges + heading_only)
     for s in spans:
         _recompute_page_range(s, pages_sorted)
     spans = assign_chunk_ids(spans, record.doc_id)

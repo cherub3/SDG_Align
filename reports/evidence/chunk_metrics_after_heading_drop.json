@@ -1,0 +1,18 @@
+{
+  "chunk_count": 385,
+  "fragments": 10,
+  "fragment_share": 0.026,
+  "duplicate_chunks": 2,
+  "duplicated_groups": 2,
+  "mid_sentence_ending": 116,
+  "mid_sentence_ending_rate": 0.3013,
+  "table_markup_chunks": 0,
+  "html_residue_chunks": 0,
+  "footer_residue_chunks": 0,
+  "replacement_char_chunks": 0,
+  "boilerplate_chunks": 0,
+  "boilerplate_share": 0.0,
+  "size_min": 5,
+  "size_median": 1197,
+  "size_max": 2997
+}

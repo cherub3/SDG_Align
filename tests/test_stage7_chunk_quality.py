@@ -178,6 +178,30 @@ def test_validation_accepts_two_consecutive_dropped_ranges_and_a_dropped_tail():
     assert not any(f["code"] == "CHUNK_COVERAGE_EXACT" for f in findings)
 
 
+# ---- heading-only spans ----------------------------------------------------------------------
+
+def test_heading_only_span_is_dropped_and_range_reported():
+    full, b = text_for(BODY, "#### ANNEX A: FINANCING TABLES\n\n")
+    spans = [span(*b[0], "1"), span(*b[1], "A", appendix=True)]
+    kept, dropped = s7.drop_heading_only_spans(spans, full)
+    assert [s["anchor_section_id"] for s in kept] == ["1"]
+    assert dropped == [b[1]]
+
+
+def test_span_with_any_body_text_is_never_dropped():
+    full, b = text_for("#### ANNEX A\n\nYes\n\n", "# Title\n", "## Sub\n\nShort body.", BODY, "Plain line without hash")
+    spans = [span(*b[i], str(i)) for i in range(5)]
+    kept, dropped = s7.drop_heading_only_spans(spans, full)
+    assert [s["anchor_section_id"] for s in kept] == ["0", "2", "3", "4"]   # only '# Title' goes
+    assert dropped == [b[1]]
+
+
+def test_a_long_heading_only_span_is_kept():
+    full, b = text_for("# " + "x" * 400 + "\n")
+    kept, dropped = s7.drop_heading_only_spans([span(*b[0], "1")], full)
+    assert len(kept) == 1 and dropped == []
+
+
 # ---- end to end: a repeated section is dropped and the document still validates ------------------
 
 def test_chunk_document_drops_a_repeated_section_and_still_passes_validation(tmp_path, monkeypatch):
@@ -209,3 +233,30 @@ def test_chunk_document_drops_a_repeated_section_and_still_passes_validation(tmp
     assert len(report["dropped_duplicate_ranges"]) == 1
     assert report["overall_status"] in ("PASS", "WARNING")
     assert len(chunks) == 2
+
+
+def test_chunk_document_drops_a_trailing_heading_only_section_and_still_passes_validation(tmp_path, monkeypatch):
+    import json
+    from src.ingestion_types import ManifestRecord, DocumentStatus
+    monkeypatch.setattr(s7, "CHUNKS_DIR", tmp_path / "chunks")
+    page1 = "# Approach\n\n" + "The project approach is described in detail here. " * 14 + "\n\n"
+    page2 = "# ANNEX A: FINANCING TABLES\n\n"                       # a heading with nothing after it
+    pages, cursor = [], 0
+    for i, txt in enumerate([page1, page2], start=1):
+        pages.append({"page_number": i, "text": txt, "char_start": cursor, "char_end": cursor + len(txt),
+                      "is_excluded": False, "headings": []})
+        cursor += len(txt)
+    section_tree = [
+        {"section_id": "1", "section_level": 1, "parent_section": None, "title": "Approach", "start_page": 1},
+        {"section_id": "2", "section_level": 1, "parent_section": None, "title": "ANNEX A: FINANCING TABLES",
+         "start_page": 2},
+    ]
+    clean = {"doc_id": "doc_ho", "full_text_char_count": cursor, "section_tree": section_tree, "pages": pages}
+    record = ManifestRecord(doc_id="doc_ho", category="climate", status=DocumentStatus.READY_FOR_CHUNKING,
+                            artifact_paths={})
+    s7.chunk_document(record, clean, {"classification": {"category": "climate", "doc_type": None}, "title": "T"})
+    assert record.status == DocumentStatus.READY_FOR_CHUNKING, record.error_code
+    chunks = json.loads((tmp_path / "chunks" / "doc_ho" / "chunks.json").read_text(encoding="utf-8"))["chunks"]
+    report = json.loads((tmp_path / "chunks" / "doc_ho" / "chunk_validation_report.json").read_text(encoding="utf-8"))
+    assert len(chunks) == 1 and "ANNEX A" not in chunks[0]["text"]
+    assert len(report["dropped_duplicate_ranges"]) == 1 and report["overall_status"] in ("PASS", "WARNING")
