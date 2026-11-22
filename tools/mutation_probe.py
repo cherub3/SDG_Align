@@ -75,7 +75,7 @@ MUTATIONS = [
 def run_one(mid, desc, rel, old, new):
     work = pathlib.Path(tempfile.mkdtemp(prefix=f"mut_{mid}_"))
     try:
-        for d in ("scripts", "src", "tests", "config"):
+        for d in ("scripts", "src", "tests", "config", "tools"):
             shutil.copytree(ROOT / d, work / d, ignore=shutil.ignore_patterns("__pycache__"))
         shutil.copy(ROOT / "pyproject.toml", work / "pyproject.toml")
         target = work / rel
@@ -86,9 +86,14 @@ def run_one(mid, desc, rel, old, new):
         proc = subprocess.run([sys.executable, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider"],
                               cwd=work, capture_output=True, text=True)
         out = proc.stdout.strip().splitlines()
-        return {"id": mid, "description": desc, "file": rel,
-                "result": "KILLED" if proc.returncode != 0 else "SURVIVED",
-                "pytest": out[-1] if out else proc.stderr[-200:]}
+        last = out[-1] if out else proc.stderr[-200:]
+        if proc.returncode == 0:
+            result = "SURVIVED"
+        elif " failed" in last:
+            result = "KILLED"                       # a test assertion failed: the suite noticed the change
+        else:
+            result = "SETUP_ERROR"                  # collection/import error: says nothing about the tests
+        return {"id": mid, "description": desc, "file": rel, "result": result, "pytest": last}
     finally:
         shutil.rmtree(work, ignore_errors=True)
 
