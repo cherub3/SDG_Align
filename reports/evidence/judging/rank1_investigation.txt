@@ -1,0 +1,19 @@
+questions whose rank-1 correctness changed: [3]
+
+Q3: Which indigenous peoples and local communities are involved in the Cameroon project?
+BEFORE
+  rank 1 score 0.7255 cameroon_biodiversity_iplc_conservation len 1264 'The project is fully aligned with the main sectoral directives and policies of Cameroon, and contributes to na'
+  rank 2 score 0.7216 cameroon_biodiversity_iplc_conservation len 47 'Indigenous Peoples and Local Communities: Yes'
+  rank 3 score 0.7175 mozambique_planetgold len 828 'Furthermore, ASGM areas in Manica, Niassa, Cabo Delgado, Sofala and Tete—overlap with territories inhabited by'
+  rank 4 score 0.7173 ecuador_marine_biodiversity len 1246 '60. Consultations informed identification of priority intervention areas, barriers to integrated marine–coasta'
+  rank 5 score 0.7167 cameroon_biodiversity_iplc_conservation len 993 '###### **Alignment and Investment Context**\n\nThe project aligns with Cameroon’s national priorities for biodiv'
+AFTER
+  rank 1 score 0.7189 mozambique_planetgold len 810 'Furthermore, ASGM areas in Manica, Niassa, Cabo Delgado, Sofala and Tete—overlap with territories inhabited by'
+  rank 2 score 0.7182 ecuador_jaguar_landscape_connectivity len 1358 'Roles and interests in theproject: application of safeguards, gender equality and inclusiveparticipation.\nPart'
+  rank 3 score 0.7141 ecuador_marine_biodiversity len 186 '#### Yes\n\n##### **Were the following stakeholders consulted during project identification phase:**\n\n#### Indig'
+  rank 4 score 0.7136 cameroon_biodiversity_iplc_conservation len 963 '###### **Alignment and Investment Context**\n\nThe project aligns with Cameroon’s national priorities for biodiv'
+  rank 5 score 0.7134 cameroon_biodiversity_iplc_conservation len 149 '##### Yes\n\n###### **Were the following stakeholders consulted during project identification phase:**\n\nIndigeno'
+
+The passage that was rank 1 before starts 'The project is fully aligned with the main sectoral directiv'
+  in the new index it is part of a chunk of 1461 chars, rank 12, score 0.6880; chunk starts 'C. ALIGNMENT WITH GEF-8 PROGRAMMING STRATEGIES AND COUNTRY/REGIONAL PRIORITIES\n\nConfirm if any country policies that might contradict with intended ou'
+  new top-5 scores: [0.7189, 0.7182, 0.7141, 0.7136, 0.7134]; spread top1-top5 = 0.0056
