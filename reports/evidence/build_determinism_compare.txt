@@ -1,0 +1,8 @@
+Two full local builds (reset -> stages 4..9), same machine, same venv
+chunk_text_sha256: identical for 6/6 documents
+vectors_sha256: identical for 6/6 documents
+chunks_json_file_sha256: identical for 0/6 documents
+embeddings_parquet_file_sha256: identical for 0/6 documents
+index fingerprint directories identical: True
+index_bin_sha256 identical
+id_map_parquet_file_sha256 DIFFERS

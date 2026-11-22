@@ -1,0 +1,5 @@
+2026-11-23 02:57:34,479 - sentence_transformers.base.model - INFO - Loading SentenceTransformer model from BAAI/bge-small-en-v1.5.
+old vectors from provider: {'huggingface'} | old chunks available: 429
+10 sampled chunks (every 42 th by chunk_id): old HF-API vector vs new local adapter vector
+cosine min=1.000000 mean=1.000000 max=1.000000
+old vector L2 norms (min,max): 1.0 1.0

@@ -1,7 +1,9 @@
 """Run the 15 fixed questions through the REAL stage-10 retrieve() and compute the Phase 1 metrics.
 
 Usage:  python tools/retrieval_eval.py --root <dir containing data/proposals> --label before --out FILE
-Needs sentence-transformers (not in requirements.txt: heavy; local, no API call).
+Needs requirements-local.txt (sentence-transformers, torch): local, no API call. The 'before' run
+used the HF-built index, so it needs an index whose provider matches the adapter used here: for that
+baseline see retrieval_before.json (frozen); this tool now measures the local-provider index.
 Questions and metric rules: reports/evidence/metrics_definitions.md (frozen).
 """
 import argparse
@@ -43,28 +45,20 @@ def main():
     a = ap.parse_args()
     out_path = os.path.abspath(a.out)
     os.chdir(a.root)
-    from sentence_transformers import SentenceTransformer
+    from scripts.embedding_provider_local import LocalEmbeddingAdapter
     from scripts.stage0_register import load_manifest
     from scripts.stage9_vector_indexing import FAISSAdapter
     from scripts.stage10_retrieval import retrieve
 
-    st = SentenceTransformer(MODEL, device="cpu")
-
-    class LocalBGE:
-        provider_name, model_name, model_version = "huggingface", MODEL, "v1.5"
-        def embed_batch(self, texts):
-            return st.encode(list(texts), normalize_embeddings=False).tolist()
-        def is_transient_error(self, e):
-            return False
-
-    ad = LocalBGE()
+    ad = LocalEmbeddingAdapter()            # the real adapter the pipeline uses (stage 8 and query time)
+    index_identity = (ad.provider_name, MODEL, "v1.5")
     manifest = load_manifest()
     chunks = {c["chunk_id"]: c for c in cm.load_chunks("data/proposals/chunks")}
     doc_name = {r.doc_id: os.path.basename(r.source_path or "").replace(".pdf", "") for r in manifest.values()}
     fps = []
     for mp in sorted(glob.glob("data/proposals/vector_index/*/index_metadata.json")):
         meta = json.load(open(mp, encoding="utf-8"))
-        if (meta.get("provider"), meta.get("model_name"), meta.get("model_version")) == ("huggingface", MODEL, "v1.5"):
+        if (meta.get("provider"), meta.get("model_name"), meta.get("model_version")) == index_identity:
             fps.append(meta["index_fingerprint"])
     if len(fps) != 1:
         raise SystemExit(f"expected exactly one matching index, found {fps}")
