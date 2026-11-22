@@ -1,0 +1,600 @@
+{
+ "judge": "Judge 1 (main session), frozen rubric only",
+ "derived_from": "labels_judge1_asis.json (commit 4d48441)",
+ "changed_ids": {
+  "Bd6c6f": {
+   "asis": 1,
+   "frozen": 2
+  },
+  "Bc61b6": {
+   "asis": 1,
+   "frozen": 2
+  },
+  "B935ab": {
+   "asis": 0,
+   "frozen": 1
+  },
+  "Bddcfa": {
+   "asis": 0,
+   "frozen": 1
+  }
+ },
+ "labels": {
+  "B2af42": {
+   "label": 2,
+   "reason": "Lists project actions to eliminate mercury use, build capacity and raise awareness; answers how."
+  },
+  "B6e2fd": {
+   "label": 0,
+   "reason": "Form-style project ID table (title, agency, dates); no components."
+  },
+  "Bdd7d7": {
+   "label": 0,
+   "reason": "Project ID table only; no components."
+  },
+  "B45847": {
+   "label": 1,
+   "reason": "Says project reduces mercury via policy and cleaner production but only as alignment text, no concrete means."
+  },
+  "B7fa11": {
+   "label": 1,
+   "reason": "Same alignment text as above (with markup residue); general contribution, no concrete means."
+  },
+  "B5f16b": {
+   "label": 1,
+   "reason": "States objective and ends at the 'Project Components' heading; components themselves missing; footer residue."
+  },
+  "B520c3": {
+   "label": 0,
+   "reason": "Alignment with national strategies; no components."
+  },
+  "B72602": {
+   "label": 0,
+   "reason": "Alignment with national strategies; no components."
+  },
+  "B54bfa": {
+   "label": 2,
+   "reason": "Component 3 text: awareness, mercury-free technology uptake, demonstration, training, adoption support."
+  },
+  "Bd6c6f": {
+   "label": 2,
+   "reason": "Frozen rubric: the passage itself states the four components and the mercury-free pathway; the template text is noise but the answer is readable on its own (as-is label P used the non-frozen template rule)."
+  },
+  "B57442": {
+   "label": 0,
+   "reason": "Coordination section; describes programme context, not the project's components."
+  },
+  "B7763f": {
+   "label": 1,
+   "reason": "Objective and Component 1 with outcome only; one of four components."
+  },
+  "Bd7c80": {
+   "label": 2,
+   "reason": "Summary: four integrated components, mercury-free production pathway, 80% reduction target."
+  },
+  "Be1159": {
+   "label": 1,
+   "reason": "Background on mercury problem in ASGM; no project means."
+  },
+  "Bc61b6": {
+   "label": 2,
+   "reason": "Frozen rubric: the passage itself names the four components; as-is label P used the non-frozen template rule."
+  },
+  "B89ae2": {
+   "label": 0,
+   "reason": "Coordination section; not the project's components."
+  },
+  "B935ab": {
+   "label": 1,
+   "reason": "Frozen rubric: on-topic background about mercury in ASGM, no project means; as-is label N used the non-frozen template rule."
+  },
+  "Ba2e81": {
+   "label": 1,
+   "reason": "Explains barriers that keep mercury in use without the project; does not say what the project does."
+  },
+  "B31e76": {
+   "label": 2,
+   "reason": "Summary names the four components clearly, readable alone."
+  },
+  "B0ce54": {
+   "label": 1,
+   "reason": "Fragment: says IPLC were consulted at identification; names no communities."
+  },
+  "Bc68a1": {
+   "label": 0,
+   "reason": "Bare 'IPLC: Yes' line; no names, unreadable without its page."
+  },
+  "Bcac25": {
+   "label": 1,
+   "reason": "Fragment: IPLC and CSOs were consulted; names no communities."
+  },
+  "Bca8a0": {
+   "label": 0,
+   "reason": "Partner table and safeguards text from a different (Chocó, Ecuador) project, not Cameroon."
+  },
+  "B01c83": {
+   "label": 0,
+   "reason": "Cameroon alignment/investment context; does not name any IPLC."
+  },
+  "B67734": {
+   "label": 0,
+   "reason": "Cameroon alignment/investment context; does not name any IPLC."
+  },
+  "Bf9179": {
+   "label": 0,
+   "reason": "Names IPLC groups (Makonde, Yao...) but for the Mozambique mining project, not Cameroon."
+  },
+  "B4390e": {
+   "label": 0,
+   "reason": "Same Mozambique IPLC text; wrong project."
+  },
+  "B427a5": {
+   "label": 0,
+   "reason": "Ecuador coastal communities; wrong project."
+  },
+  "Ba21eb": {
+   "label": 1,
+   "reason": "Cameroon: Component 2 aims at IP&LC livelihoods and benefit sharing, but no groups are named."
+  },
+  "Bd652a": {
+   "label": 1,
+   "reason": "Cameroon baseline/co-investments around BBNP and TRIDOM; protected area only mentioned in passing."
+  },
+  "B7d9bf": {
+   "label": 1,
+   "reason": "Alignment text; says BBNP is part of the TRIDOM landscape but is mainly policy alignment."
+  },
+  "B2ebbc": {
+   "label": 2,
+   "reason": "Names TRIDOM and Boumba Bek National Park (238,255 ha) as the targeted protected area."
+  },
+  "B0b327": {
+   "label": 2,
+   "reason": "Annex C: interventions in Boumba Bek National Park and peripheral landscape in the TRIDOM landscape (markup residue, readable)."
+  },
+  "B4ac0a": {
+   "label": 1,
+   "reason": "Alignment text with footer residue; BBNP/TRIDOM mentioned in passing."
+  },
+  "Bb3f65": {
+   "label": 1,
+   "reason": "Alignment context; BBNP only named as the place of gaps."
+  },
+  "Becc68": {
+   "label": 1,
+   "reason": "Alignment context; BBNP only named in passing."
+  },
+  "Bc953b": {
+   "label": 2,
+   "reason": "Annex C location: Boumba Bek National Park and periphery in TRIDOM; rest of chunk is annex noise."
+  },
+  "Bc353b": {
+   "label": 1,
+   "reason": "Project title names Boumba Bek National Park / TRIDOM, plus ID and finance tables; no description of targeting."
+  },
+  "B2f9ef": {
+   "label": 0,
+   "reason": "Stakeholder consultation table; no technologies."
+  },
+  "B3cacf": {
+   "label": 1,
+   "reason": "Mentions Gibara wind farm repowering and solar PV parks, but as climate-resilience needs, not what the project deploys."
+  },
+  "B6e5c8": {
+   "label": 1,
+   "reason": "Background: existing ~800 MW solar parks and grid problems; not what the project will deploy."
+  },
+  "Bdf246": {
+   "label": 1,
+   "reason": "Generic 'renewable energy, storage and grid solutions'; no specific technology deployed."
+  },
+  "B859b7": {
+   "label": 1,
+   "reason": "Objective names climate-resilient renewable energy, grid and storage solutions; generic."
+  },
+  "B75477": {
+   "label": 1,
+   "reason": "Summary: demonstration projects in critical facilities; technologies not specified."
+  },
+  "B0f549": {
+   "label": 0,
+   "reason": "Consultation notes (with highlight markup); no technologies deployed."
+  },
+  "Bb9099": {
+   "label": 1,
+   "reason": "Same wind-farm/solar PV resilience text, with heavy highlight markup; not what is deployed."
+  },
+  "B51db6": {
+   "label": 1,
+   "reason": "Same solar park/grid background text, with heavy highlight markup."
+  },
+  "Bddcfa": {
+   "label": 1,
+   "reason": "Frozen rubric: states alignment with NDC 3.0 but no contribution detail; same content as Bd412a (P); as-is label N used the non-frozen template rule."
+  },
+  "Bd412a": {
+   "label": 1,
+   "reason": "Says project aligns with Tarea Vida and NDC 3.0, then lists coordination; no explanation of the contribution."
+  },
+  "B8a538": {
+   "label": 0,
+   "reason": "Coordination arrangements; no NDC contribution."
+  },
+  "B87aaf": {
+   "label": 0,
+   "reason": "Coordination arrangements plus form metadata; no NDC contribution."
+  },
+  "B1823f": {
+   "label": 2,
+   "reason": "Explains NDC 3.0 (adaptation priority, higher renewable ambition) and how the project fits and fills a gap."
+  },
+  "B3cd44": {
+   "label": 0,
+   "reason": "Project ID table; nothing on NDC."
+  },
+  "Bc7ab4": {
+   "label": 1,
+   "reason": "Aligned with Tarea Vida; names NDC 3.0 as a principal instrument without explaining the contribution (markup residue)."
+  },
+  "Bac419": {
+   "label": 1,
+   "reason": "Alignment with national climate priorities and G-RES; NDC not named."
+  },
+  "Bb470c": {
+   "label": 1,
+   "reason": "Same alignment text without NDC mention."
+  },
+  "Bc4ca2": {
+   "label": 0,
+   "reason": "Project objective only; no NDC link."
+  },
+  "Bab2bd": {
+   "label": 1,
+   "reason": "Marine-coastal context and the five coastal provinces; no marine protected area named (markup residue)."
+  },
+  "B7f5c1": {
+   "label": 0,
+   "reason": "National biodiversity/protected-area system in general; nothing marine-specific."
+  },
+  "B0e3da": {
+   "label": 1,
+   "reason": "Same marine-coastal context and five coastal provinces; no marine protected area named."
+  },
+  "B9ab5c": {
+   "label": 0,
+   "reason": "Tropical dry forest landscape; not marine."
+  },
+  "B16835": {
+   "label": 0,
+   "reason": "Strategic fit paragraphs and references; no protected areas."
+  },
+  "Bc1787": {
+   "label": 0,
+   "reason": "One-line fragment '3. WWF Ecuador.'"
+  },
+  "B5dae7": {
+   "label": 0,
+   "reason": "Baseline policy on coastal management; no protected areas named."
+  },
+  "B20ebe": {
+   "label": 0,
+   "reason": "Project ID table only."
+  },
+  "B6cf6e": {
+   "label": 1,
+   "reason": "Coverage: five coastal provinces, 178,661 ha marine habitat; no marine protected area named."
+  },
+  "B41750": {
+   "label": 1,
+   "reason": "Marine-coastal context; ends as it introduces 'cumulative anthropogenic and climate pressures' without listing them."
+  },
+  "B3d03e": {
+   "label": 0,
+   "reason": "Policy baseline for coastal management; no threats."
+  },
+  "B747dd": {
+   "label": 0,
+   "reason": "Threats to dry forest and southeastern ridges landscapes, not coastal or marine."
+  },
+  "B4f5ff": {
+   "label": 1,
+   "reason": "Same marine-coastal context, cut off before the pressures are listed (markup residue)."
+  },
+  "B3a1fe": {
+   "label": 0,
+   "reason": "National biodiversity pressures (land use, mining, fires); not specific to coastal/marine."
+  },
+  "Bce4a8": {
+   "label": 0,
+   "reason": "Dry forest threats; not coastal or marine."
+  },
+  "B5108b": {
+   "label": 0,
+   "reason": "Template instruction plus general national biodiversity text; no coastal/marine threats."
+  },
+  "B9364b": {
+   "label": 0,
+   "reason": "Dry forest threats; not coastal or marine."
+  },
+  "Bf1b27": {
+   "label": 1,
+   "reason": "Summary names unsustainable coastal/marine use, habitat degradation and fragmented governance in one clause."
+  },
+  "Ba6635": {
+   "label": 2,
+   "reason": "Financing table text: total GEF financing 4,945,250 (Ecuador/UNDP), readable."
+  },
+  "B1d205": {
+   "label": 1,
+   "reason": "Focal-area split with GEF project financing total 4,516,210; excludes agency fee, so not the 'total GEF financing' line."
+  },
+  "B3d325": {
+   "label": 2,
+   "reason": "Financing table: total GEF financing 4,371,000 (CAF, Ecuador)."
+  },
+  "Bb87a6": {
+   "label": 2,
+   "reason": "Financing table text: total GEF financing 2,890,500 (UNIDO, Cuba)."
+  },
+  "B9d4af": {
+   "label": 2,
+   "reason": "Financing table: total GEF financing 4,927,500 (UNEP, Mozambique); footer residue."
+  },
+  "B2faa1": {
+   "label": 2,
+   "reason": "Financing table: total GEF financing 4,945,250 (UNDP, Ecuador)."
+  },
+  "B4e7e6": {
+   "label": 2,
+   "reason": "Financing table: total GEF financing 3,836,500 (WWF-US, Cameroon)."
+  },
+  "Bfcaa0": {
+   "label": 2,
+   "reason": "Financing table: total GEF financing 2,890,500 (UNIDO, Cuba)."
+  },
+  "B2a49e": {
+   "label": 1,
+   "reason": "M&E section plus component balances ending in total project cost 4,010,092 (GEF project financing, no agency fee)."
+  },
+  "Bd9fe5": {
+   "label": 2,
+   "reason": "Financing table text: total GEF financing 4,927,500 (UNEP, Mozambique)."
+  },
+  "Ba0cb8": {
+   "label": 0,
+   "reason": "Taxonomy keyword list and finance table; gender words only as tags."
+  },
+  "B60359": {
+   "label": 0,
+   "reason": "Taxonomy keyword list and finance table; gender words only as tags."
+  },
+  "B902bf": {
+   "label": 2,
+   "reason": "Outcome 3.2: gender mainstreaming strategies integrated across components via the GAP, gender-responsive risk screening and engagement."
+  },
+  "B87523": {
+   "label": 1,
+   "reason": "Indicator for tools for safeguards and gender mainstreaming, otherwise M&E and knowledge-management outputs."
+  },
+  "B9b2ae": {
+   "label": 2,
+   "reason": "Gender dimensions: inclusive participation, gender analysis in PPG, sex-disaggregated data and gender-sensitive indicators (footer residue, KM text follows)."
+  },
+  "Be5545": {
+   "label": 0,
+   "reason": "Confirmation statement 'gender addressed in Section B'; no content."
+  },
+  "Bc5eff": {
+   "label": 2,
+   "reason": "Gender barriers and the measures: equitable participation, women's leadership, equal access to benefits."
+  },
+  "B910eb": {
+   "label": 2,
+   "reason": "Gender-responsive measures, sex-disaggregated indicators and budget for monitoring gender mainstreaming (template line at end)."
+  },
+  "B10009": {
+   "label": 2,
+   "reason": "Gender-responsive measures, sex-disaggregated indicators and budget for monitoring gender mainstreaming."
+  },
+  "B8d9d3": {
+   "label": 2,
+   "reason": "Gender dimensions: inclusive participation, gender analysis in PPG, sex-disaggregated data and gender-sensitive indicators."
+  },
+  "B62a50": {
+   "label": 2,
+   "reason": "Cuba risk rows with rating, explanation and mitigation (climate, social, political)."
+  },
+  "B8a9a8": {
+   "label": 2,
+   "reason": "Elite-capture and enforcement risks with detailed mitigation measures, plus governance risks."
+  },
+  "B8199b": {
+   "label": 2,
+   "reason": "Social and political risks with mitigation (safeguards, grievance mechanism, monitoring)."
+  },
+  "Ba5f11": {
+   "label": 2,
+   "reason": "Risk table (HTML residue): climate and social risks with mitigation, footer residue; cut mid-row but readable."
+  },
+  "B38ae6": {
+   "label": 2,
+   "reason": "Risk table (HTML residue): mitigation for enforcement risk, plus political and governance risks and mitigations."
+  },
+  "B1c309": {
+   "label": 2,
+   "reason": "Risk table tail (HTML residue): institutional and policy risk with mitigation."
+  },
+  "Bfc205": {
+   "label": 2,
+   "reason": "Cuba risk table (HTML residue): climate, social, political, institutional risks with mitigation."
+  },
+  "B35ec7": {
+   "label": 2,
+   "reason": "Stakeholder, external-shock and overall risk with mitigation measures."
+  },
+  "B7c783": {
+   "label": 2,
+   "reason": "Risk table tail (HTML residue): stakeholder, external shocks and overall risk with mitigation."
+  },
+  "B25dc5": {
+   "label": 2,
+   "reason": "Climate risk with mitigation measures added to design."
+  },
+  "B389b4": {
+   "label": 1,
+   "reason": "Hectares for protected areas under improved effectiveness (CI 1.2) and 8,000 ha restoration; not the 'landscapes under improved management' figure."
+  },
+  "B6b786": {
+   "label": 2,
+   "reason": "CI 4.1: 72,000 ha net landscapes under improved management (plus 6,000 ha SLM and OECMs)."
+  },
+  "Bce337": {
+   "label": 2,
+   "reason": "Indicator 4.1: 30,000 ha expected (table markup, readable)."
+  },
+  "B11ee0": {
+   "label": 2,
+   "reason": "Sustainable management practices across at least 30,000 ha of priority landscapes."
+  },
+  "Bb53b0": {
+   "label": 2,
+   "reason": "CI 4.1: 60,312 ha landscapes under improved management (and 178,661 ha marine)."
+  },
+  "B1a67e": {
+   "label": 2,
+   "reason": "Indicator 4 and 4.1: 60,312 ha expected."
+  },
+  "B1fb6d": {
+   "label": 2,
+   "reason": "Improved management of at least 30,000 ha of landscapes."
+  },
+  "B1805e": {
+   "label": 2,
+   "reason": "Indicator 4 and 4.1: 30,000 ha expected."
+  },
+  "B9cb1e": {
+   "label": 2,
+   "reason": "Indicator 4 and 4.1: 60,312 ha expected (footer and markup residue)."
+  },
+  "B93372": {
+   "label": 0,
+   "reason": "National policy frameworks (NBSAP, NDC); SDGs not mentioned."
+  },
+  "Be181a": {
+   "label": 0,
+   "reason": "Ecuador biodiversity context; SDGs not mentioned."
+  },
+  "Bfae90": {
+   "label": 0,
+   "reason": "Template instruction plus general context; SDGs not mentioned."
+  },
+  "Bc7afc": {
+   "label": 0,
+   "reason": "Project approach and start of a GBF target table; SDGs not mentioned."
+  },
+  "B658c4": {
+   "label": 0,
+   "reason": "Project objective only; SDGs not mentioned."
+  },
+  "Bfe12c": {
+   "label": 0,
+   "reason": "Project summary; SDGs not mentioned."
+  },
+  "Be5cda": {
+   "label": 0,
+   "reason": "Marine-coastal project summary (different project); SDGs not mentioned."
+  },
+  "B4713d": {
+   "label": 0,
+   "reason": "National policy frameworks; SDGs not mentioned."
+  },
+  "B297e8": {
+   "label": 0,
+   "reason": "Project summary with template text; SDGs not mentioned."
+  },
+  "B20998": {
+   "label": 1,
+   "reason": "GBF targets table and one mention of supporting the 2030 Agenda; no SDG named."
+  },
+  "Ba2aa0": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B94bde": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B7bca7": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B2dfe0": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B5bc4c": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B33ad8": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "Be5487": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "Bb9727": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "Ba8ab1": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B10cc5": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B566bb": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "Bd3a4f": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "Bbc317": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B94009": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B32c69": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B95036": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B927cc": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B1d2b5": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B3e184": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  },
+  "B2b3dc": {
+   "label": 0,
+   "reason": "Question not answerable from the index (scanned PDF, no OCR); scored 0 by the frozen rule."
+  }
+ }
+}
