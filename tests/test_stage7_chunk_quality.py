@@ -260,3 +260,56 @@ def test_chunk_document_drops_a_trailing_heading_only_section_and_still_passes_v
     report = json.loads((tmp_path / "chunks" / "doc_ho" / "chunk_validation_report.json").read_text(encoding="utf-8"))
     assert len(chunks) == 1 and "ANNEX A" not in chunks[0]["text"]
     assert len(report["dropped_duplicate_ranges"]) == 1 and report["overall_status"] in ("PASS", "WARNING")
+
+
+# ---- Phase 2 step 3a: a merged-in heading is metadata, not embedded text -------------------------------------------
+
+def _chunks(full, spans):
+    for s in spans:
+        s.setdefault("chunk_id", "c")
+        s.setdefault("chunk_index_within_section", 0)
+        s.setdefault("section_chunk_count", 1)
+    return s7.assemble_chunk_records(spans, "doc", full, {})
+
+
+def test_unembedded_prefix_is_recorded_and_left_out_of_embed_text():
+    from scripts.stage8_embedding_generation import embedding_text
+    full, b = text_for("# PART ONE\n\n", "## Background\n\n", BODY)
+    spans = [span(*b[0], "1", ["1"]), span(*b[1], "1.1", ["1"]), span(*b[2], "1.2", ["1"])]
+    (c,) = _chunks(full, s7.merge_undersized_spans(spans, full))
+    assert c["text"] == full                                   # offsets and display text unchanged
+    assert c["unembedded_prefix"] == "# PART ONE\n\n## Background"
+    assert c["embed_text"] == BODY and embedding_text(c) == BODY
+
+
+def test_a_chunk_without_a_unembedded_prefix_embeds_its_text():
+    from scripts.stage8_embedding_generation import embedding_text
+    full, b = text_for(BODY)
+    (c,) = _chunks(full, [span(*b[0], "1", ["1"])])
+    assert "embed_text" not in c and "unembedded_prefix" not in c and embedding_text(c) == BODY
+
+
+def test_heading_merged_backward_or_inside_a_chunk_is_not_stripped():
+    full, b = text_for(BODY, "tiny tail.\n", )
+    merged = s7.merge_undersized_spans([span(*b[0], "1", ["1"]), span(*b[1], "1b", ["1"])], full)
+    (c,) = _chunks(full, merged)
+    assert "embed_text" not in c
+
+
+def test_template_prompt_after_the_section_heading_is_not_embedded():
+    text = ("C. ALIGNMENT WITH GEF-8 PROGRAMMING STRATEGIES\n\nConfirm if any country policies that might contradict with "
+            "intended outcomes have been identified.\n\n" + BODY)
+    cut = s7.embed_prefix_end(text, 0, "merged+template")
+    assert text[cut:] == BODY
+    assert s7.embed_prefix_end(text, 0, "merged") == 0 and s7.embed_prefix_end(text, 0, "off") == 0
+
+
+def test_heading_without_a_template_prompt_is_kept_unless_mode_strips_all_headings():
+    text = "## Project Objective\n\n" + BODY
+    assert s7.embed_prefix_end(text, 0, "merged+template") == 0
+    assert text[s7.embed_prefix_end(text, 0, "headings+template"):] == BODY
+
+
+def test_never_strip_a_chunk_to_almost_nothing():
+    text = "# H\n\nWe confirm that this is fine.\n\nshort"
+    assert s7.embed_prefix_end(text, 0, "merged+template") == 0

@@ -16,6 +16,7 @@ order and design rationale.
 import sys
 import json
 import logging
+import os
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -358,6 +359,7 @@ def _crosses_appendix_boundary(a: Dict, b: Dict) -> bool:
 
 def _combine(a: Dict, b: Dict) -> Dict:
     combined_ids = list(a["section_ids"])
+    lead = {"lead_end": a["lead_end"]} if a.get("lead_end") else {}
     for sid in b["section_ids"]:
         if sid not in combined_ids:
             combined_ids.append(sid)
@@ -373,6 +375,7 @@ def _combine(a: Dict, b: Dict) -> Dict:
         "is_references": a.get("is_references", False) or b.get("is_references", False),
         "page_start": a.get("page_start"),
         "page_end": b.get("page_end"),
+        **lead,
     }
 
 
@@ -392,6 +395,7 @@ def _combine_into_next(a: Dict, b: Dict) -> Dict:
     combined["degenerate"] = a.get("degenerate", False) and b.get("degenerate", False)
     combined["page_start"] = a.get("page_start")
     combined["page_end"] = b.get("page_end")
+    combined["lead_end"] = a["char_end"]   # [char_start, lead_end) is merged-in heading text: metadata, not embedded
     return combined
 
 
@@ -534,6 +538,58 @@ def assign_chunk_ids(spans: List[Dict], doc_id: str) -> List[Dict]:
 # STEP 6 — chunk record assembly
 # ===========================================================================
 
+# ---------------------------------------------------------------------------
+# Phase 2 step 3a: text a chunk starts with that is NOT embedded (heading lines merged in front of the content, and
+# the form's own prompt sentences). The prompts are the paragraphs the GEF PIF template prints in every proposal
+# (found verbatim in all 6 corpus documents); the list is explicit so each rule is reviewable. It was read from the
+# same 6 documents it is measured on, so it can overfit; a new template needs a new list.
+# ---------------------------------------------------------------------------
+EMBED_STRIP_MODE = os.environ.get("SDG_EMBED_STRIP", "merged+template")   # off | merged | merged+template | headings+template
+TEMPLATE_PROMPT_OPENERS = (
+    "this section asks for a theory of change",
+    "does the gef agency expect to play an execution role",
+    "confirm if any country policies that might contradict",
+    "we confirm that",
+    "and if so, has its role been described",
+    "**indicative trust fund resources requested by agency",
+    "**(pif level) attach agency safeguard screen form",
+)
+MIN_EMBED_CHARS = 100
+_LINE_RE = re.compile(chr(91) + "^" + chr(92) + "n]+" + chr(92) + "n*")   # a non-empty line plus its trailing newlines
+
+
+def _is_template_prompt(line: str) -> bool:
+    low = line.strip().lower()
+    return any(low.startswith(o) for o in TEMPLATE_PROMPT_OPENERS)
+
+
+def _is_heading_line(line: str) -> bool:
+    line = line.strip()
+    return line.startswith("#") or (0 < len(line) <= 120 and line.isupper())
+
+
+def embed_prefix_end(text: str, lead_rel: int, mode: Optional[str] = None) -> int:
+    """Character index in `text` where the embedded text starts (0 = embed everything)."""
+    mode = mode or EMBED_STRIP_MODE
+    if mode == "off":
+        return 0
+    cut = lead_rel if lead_rel < len(text) else 0
+    if mode != "merged":
+        pos = cut
+        for m in re.finditer(_LINE_RE, text[cut:]):
+            line, end = m.group().strip(), cut + m.end()
+            if _is_template_prompt(line):
+                cut = pos = end
+            elif _is_heading_line(line):
+                if mode == "headings+template":
+                    cut = pos = end
+            else:
+                break
+    if len(text[cut:].strip()) < MIN_EMBED_CHARS:           # never strip a chunk down to (almost) nothing
+        cut = lead_rel if len(text[lead_rel:].strip()) >= MIN_EMBED_CHARS else 0
+    return cut
+
+
 def assemble_chunk_records(
     spans: List[Dict],
     doc_id: str,
@@ -545,7 +601,15 @@ def assemble_chunk_records(
     classification = metadata.get("classification", {})
     chunks: List[Dict] = []
     for s in spans:
+        text = full_text[s["char_start"]:s["char_end"]]
+        lead_rel = max(0, (s.get("lead_end") or s["char_start"]) - s["char_start"])
+        cut = embed_prefix_end(text, lead_rel)
+        extra: Dict = {}
+        if cut:
+            # The leading heading / form-prompt lines stay in `text` (display, citations, offsets) but are not embedded.
+            extra = {"unembedded_prefix": text[:cut].strip(), "embed_text": text[cut:]}
         chunks.append({
+            **extra,
             "chunk_id": s["chunk_id"],
             "doc_id": doc_id,
             "text": full_text[s["char_start"]:s["char_end"]],

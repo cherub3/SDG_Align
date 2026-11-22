@@ -101,6 +101,12 @@ def sanitize_id_component(text: str) -> str:
     """Replace any character outside [A-Za-z0-9_.-] with -."""
     return re.sub(r'[^A-Za-z0-9_.-]', '-', text)
 
+def embedding_text(chunk: Dict) -> str:
+    """The text that is embedded: `embed_text` when stage 7 split merged heading lines off (they stay in `text`
+    and in `merged_heading`), else the chunk text."""
+    return chunk.get("embed_text") or chunk["text"]
+
+
 def compute_text_checksum(text: str) -> str:
     """sha256 hex digest of the chunk's exact UTF-8 text."""
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
@@ -202,7 +208,7 @@ def determine_workload(
     
     for chunk in chunks:
         chunk_id = chunk["chunk_id"]
-        text_checksum = compute_text_checksum(chunk["text"])
+        text_checksum = compute_text_checksum(embedding_text(chunk))
         emb_id = build_embedding_id(chunk_id, provider)
         
         if emb_id in existing_lookup:
@@ -325,7 +331,7 @@ def validate_embeddings(
 
         # 9. EMBEDDING_CHECKSUM_STALE (Recoverable)
         if r.get("config_fingerprint") == config_fp and cid in expected_chunk_ids:
-            current_chk = compute_text_checksum(expected_chunk_ids[cid]["text"])
+            current_chk = compute_text_checksum(embedding_text(expected_chunk_ids[cid]))
             if chk != current_chk:
                 findings.append(_finding(SEVERITY_WARNING, "EMBEDDING_CHECKSUM_STALE", f"Stale checksum for {eid}"))
                 
@@ -400,7 +406,7 @@ def process_document(
         emb_id = build_embedding_id(c["chunk_id"], provider)
         if emb_id in completed_checkpoints:
             # check if it matches the current config + text
-            chk = compute_text_checksum(c["text"])
+            chk = compute_text_checksum(embedding_text(c))
             cfg = compute_config_fingerprint(provider, dim)
             cpt = completed_checkpoints[emb_id]
             if cpt.get("text_checksum") == chk and cpt.get("config_fingerprint") == cfg:
@@ -421,7 +427,7 @@ def process_document(
     
     for i in range(0, len(pending_chunks), batch_size):
         batch = pending_chunks[i:i+batch_size]
-        texts = [c["text"] for c in batch]
+        texts = [embedding_text(c) for c in batch]
         
         # Rate limiting
         if provider.requests_per_minute:
@@ -464,11 +470,11 @@ def process_document(
                 "model_version": provider.model_version,
                 "embedding_dimension": dim,
                 "embedding_vector": vectors[j],
-                "text_checksum": compute_text_checksum(c["text"]),
+                "text_checksum": compute_text_checksum(embedding_text(c)),
                 "config_fingerprint": config_fp,
                 "created_at": get_now_iso(),
                 "embedding_pipeline_version": EMBEDDING_PIPELINE_VERSION,
-                "source_chunk_char_count": len(c["text"])
+                "source_chunk_char_count": len(embedding_text(c))
             }
             generated_rows.append(row)
             _write_checkpoint_row(checkpoint_path, row)
