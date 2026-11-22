@@ -349,18 +349,53 @@ def _combine(a: Dict, b: Dict) -> Dict:
     }
 
 
-def merge_undersized_spans(spans: List[Dict]) -> List[Dict]:
-    """Merges spans below MIN_CHUNK_CHARS into an adjacent neighbor (backward-only, except
-    the first span merges forward). Never crosses a branch or appendix/references
-    boundary, and never exceeds MAX_CHUNK_CHARS."""
+def _is_heading_only(span: Dict, full_text: str) -> bool:
+    """True if the span holds only heading lines (Markdown '#' lines or ALL-CAPS titles): a
+    heading with no body belongs with the content that follows it, not with the text before."""
+    lines = [ln.strip() for ln in full_text[span["char_start"]:span["char_end"]].splitlines() if ln.strip()]
+    return bool(lines) and all(ln.startswith("#") or ln.isupper() for ln in lines)
+
+
+def _combine_into_next(a: Dict, b: Dict) -> Dict:
+    """Merges a body-less heading span `a` into the span `b` that follows it. The result is
+    labelled (anchor, ancestors, heading path) as `b`, because `b` holds the content."""
+    combined = _combine(b, b)
+    combined["char_start"] = a["char_start"]
+    combined["section_ids"] = list(a["section_ids"]) + [s for s in b["section_ids"] if s not in a["section_ids"]]
+    combined["degenerate"] = a.get("degenerate", False) and b.get("degenerate", False)
+    combined["page_start"] = a.get("page_start")
+    combined["page_end"] = b.get("page_end")
+    return combined
+
+
+def merge_undersized_spans(spans: List[Dict], full_text: Optional[str] = None) -> List[Dict]:
+    """Merges spans below MIN_CHUNK_CHARS into a neighbour, never exceeding MAX_CHUNK_CHARS and
+    never crossing an appendix/references boundary.
+
+    1. With `full_text`: a body-less heading span merges forward into the content that follows
+       it, even across a top-level branch (a heading must stay with its own content).
+    2. The first span merges forward; any other undersized span merges backward into the
+       previous span of the same top-level branch.
+    3. Anything still undersized merges forward into the next span of the same branch.
+    The pass in 3 runs until nothing changes."""
     if not spans:
         return spans
 
     work = [dict(s) for s in spans]
 
+    if full_text is not None:
+        i = 0
+        while i < len(work) - 1:
+            a, b = work[i], work[i + 1]
+            if (_span_len(a) < MIN_CHUNK_CHARS and _is_heading_only(a, full_text)
+                    and _span_len(a) + _span_len(b) <= MAX_CHUNK_CHARS
+                    and not _crosses_appendix_boundary(a, b)):
+                work[i:i + 2] = [_combine_into_next(a, b)]
+            else:
+                i += 1
+
     # First-span-forward exception: the very first span has no predecessor to
-    # merge backward into, so it merges forward instead — the one case this
-    # design merges in the forward direction. Not gated on _same_branch: a
+    # merge backward into, so it merges forward instead. Not gated on _same_branch: a
     # preamble span (no section of its own) merging into the document's
     # first real section is not a branch crossing in any meaningful sense.
     if len(work) >= 2 and _span_len(work[0]) < MIN_CHUNK_CHARS:
@@ -383,6 +418,20 @@ def merge_undersized_spans(spans: List[Dict]) -> List[Dict]:
                 result[-1] = _combine(prev, span)
                 continue
         result.append(span)
+
+    changed = True
+    while changed:
+        changed = False
+        for i in range(len(result) - 1):
+            a, b = result[i], result[i + 1]
+            if _span_len(a) >= MIN_CHUNK_CHARS:
+                continue
+            eligible = a.get("degenerate") or b.get("degenerate") or _same_branch(a, b)
+            if (eligible and _span_len(a) + _span_len(b) <= MAX_CHUNK_CHARS
+                    and not _crosses_appendix_boundary(a, b)):
+                result[i:i + 2] = [_combine(a, b)]
+                changed = True
+                break
 
     return result
 
@@ -655,7 +704,7 @@ def chunk_document(record: ManifestRecord, clean_text: Dict, metadata: Dict) -> 
     spans = split_oversized_spans(spans, full_text)
     for s in spans:
         _recompute_page_range(s, pages_sorted)
-    spans = merge_undersized_spans(spans)
+    spans = merge_undersized_spans(spans, full_text)
     for s in spans:
         _recompute_page_range(s, pages_sorted)
     spans = assign_chunk_ids(spans, record.doc_id)
