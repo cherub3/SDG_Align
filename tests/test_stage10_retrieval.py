@@ -12,6 +12,7 @@ from scripts.stage10_retrieval import (
     validate_retrieval_result,
     RetrievalInternalError,
     retrieve,
+    apply_metadata_filters,
     RETRIEVAL_PIPELINE_VERSION,
     DEFAULT_TOP_K
 )
@@ -158,3 +159,79 @@ def test_retrieve_partial_status(mock_search, mock_resolve):
     assert res["searched_index_fingerprints"] == ["idx_success"]
     assert res["requested_index_fingerprints"] == ["idx_success", "idx_fail"]
     assert any(f["code"] == "INDEX_ARTIFACT_READABLE" and f["severity"] == "FAIL" for f in res["findings"])
+
+
+# ---------------------------------------------------------------------------
+# Metadata filters: exercised for real (no mocking of the filter logic)
+# ---------------------------------------------------------------------------
+
+def _cand(doc, chunk, score=0.5):
+    return {"doc_id": doc, "chunk_id": chunk, "score": score}
+
+
+_CHUNKS = {
+    "dA": {"a1": {"chunk_id": "a1", "category": "climate", "doc_type": "proposal"},
+           "a2": {"chunk_id": "a2", "category": "climate", "doc_type": "proposal"}},
+    "dB": {"b1": {"chunk_id": "b1", "category": "health", "doc_type": "proposal"}},
+    "dC": {"c1": {"chunk_id": "c1", "category": "health", "doc_type": "report"}},
+}
+_ALL = [_cand("dA", "a1"), _cand("dA", "a2"), _cand("dB", "b1"), _cand("dC", "c1")]
+
+
+def _ids(cands):
+    return sorted(c["chunk_id"] for c in cands)
+
+
+def test_filter_category_keeps_only_matching_category():
+    assert _ids(apply_metadata_filters(_ALL, {"category": "health"}, _CHUNKS)) == ["b1", "c1"]
+    assert _ids(apply_metadata_filters(_ALL, {"category": "climate"}, _CHUNKS)) == ["a1", "a2"]
+
+
+def test_filter_unknown_category_returns_nothing():
+    assert apply_metadata_filters(_ALL, {"category": "water"}, _CHUNKS) == []
+
+
+def test_filter_doc_type_and_doc_ids():
+    assert _ids(apply_metadata_filters(_ALL, {"doc_type": "report"}, _CHUNKS)) == ["c1"]
+    assert _ids(apply_metadata_filters(_ALL, {"doc_ids": ["dA", "dC"]}, _CHUNKS)) == ["a1", "a2", "c1"]
+
+
+def test_filters_combine_with_and():
+    got = apply_metadata_filters(_ALL, {"category": "health", "doc_type": "proposal"}, _CHUNKS)
+    assert _ids(got) == ["b1"]
+    assert apply_metadata_filters(_ALL, {"category": "health", "doc_ids": ["dA"]}, _CHUNKS) == []
+
+
+def test_no_filters_keeps_everything_that_has_a_chunk_record():
+    assert _ids(apply_metadata_filters(_ALL, {}, _CHUNKS)) == ["a1", "a2", "b1", "c1"]
+    # a candidate whose chunk record is missing is dropped, never passed through
+    assert _ids(apply_metadata_filters(_ALL + [_cand("dA", "ghost")], {}, _CHUNKS)) == ["a1", "a2", "b1", "c1"]
+
+
+@patch('scripts.stage10_retrieval.resolve_index_fingerprints')
+@patch('scripts.stage10_retrieval.search_index')
+def test_retrieve_applies_category_filter_end_to_end(mock_search, mock_resolve, tmp_path):
+    """retrieve() with a category filter must return only that category's chunks (real chunk files)."""
+    manifest = {}
+    for doc, cat, chunk_ids in (("dA", "climate", ["a1"]), ("dB", "health", ["b1"])):
+        path = tmp_path / f"{doc}.json"
+        path.write_text(json.dumps({"chunks": [
+            {"chunk_id": c, "text": f"text {c}", "category": cat, "doc_type": "proposal"} for c in chunk_ids]}),
+            encoding="utf-8")
+        manifest[doc] = ManifestRecord(doc_id=doc, category=cat, status=DocumentStatus.READY_FOR_CHUNKING,
+                                       artifact_paths={"vector_index": "x", "chunks": str(path)})
+    mock_resolve.return_value = [IndexHandle("idx", {"provider": "p", "embedding_dimension": 2}, Path("p"))]
+    mock_search.return_value = [
+        {"index_fingerprint": "idx", "distance": 0.9, "metric": "cosine", "embedding_id": "e1", "chunk_id": "a1", "doc_id": "dA"},
+        {"index_fingerprint": "idx", "distance": 0.8, "metric": "cosine", "embedding_id": "e2", "chunk_id": "b1", "doc_id": "dB"},
+    ]
+    provider = MagicMock()
+    provider.embed_batch.return_value = [[1.0, 0.0]]
+
+    unfiltered = retrieve({"query": "q", "index_fingerprints": ["idx"]}, manifest, lambda *a: provider, lambda *a: None)
+    assert sorted(r["chunk_id"] for r in unfiltered["results"]) == ["a1", "b1"]
+
+    filtered = retrieve({"query": "q", "index_fingerprints": ["idx"], "filters": {"category": "health"}},
+                        manifest, lambda *a: provider, lambda *a: None)
+    assert [r["chunk_id"] for r in filtered["results"]] == ["b1"]
+

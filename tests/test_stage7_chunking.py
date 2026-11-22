@@ -308,6 +308,42 @@ class TestSplitOversizedSpans(unittest.TestCase):
         for piece in result:
             self.assertLessEqual(piece["char_end"] - piece["char_start"], s7.MAX_CHUNK_CHARS)
 
+    def _plain_span(self, length):
+        return {"char_start": 0, "char_end": length, "section_ids": ["1"], "anchor_section_id": "1",
+                "ancestor_section_ids": ["1"], "heading_path": ["T"], "degenerate": False,
+                "is_appendix": False, "is_references": False}
+
+    def test_span_of_exactly_max_chars_is_kept_whole(self):
+        span = self._plain_span(s7.MAX_CHUNK_CHARS)
+        result = s7.split_oversized_spans([span], "x" * s7.MAX_CHUNK_CHARS)
+        self.assertEqual([(r["char_start"], r["char_end"]) for r in result], [(0, s7.MAX_CHUNK_CHARS)])
+
+    def test_span_between_half_max_and_max_is_not_split(self):
+        # 2,000 chars is a perfectly valid chunk (MIN 300 <= 2000 <= MAX 3000); splitting it would be a bug
+        length = (s7.MAX_CHUNK_CHARS * 2) // 3
+        self.assertGreater(length, s7.MAX_CHUNK_CHARS // 2)
+        result = s7.split_oversized_spans([self._plain_span(length)], "word " * (length // 5 + 1))
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["char_end"] - result[0]["char_start"], length)
+
+    def test_span_within_max_is_passed_through_unchanged_including_degenerate_flag(self):
+        # A span that needs no splitting must come back exactly as it went in. In particular its
+        # "degenerate" flag is preserved (only the pieces of a genuinely split span are reset to False).
+        length = (s7.MAX_CHUNK_CHARS * 2) // 3
+        span = self._plain_span(length)
+        span["degenerate"] = True
+        result = s7.split_oversized_spans([span], "word " * (length // 5 + 1))
+        self.assertEqual(result, [span])
+        self.assertIsNot(result[0], span)  # a copy, so callers cannot mutate their input by accident
+
+    def test_span_one_char_over_max_is_split_into_valid_pieces(self):
+        length = s7.MAX_CHUNK_CHARS + 1
+        result = s7.split_oversized_spans([self._plain_span(length)], "x" * length)
+        self.assertEqual(len(result), 2)
+        self.assertEqual(sum(r["char_end"] - r["char_start"] for r in result), length)
+        for piece in result:
+            self.assertLessEqual(piece["char_end"] - piece["char_start"], s7.MAX_CHUNK_CHARS)
+
 
 # ===========================================================================
 # merge_undersized_spans
@@ -385,6 +421,37 @@ class TestMergeUndersizedSpans(unittest.TestCase):
         ]
         merged = s7.merge_undersized_spans(spans)
         self.assertEqual(len(merged), 2)
+
+    def test_leading_undersized_span_does_not_merge_forward_past_max(self):
+        big = s7.MAX_CHUNK_CHARS - 50
+        spans = [
+            self._span(0, 100, "1", ["1"]),            # undersized preamble
+            self._span(100, 100 + big, "2", ["1"]),   # 100 + 2,950 = 3,050 > MAX
+        ]
+        merged = s7.merge_undersized_spans(spans)
+        self.assertEqual(len(merged), 2)
+        for m in merged:
+            self.assertLessEqual(m["char_end"] - m["char_start"], s7.MAX_CHUNK_CHARS)
+
+    def test_trailing_undersized_span_does_not_merge_backward_past_max(self):
+        big = s7.MAX_CHUNK_CHARS - 50
+        spans = [
+            self._span(0, big, "1", ["1"]),                 # 2,950 chars, already valid
+            self._span(big, big + 100, "2", ["1"]),         # 100 chars; combined 3,050 > MAX
+        ]
+        merged = s7.merge_undersized_spans(spans)
+        self.assertEqual(len(merged), 2)
+        for m in merged:
+            self.assertLessEqual(m["char_end"] - m["char_start"], s7.MAX_CHUNK_CHARS)
+
+    def test_merge_that_exactly_fits_max_is_allowed(self):
+        spans = [
+            self._span(0, s7.MAX_CHUNK_CHARS - 50, "1", ["1"]),
+            self._span(s7.MAX_CHUNK_CHARS - 50, s7.MAX_CHUNK_CHARS, "2", ["1"]),  # exactly 50 chars
+        ]
+        merged = s7.merge_undersized_spans(spans)
+        self.assertEqual(len(merged), 1)
+        self.assertEqual(merged[0]["char_end"] - merged[0]["char_start"], s7.MAX_CHUNK_CHARS)
 
     def test_empty_span_list_returns_empty(self):
         self.assertEqual(s7.merge_undersized_spans([]), [])
