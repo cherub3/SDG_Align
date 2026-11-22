@@ -1,0 +1,4 @@
+items: 144  unique ids: 144  fields: ['id', 'question', 'question_no', 'text']
+all 144 ids of blind_judging.jsonl present: True
+order differs from blind_judging.jsonl: True
+RESULT: PASS
