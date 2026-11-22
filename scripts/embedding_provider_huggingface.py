@@ -11,18 +11,24 @@ from scripts.stage8_embedding_generation import ProviderAdapter
 from scripts.phase1_1_configuration_layer import ProviderSettings, ProviderRegistration
 
 
+# Without a timeout, requests.post can block a worker thread forever on a stalled connection.
+DEFAULT_REQUEST_TIMEOUT_SECONDS = 30.0
+
+
 class HuggingFaceEmbeddingAdapter(ProviderAdapter):
     """
     Concrete embedding provider adapter for Hugging Face Inference API via requests.
     Fully implements Phase 1.3 architecture and Stage 8 ProviderAdapter contract.
     """
 
-    def __init__(self, token: str, model_name: str, model_version: str):
+    def __init__(self, token: str, model_name: str, model_version: str,
+                 timeout_seconds: float = DEFAULT_REQUEST_TIMEOUT_SECONDS):
         # We hold the API URL and headers privately.
         # api-inference.huggingface.co was decommissioned by Hugging Face (DNS no longer
         # resolves); router.huggingface.co/hf-inference is its successor endpoint.
         self._url = f"https://router.huggingface.co/hf-inference/models/{model_name}/pipeline/feature-extraction"
         self._headers = {"Authorization": f"Bearer {token}"}
+        self._timeout_seconds = timeout_seconds
         
         # Provider identity: stable triple fixed at construction.
         self._model_name = model_name
@@ -50,7 +56,8 @@ class HuggingFaceEmbeddingAdapter(ProviderAdapter):
         return self._embedding_dimension
 
     def embed_batch(self, texts: List[str]) -> List[List[float]]:
-        response = requests.post(self._url, headers=self._headers, json={"inputs": texts})
+        response = requests.post(self._url, headers=self._headers, json={"inputs": texts},
+                                 timeout=self._timeout_seconds)
         
         # Raise HTTP errors first
         response.raise_for_status()
@@ -131,7 +138,8 @@ def huggingface_factory(settings: ProviderSettings, raw_credential: Optional[str
         raise ValueError("Hugging Face provider requires a credential (API key)")
         
     # Adapter instance returned (raw_credential consumed here)
-    return HuggingFaceEmbeddingAdapter(raw_credential, model_name, model_version)
+    timeout_seconds = float(extra.get("timeout_seconds", DEFAULT_REQUEST_TIMEOUT_SECONDS))
+    return HuggingFaceEmbeddingAdapter(raw_credential, model_name, model_version, timeout_seconds)
 
 
 def get_provider_registration() -> ProviderRegistration:

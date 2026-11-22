@@ -8,7 +8,10 @@ import requests
 src_path = Path(__file__).parent.parent
 sys.path.append(str(src_path))
 
-from scripts.embedding_provider_huggingface import HuggingFaceEmbeddingAdapter, huggingface_factory, get_provider_registration
+from scripts.embedding_provider_huggingface import (
+    HuggingFaceEmbeddingAdapter, huggingface_factory, get_provider_registration,
+    DEFAULT_REQUEST_TIMEOUT_SECONDS,
+)
 
 
 class TestHuggingFaceEmbeddingProvider(unittest.TestCase):
@@ -37,12 +40,32 @@ class TestHuggingFaceEmbeddingProvider(unittest.TestCase):
         mock_post.assert_called_once_with(
             self.adapter._url,
             headers={"Authorization": "Bearer fake-token"},
-            json={"inputs": texts}
+            json={"inputs": texts},
+            timeout=DEFAULT_REQUEST_TIMEOUT_SECONDS
         )
         mock_response.raise_for_status.assert_called_once()
         self.assertEqual(vectors, [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]])
         self.assertEqual(self.adapter.embedding_dimension, 3)
         
+    @patch('scripts.embedding_provider_huggingface.requests.post')
+    def test_embed_batch_always_passes_a_finite_timeout(self, mock_post):
+        mock_post.return_value = Mock(json=Mock(return_value=[[0.1]]))
+        self.adapter.embed_batch(["x"])
+        timeout = mock_post.call_args.kwargs["timeout"]
+        self.assertIsInstance(timeout, (int, float))
+        self.assertGreater(timeout, 0)
+
+    @patch('scripts.embedding_provider_huggingface.requests.post')
+    def test_factory_timeout_is_configurable(self, mock_post):
+        mock_post.return_value = Mock(json=Mock(return_value=[[0.1]]))
+        adapter = huggingface_factory({"extra": {"timeout_seconds": "7"}}, "fake-api-key")
+        adapter.embed_batch(["x"])
+        self.assertEqual(mock_post.call_args.kwargs["timeout"], 7.0)
+
+    def test_read_timeout_is_classified_transient(self):
+        self.assertTrue(self.adapter.is_transient_error(requests.exceptions.ReadTimeout()))
+        self.assertTrue(self.adapter.is_transient_error(requests.exceptions.ConnectTimeout()))
+
     def test_embedding_dimension_before_discovery_raises(self):
         with self.assertRaisesRegex(RuntimeError, "not yet discovered"):
             _ = self.adapter.embedding_dimension
