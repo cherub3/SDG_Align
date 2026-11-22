@@ -20,7 +20,7 @@ const rows: HealthRow[] = [
   { name: "Planner", status: "OPERATIONAL", detail: "PlannerLLMAdapter wired" },
   { name: "Vector Index", status: "OPERATIONAL", detail: "477879bb… · 6 documents" },
   { name: "Observability", status: "OPERATIONAL", detail: "Phase 2.3 · observe_request()" },
-  { name: "Pipeline", status: "OPERATIONAL", detail: "575 tests passing" },
+  { name: "Pipeline", status: "OPERATIONAL", detail: "795 tests passing (local run)" },
   { name: "Gold Set Eval", status: "PENDING", detail: "evaluation.md not yet authored" },
 ]
 

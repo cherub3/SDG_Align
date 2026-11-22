@@ -16,7 +16,7 @@ export function HeroSection() {
           Grounded AI analysis for UN SDG proposal alignment
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-          A 22-stage deterministic RAG + agent pipeline — every claim traceable,
+          A 22-stage RAG + agent pipeline with content-deterministic ingestion —
           every stage tested, every boundary documented.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">

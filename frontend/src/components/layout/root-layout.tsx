@@ -21,7 +21,7 @@ export function RootLayout() {
               <Outlet />
             </main>
             <footer className="border-t h-16 flex items-center justify-center px-4">
-              <p className="text-sm text-muted-foreground">SDG Align — a 22-stage deterministic RAG + agent pipeline</p>
+              <p className="text-sm text-muted-foreground">SDG Align — a 22-stage RAG + agent pipeline with content-deterministic ingestion</p>
             </footer>
           </div>
         </ReducedMotionProvider>

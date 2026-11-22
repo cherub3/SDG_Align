@@ -10,10 +10,10 @@ const principles = [
     detailContent: "The evidence package can only read approved rows.",
   },
   {
-    headline: "Deterministic before probabilistic",
+    headline: "Plain code before probabilistic models",
     visibleSummary: "Everything that enforces trust is plain, testable code.",
     detailContent:
-      "Deterministic before probabilistic — everything that enforces trust is plain, testable code. The LLM is confined to the narrow steps where judgment is genuinely required.",
+      "Plain code before probabilistic models — everything that enforces trust is plain, testable code. The LLM is confined to the narrow steps where judgment is genuinely required.",
   },
   {
     headline: "Simple before scalable",
@@ -110,10 +110,10 @@ const limitations = [
     detailContent: "Product goal (SDG alignment UI) not yet implemented — this is the pipeline foundation",
   },
   {
-    headline: "Test count: GitHub CI is the sole authoritative source",
-    visibleSummary: "575 passing, confirmed 2026-07-23",
+    headline: "Test count: the latest recorded run is the source",
+    visibleSummary: "795 passing in a local run, 2026-11-23",
     detailContent:
-      "Test count: GitHub CI is the sole authoritative source (575 passing, confirmed 2026-07-23). The dashboard, the README, and every other published artifact are regenerated from this CI-confirmed count before release — no artifact is published with a divergent figure.",
+      "Test count: 795 passing in a local run on 2026-11-23. The GitHub Actions workflow is defined but has not been run yet, so this figure is not CI-confirmed.",
   },
 ]
 
@@ -121,11 +121,11 @@ const comparisonRows: [string, string][] = [
   ["Simple chatbot or Q&A demo", "22-stage observable pipeline"],
   ["No documented architecture", "8 frozen architecture phases (1.1–2.3)"],
   ["Black-box inference", "Full execution trace, stage by stage"],
-  ["Minimal or no tests", "575 passing tests · GitHub CI verified"],
+  ["Minimal or no tests", "Automated test suite with an 80% coverage gate · CI workflow defined"],
   ["No observability", "Phase 2.3 request observability (correlation ID · outcome · duration)"],
   ["Single provider, hardwired", "6 adapter seams · provider-neutral contracts"],
   ["No known limitations documented", "Limitations published transparently (including known defects)"],
-  ['"Production-ready" claim, no evidence', "Binary-completion guarantee · deterministic output per stage"],
+  ['"Production-ready" claim, no evidence', "Content-deterministic ingestion · per-stage validation reports"],
 ]
 
 export function AboutPage() {
@@ -135,7 +135,7 @@ export function AboutPage() {
 
       <NarrativeBlock
         headline="SDG Align was built to answer a real gap in development-sector work: organizations spend significant time manually mapping proposals to SDG targets, with no consistent method and no audit trail."
-        body="This is the engineering case study of how one deterministic, evidence-backed pipeline was designed to change that."
+        body="This is the engineering case study of how one evidence-backed pipeline was designed to change that."
       />
 
       <section aria-labelledby="comparison-heading" className="space-y-4">
@@ -166,7 +166,7 @@ export function AboutPage() {
         <h2 id="thesis-heading" className="sr-only">Engineering Thesis</h2>
         <blockquote className="border-l-4 border-primary bg-muted/30 rounded-lg p-6 text-lg">
           <p>
-            &ldquo;Deterministic before probabilistic — everything that enforces trust is plain, testable
+            &ldquo;Plain code before probabilistic models — everything that enforces trust is plain, testable
             code. The LLM is confined to the narrow steps where judgment is genuinely required.&rdquo;
           </p>
           <footer className="mt-3 text-sm text-muted-foreground">

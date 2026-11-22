@@ -9,7 +9,7 @@ export function ExecutiveMetricsStrip() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
           <MetricCard label="Pipeline Stages" value={22} description="Stages 0–21 · fully frozen" />
-          <MetricCard label="Tests Passing" value={575} description="GitHub CI · confirmed 2026-07-23" variant="highlight" />
+          <MetricCard label="Tests Passing" value={795} description="Local run 2026-11-23 · not yet run on GitHub CI" variant="highlight" />
           <MetricCard label="Documents Indexed" value={6} description="of 13 ingested" />
           <MetricCard label="AI Providers" value={3} description="LLM · Embedding · Planner" />
           <MetricCard label="Adapter Boundaries" value={6} description="LLM · Cache · Tool · Index · Planner · Conversation" />

@@ -69,7 +69,7 @@ export function ObservabilityPage() {
 
       <NarrativeBlock
         headline="Phase 2.3 (Request Observability) wraps every execution with a correlation identity, outcome, and timing record."
-        body="This page is the read-only window into that layer. Every row here represents one call to observe_request() — produced deterministically, owned by the observer alone."
+        body="This page is the read-only window into that layer. Every row here represents one call to observe_request() — written by the observer alone."
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
