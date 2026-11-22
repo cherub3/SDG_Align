@@ -151,6 +151,37 @@ def normalize_query_vector(vector) -> np.ndarray:
         raise ValueError("query vector has zero norm")
     return (arr / norm).astype(np.float32)
 
+_ID_MAP_CACHE: Dict[tuple, Dict[int, tuple]] = {}
+_CHUNKS_CACHE: Dict[tuple, Any] = {}
+
+
+def _file_key(path: Path) -> tuple:
+    st = Path(path).stat()
+    return (str(path), st.st_mtime_ns, st.st_size)
+
+
+def _load_id_map(path: Path) -> Dict[int, tuple]:
+    """adapter_internal_id -> (embedding_id, chunk_id, doc_id), read once per file version (first row wins on a duplicate id)."""
+    key = _file_key(path)
+    if key not in _ID_MAP_CACHE:
+        df = pq.read_table(path).to_pandas()
+        table: Dict[int, tuple] = {}
+        for iid, eid, cid, did in zip(df["adapter_internal_id"], df["embedding_id"], df["chunk_id"], df["doc_id"]):
+            table.setdefault(int(iid), (eid, cid, did))
+        _ID_MAP_CACHE[key] = table
+    return _ID_MAP_CACHE[key]
+
+
+def _load_chunk_list(path: Path) -> List[Dict]:
+    """A stage-7 chunks file, parsed once per file version. Accepts the {"chunks": [...]} envelope or a bare list."""
+    key = _file_key(path)
+    if key not in _CHUNKS_CACHE:
+        with open(path, 'r', encoding='utf-8') as f:
+            loaded = json.load(f)
+        _CHUNKS_CACHE[key] = loaded.get("chunks", []) if isinstance(loaded, dict) else loaded
+    return _CHUNKS_CACHE[key]
+
+
 def search_index(index_handle: IndexHandle, query_vector: np.ndarray, k: int, index_adapter_factory: Callable[[str], IndexAdapter]) -> List[Dict]:
     metric = index_handle.metadata.get("metric", "cosine")
     adapter = index_adapter_factory(metric)
@@ -166,22 +197,21 @@ def search_index(index_handle: IndexHandle, query_vector: np.ndarray, k: int, in
     distances = distances[0]
     internal_ids = internal_ids[0]
     
-    # Load id_map
-    id_map_df = pq.read_table(index_handle.path / "id_map.parquet").to_pandas()
-    
+    id_map = _load_id_map(index_handle.path / "id_map.parquet")
+
     candidates = []
     for dist, iid in zip(distances, internal_ids):
         if iid == -1:
             continue
-        row = id_map_df[id_map_df["adapter_internal_id"] == iid]
-        if not row.empty:
+        row = id_map.get(int(iid))
+        if row is not None:
             candidates.append({
                 "index_fingerprint": index_handle.fingerprint,
                 "distance": float(dist),
                 "metric": metric,
-                "embedding_id": row.iloc[0]["embedding_id"],
-                "chunk_id": row.iloc[0]["chunk_id"],
-                "doc_id": row.iloc[0]["doc_id"]
+                "embedding_id": row[0],
+                "chunk_id": row[1],
+                "doc_id": row[2]
             })
     return candidates
 
@@ -437,11 +467,7 @@ def retrieve(
                 chunks_path = Path(paths["chunks"])
                 if chunks_path.exists():
                     try:
-                        with open(chunks_path, 'r', encoding='utf-8') as f:
-                            loaded = json.load(f)
-                            # Stage 7 writes {"chunks": [...]} envelopes; accept a bare list too.
-                            chunk_list = loaded.get("chunks", []) if isinstance(loaded, dict) else loaded
-                            chunks_by_doc[doc_id] = {c["chunk_id"]: c for c in chunk_list}
+                        chunks_by_doc[doc_id] = {c["chunk_id"]: c for c in _load_chunk_list(chunks_path)}
                     except Exception:
                         pass
                         

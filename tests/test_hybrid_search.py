@@ -107,3 +107,34 @@ def test_build_bm25_is_cached_on_content_and_rebuilt_on_change():
 def test_default_params_are_the_documented_ones():
     assert hs.DEFAULT_PARAMS == {"rrf_k": 60, "w_bm25": 1.0, "w_dense": 1.0, "depth": 50}
     assert math.isclose(hs.K1, 1.5) and math.isclose(hs.B, 0.75)
+
+
+def _naive_bm25(docs, query, k1=1.5, b=0.75):
+    """Textbook BM25 straight from the definition, as an independent check of the vectorised implementation."""
+    toks = {cid: hs.tokenize(t) for cid, t in docs}
+    n = len(docs)
+    avg = sum(len(t) for t in toks.values()) / n
+    out = {}
+    for cid, t in toks.items():
+        s = 0.0
+        for q in hs.tokenize(query):
+            df = sum(q in x for x in toks.values())
+            if df == 0:
+                continue
+            idf = math.log(1.0 + (n - df + 0.5) / (df + 0.5))
+            f = t.count(q)
+            s += idf * f * (k1 + 1.0) / (f + k1 * (1.0 - b + b * len(t) / avg))
+        if s > 0:
+            out[cid] = s
+    return out
+
+
+def test_vectorised_bm25_matches_the_textbook_formula():
+    docs = [("a", "jaguar corridor in Ecuador 2026"), ("b", "gold mining mercury Mozambique gold"),
+            ("c", "jaguar jaguar jaguar habitat 1,250,000"), ("d", "budget 1,250,000 USD co-financing in Ecuador")]
+    idx = hs.BM25Index(docs)
+    for q in ("jaguar in ecuador", "gold gold mercury", "1,250,000 budget", "ecuador"):
+        got, want = idx.scores(q), _naive_bm25(docs, q)
+        assert got.keys() == want.keys()
+        for k in want:
+            assert got[k] == pytest.approx(want[k], rel=1e-12)

@@ -390,3 +390,25 @@ def test_retrieve_hybrid_promotes_the_lexical_match_and_keeps_the_cosine(mock_se
     assert [r["chunk_id"] for r in hyb["results"]] == ["a2", "a1"]
     assert hyb["results"][0]["dense_score"] == pytest.approx(0.2) and hyb["results"][0]["bm25_score"] > 0
     assert mock_search.call_args.args[2] >= 10 ** 6          # hybrid searches the whole index
+
+
+def test_chunk_and_id_map_caches_follow_the_file(tmp_path):
+    """The per-file caches must serve a repeat read from memory but notice when the file changes."""
+    import os
+    import pandas as pd
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+    from scripts import stage10_retrieval as s10
+
+    cp = tmp_path / "c.json"
+    cp.write_text(json.dumps({"chunks": [{"chunk_id": "a"}]}), encoding="utf-8")
+    assert s10._load_chunk_list(cp) == [{"chunk_id": "a"}]
+    assert s10._load_chunk_list(cp) is s10._load_chunk_list(cp)
+    cp.write_text(json.dumps([{"chunk_id": "a"}, {"chunk_id": "b"}]), encoding="utf-8")   # bare list accepted, bigger file
+    assert len(s10._load_chunk_list(cp)) == 2
+
+    ip = tmp_path / "id_map.parquet"
+    pq.write_table(pa.Table.from_pandas(pd.DataFrame({"adapter_internal_id": [0, 0, 1], "embedding_id": ["e0", "dup", "e1"],
+                                                      "chunk_id": ["c0", "cdup", "c1"], "doc_id": ["d", "d", "d"]})), ip)
+    m = s10._load_id_map(ip)
+    assert m[0] == ("e0", "c0", "d") and m[1] == ("e1", "c1", "d")      # first row wins on a duplicate id

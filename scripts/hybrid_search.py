@@ -16,6 +16,8 @@ Design, all deliberate and all disclosed in reports/PHASE_2_REPORT.md:
 import math
 import re
 from collections import Counter
+
+import numpy as np
 from typing import Dict, List, Optional, Sequence, Tuple
 
 K1 = 1.5
@@ -44,20 +46,26 @@ class BM25Index:
             df.update(c.keys())
         n = len(self.ids)
         self.idf = {t: math.log(1.0 + (n - f + 0.5) / (f + 0.5)) for t, f in df.items()}
+        # Query-time arrays: per term, the chunks containing it (row indices) and their term frequencies; plus each
+        # chunk's length-normaliser. Scoring a query is then a few numpy operations instead of a Python loop over chunks.
+        postings: Dict[str, Tuple[list, list]] = {}
+        for i, c in enumerate(self.tf):
+            for t, f in c.items():
+                postings.setdefault(t, ([], []))
+                postings[t][0].append(i)
+                postings[t][1].append(f)
+        self._post = {t: (np.asarray(ix, dtype=np.int64), np.asarray(fs, dtype=np.float64)) for t, (ix, fs) in postings.items()}
+        self._norm = (self.k1 * (1.0 - self.b + self.b * np.asarray(self.len, dtype=np.float64) / self.avg_len)
+                      if self.len else np.zeros(0))
 
     def scores(self, query: str) -> Dict[str, float]:
         """BM25 score for every chunk with a non-zero score."""
         q = [t for t in tokenize(query) if t in self.idf]
-        out = {}
-        for cid, tf, ln in zip(self.ids, self.tf, self.len):
-            s = 0.0
-            for t in q:
-                f = tf.get(t, 0)
-                if f:
-                    s += self.idf[t] * f * (self.k1 + 1.0) / (f + self.k1 * (1.0 - self.b + self.b * ln / self.avg_len))
-            if s > 0.0:
-                out[cid] = s
-        return out
+        acc = np.zeros(len(self.ids), dtype=np.float64)
+        for t in q:                                     # repeated query terms count repeatedly, as in the textbook formula
+            ix, f = self._post[t]
+            acc[ix] += self.idf[t] * f * (self.k1 + 1.0) / (f + self._norm[ix])
+        return {self.ids[i]: float(acc[i]) for i in np.flatnonzero(acc > 0.0)}
 
 
 def rank_by_score(scores: Dict[str, float]) -> List[str]:
