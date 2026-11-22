@@ -82,6 +82,17 @@ def register_document(file_path: Path, manifest: Dict[str, ManifestRecord]) -> b
         if existing.source_path is None:
             existing.source_path = source_path
             logger.info(f"Backfilled source_path for existing record: {doc_id}")
+        elif existing.source_path != source_path and not Path(existing.source_path).exists():
+            # Same bytes (same doc_id) now live in a different folder and the old location is gone:
+            # the file was MOVED. The category is derived from the folder, so it must follow the file.
+            # (If the old location still exists this is a genuine duplicate copy and is skipped below,
+            # so two copies can never make the category flip-flop between runs.)
+            logger.info(
+                f"Document moved: {doc_id} {existing.source_path} -> {source_path}; "
+                f"category {existing.category!r} -> {category!r}. Re-run stages 6-9 to refresh derived artifacts."
+            )
+            existing.source_path = source_path
+            existing.category = category
         else:
             logger.warning(f"Duplicate skipped: Document with doc_id {doc_id} is already registered.")
         return True

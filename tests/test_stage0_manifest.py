@@ -106,3 +106,51 @@ class TestStage0Manifest(unittest.TestCase):
         
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestMovedDocuments(unittest.TestCase):
+    """The category comes from the folder, so a document moved between folders must be re-categorised."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.root = Path(self._tmp.name)
+        self.old = self.root / "raw" / "climate" / "doc.pdf"
+        self.new = self.root / "raw" / "biodiversity" / "doc.pdf"
+        for d in (self.old.parent, self.new.parent):
+            d.mkdir(parents=True)
+        self.old.write_bytes(b"same bytes")
+
+    def _registered(self):
+        manifest = {}
+        self.assertTrue(register_document(self.old, manifest))
+        (doc_id,) = manifest
+        return manifest, doc_id
+
+    def test_moved_file_updates_category_and_source_path_but_keeps_the_record(self):
+        manifest, doc_id = self._registered()
+        manifest[doc_id].status = DocumentStatus.READY_FOR_CHUNKING
+        self.old.rename(self.new)
+
+        self.assertTrue(register_document(self.new, manifest))
+
+        self.assertEqual(list(manifest), [doc_id])                       # same doc_id, no second record
+        self.assertEqual(manifest[doc_id].category, "biodiversity")
+        self.assertEqual(manifest[doc_id].source_path, str(self.new).replace("\\", "/"))
+        self.assertEqual(manifest[doc_id].status, DocumentStatus.READY_FOR_CHUNKING)  # progress is kept
+
+    def test_second_copy_while_the_original_still_exists_is_a_duplicate_not_a_move(self):
+        manifest, doc_id = self._registered()
+        self.new.write_bytes(b"same bytes")                              # copy, original still in place
+
+        register_document(self.new, manifest)
+
+        self.assertEqual(manifest[doc_id].category, "climate")           # first registration wins
+        self.assertEqual(manifest[doc_id].source_path, str(self.old).replace("\\", "/"))
+
+    def test_re_registering_an_unmoved_file_changes_nothing(self):
+        manifest, doc_id = self._registered()
+        before = (manifest[doc_id].category, manifest[doc_id].source_path)
+        register_document(self.old, manifest)
+        self.assertEqual((manifest[doc_id].category, manifest[doc_id].source_path), before)
+
