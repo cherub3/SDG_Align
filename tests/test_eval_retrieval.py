@@ -27,3 +27,21 @@ def test_threshold_boundary():
     it = item([("A", 0, 200)], "single_fact")
     assert ev.score_item(it, [("A", 150, 400)])["recall@1"] == 1.0      # 50 chars overlap
     assert ev.score_item(it, [("A", 151, 400)])["recall@1"] == 0.0      # 49
+
+
+def test_compare_paired(tmp_path):
+    import json
+
+    def mk(name, r5, rr):
+        items = [{"qid": f"Q{i}", "type": "single_fact", "recall@1": 0.0, "recall@5": r5[i], "recall@10": r5[i],
+                  "mrr@10": rr[i], "ndcg@10": rr[i]} for i in range(10)]
+        p = tmp_path / name
+        p.write_text(json.dumps({"split": "test", "items": items, "latency_ms_per_query": {"p50": 1.0}}), encoding="utf-8")
+        return str(p)
+    a = mk("a.json", [0] * 10, [0.1] * 10)
+    b = mk("b.json", [1] * 8 + [0] * 2, [0.5] * 10)
+    c = ev.compare(a, b)
+    assert c["recall@5"]["improved"] == 8 and c["recall@5"]["worsened"] == 0
+    assert abs(c["recall@5"]["mcnemar_exact_p"] - 2 * 0.5 ** 8) < 1e-4
+    assert c["mrr@10"]["delta"] > 0.39 and c["mrr@10"]["wilcoxon_p"] < 0.01
+    assert "McNemar" in ev.compare_table(c, "a", "b")

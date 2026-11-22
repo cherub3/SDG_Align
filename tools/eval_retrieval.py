@@ -93,7 +93,7 @@ def summarize(rows):
     return out
 
 
-def build_retriever():
+def build_retriever(top_k=TOP_K):
     """Real stage-10 retrieve() over the local index (same as tools/retrieval_eval.py): fn(query) -> [(doc_id,start,end,score)]."""
     os.chdir(REPO)
     from scripts.embedding_provider_local import LocalEmbeddingAdapter
@@ -118,7 +118,7 @@ def build_retriever():
                 spans[c["chunk_id"]] = (c["doc_id"], c["char_start"], c["char_end"])
 
     def run(q):
-        r = retrieve({"query": q, "index_fingerprints": fps, "top_k": TOP_K}, manifest,
+        r = retrieve({"query": q, "index_fingerprints": fps, "top_k": top_k}, manifest,
                      lambda p, m, v: ad, lambda m: FAISSAdapter(m))
         return [(*spans[x["chunk_id"]], x["score"]) for x in r["results"]]
     return run
@@ -146,28 +146,48 @@ def evaluate(split, retriever, label):
             "summary": summarize(rows), "items": rows}
 
 
-def compare(a_path, b_path):
+def _paired(d, rng, binary):
     from scipy.stats import wilcoxon, binomtest
+    d = np.asarray(d, dtype=float)
+    idx = rng.integers(0, len(d), (BOOT, len(d)))
+    bm = d[idx].mean(axis=1)
+    e = {"n": len(d), "delta": round(float(d.mean()), 4),
+         "ci95": [round(float(np.percentile(bm, 2.5)), 4), round(float(np.percentile(bm, 97.5)), 4)]}
+    nz = d[d != 0]
+    e["wilcoxon_p"] = round(float(wilcoxon(nz).pvalue), 4) if len(nz) else 1.0
+    if binary:
+        up, down = int((d > 0).sum()), int((d < 0).sum())
+        e.update(improved=up, worsened=down, mcnemar_exact_p=round(float(binomtest(up, up + down, 0.5).pvalue), 4) if up + down else 1.0)
+    return e
+
+
+def compare(a_path, b_path):
+    """Per-question paired comparison of config B vs config A (same split). Headline tests requested for every Step 3 change:
+    McNemar (exact) on R@5 hit/miss and Wilcoxon signed-rank on reciprocal rank (mrr@10), each with delta + bootstrap CI."""
     a, b = (json.load(open(p, encoding="utf-8")) for p in (a_path, b_path))
     assert a["split"] == b["split"], "different splits"
     ia = {r["qid"]: r for r in a["items"] if r["type"] != "unanswerable"}
     ib = {r["qid"]: r for r in b["items"] if r["type"] != "unanswerable"}
-    rng, out = np.random.default_rng(2), {}
+    assert ia.keys() == ib.keys(), "different items"
+    rng, out, q = np.random.default_rng(2), {}, sorted(ia)
     for m in METRICS:
-        q = sorted(ia)
-        d = np.array([ib[k][m] - ia[k][m] for k in q])
-        idx = rng.integers(0, len(d), (BOOT, len(d)))
-        bm = d[idx].mean(axis=1)
-        e = {"delta": round(float(d.mean()), 4),
-             "ci95": [round(float(np.percentile(bm, 2.5)), 4), round(float(np.percentile(bm, 97.5)), 4)]}
-        nz = d[d != 0]
-        e["wilcoxon_p"] = round(float(wilcoxon(nz).pvalue), 4) if len(nz) else 1.0
-        if m.startswith("recall"):
-            up, down = int((d > 0).sum()), int((d < 0).sum())
-            e["mcnemar_exact_p"] = round(float(binomtest(up, up + down, 0.5).pvalue), 4) if up + down else 1.0
-            e["improved"], e["worsened"] = up, down
-        out[m] = e
+        out[m] = _paired([ib[k][m] - ia[k][m] for k in q], rng, m.startswith("recall"))
+    multi = [k for k in q if "all_spans@10" in ia[k]]
+    out["all_spans@10 (multi+cross)"] = _paired([ib[k]["all_spans@10"] - ia[k]["all_spans@10"] for k in multi], rng, True)
+    out["latency_ms_p50"] = {"A": a["latency_ms_per_query"]["p50"], "B": b["latency_ms_per_query"]["p50"]}
     return out
+
+
+def compare_table(c, name_a, name_b):
+    r5, rr = c["recall@5"], c["mrr@10"]
+    return chr(10).join([
+        f"{name_b} vs {name_a}  (n={r5['n']} answerable, paired by question)",
+        f"  R@5: delta {r5['delta']:+.3f} CI [{r5['ci95'][0]:+.3f},{r5['ci95'][1]:+.3f}]  McNemar exact p={r5['mcnemar_exact_p']} "
+        f"(improved {r5['improved']}, worsened {r5['worsened']})",
+        f"  reciprocal rank (MRR@10): delta {rr['delta']:+.3f} CI [{rr['ci95'][0]:+.3f},{rr['ci95'][1]:+.3f}]  Wilcoxon p={rr['wilcoxon_p']}",
+        f"  nDCG@10: delta {c['ndcg@10']['delta']:+.3f}   R@1: delta {c['recall@1']['delta']:+.3f}   R@10: delta {c['recall@10']['delta']:+.3f}",
+        f"  all-spans@10 (multi+cross): delta {c['all_spans@10 (multi+cross)']['delta']:+.3f} (improved {c['all_spans@10 (multi+cross)']['improved']}, worsened {c['all_spans@10 (multi+cross)']['worsened']})",
+        f"  latency p50 ms: {c['latency_ms_p50']['A']} -> {c['latency_ms_p50']['B']}"])
 
 
 def fmt(c):
@@ -196,7 +216,9 @@ if __name__ == "__main__":
     ap.add_argument("--compare", nargs=2)
     a = ap.parse_args()
     if a.compare:
-        print(json.dumps(compare(*a.compare), indent=1))
+        c = compare(*a.compare)
+        print(json.dumps(c, indent=1))
+        print(compare_table(c, *[os.path.basename(p) for p in a.compare]))
     else:
         res = evaluate(a.split, build_retriever(), a.label)
         os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
