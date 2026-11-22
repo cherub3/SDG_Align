@@ -1,0 +1,16 @@
+[
+  {
+    "id": "M22",
+    "description": "RRF fusion ignores the BM25 weight",
+    "file": "scripts/hybrid_search.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 151 passed, 1 skipped, 4 warnings, 18 subtests passed in 17.58s"
+  },
+  {
+    "id": "M23",
+    "description": "RRF constant k ignored (hard-coded 60)",
+    "file": "scripts/hybrid_search.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 151 passed, 1 skipped, 4 warnings, 18 subtests passed in 17.45s"
+  }
+]

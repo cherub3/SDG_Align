@@ -1,0 +1,100 @@
+[
+  {
+    "id": "M22",
+    "description": "RRF fusion ignores the BM25 weight",
+    "file": "scripts/hybrid_search.py",
+    "result": "SURVIVED",
+    "pytest": "869 passed, 1 skipped, 4 warnings, 18 subtests passed in 30.90s"
+  },
+  {
+    "id": "M23",
+    "description": "RRF constant k ignored (hard-coded 60)",
+    "file": "scripts/hybrid_search.py",
+    "result": "SURVIVED",
+    "pytest": "869 passed, 1 skipped, 4 warnings, 18 subtests passed in 29.77s"
+  },
+  {
+    "id": "M24",
+    "description": "RRF depth cut removed",
+    "file": "scripts/hybrid_search.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 143 passed, 1 skipped, 4 warnings, 18 subtests passed in 17.27s"
+  },
+  {
+    "id": "M25",
+    "description": "BM25 idf loses its +1 (can go negative)",
+    "file": "scripts/hybrid_search.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 138 passed, 1 skipped, 4 warnings, 18 subtests passed in 17.50s"
+  },
+  {
+    "id": "M26",
+    "description": "BM25 length normalisation disabled (b=0)",
+    "file": "scripts/hybrid_search.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 149 passed, 1 skipped, 4 warnings, 18 subtests passed in 18.10s"
+  },
+  {
+    "id": "M27",
+    "description": "rerank N cut-off ignored (scores the whole pool)",
+    "file": "scripts/reranker.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 248 passed, 1 skipped, 4 warnings, 18 subtests passed in 18.82s"
+  },
+  {
+    "id": "M28",
+    "description": "reranker order reversed (worst first)",
+    "file": "scripts/reranker.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 247 passed, 1 skipped, 4 warnings, 18 subtests passed in 19.69s"
+  },
+  {
+    "id": "M29",
+    "description": "reranking switched ON by default",
+    "file": "scripts/stage10_retrieval.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 53 passed, 6 subtests passed in 9.48s"
+  },
+  {
+    "id": "M30",
+    "description": "hybrid switched ON by default in retrieve()",
+    "file": "scripts/stage10_retrieval.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 251 passed, 1 skipped, 4 warnings, 18 subtests passed in 21.11s"
+  },
+  {
+    "id": "M31",
+    "description": "advisory threshold changed",
+    "file": "scripts/confidence.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 49 passed, 6 subtests passed in 9.80s"
+  },
+  {
+    "id": "M32",
+    "description": "advisory flag comparison flipped (<= instead of <)",
+    "file": "scripts/confidence.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 50 passed, 6 subtests passed in 8.52s"
+  },
+  {
+    "id": "M33",
+    "description": "advisory switched ON by default",
+    "file": "scripts/stage10_retrieval.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 53 passed, 6 subtests passed in 8.60s"
+  },
+  {
+    "id": "M34",
+    "description": "span-overlap hit rule: any overlap counts",
+    "file": "tools/gold_common.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 125 passed, 18 subtests passed in 18.04s"
+  },
+  {
+    "id": "M35",
+    "description": "span-overlap hit rule: 50-char cap removed",
+    "file": "tools/gold_common.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 125 passed, 18 subtests passed in 17.57s"
+  }
+]
