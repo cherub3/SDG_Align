@@ -19,7 +19,7 @@ goal-level alignment features are intended to be built.
 | | Status |
 |---|---|
 | Stages 0–21 pipeline (ingestion → RAG → agent orchestration) | ✅ Implemented & frozen |
-| Test suite | ✅ 813 tests passing, 85% line+branch coverage (`python -m pytest --cov`) |
+| Test suite | ✅ 871 tests passing, 85% line+branch coverage (`python -m pytest --cov`) |
 | Ingestion (Stages 0–9) verified on a real 13-document corpus | ✅ |
 | Query/agent stages (10–21) verified via unit tests over abstract adapters | ✅ |
 | Track B backend (FastAPI) + frontend (React dashboard), Mode A (Live) | ✅ Implemented & verified — see [`DEPLOYMENT.md`](DEPLOYMENT.md) |
@@ -293,7 +293,7 @@ Expected: **All tests passing**. Run a single stage's tests with, e.g.,
   groundedness → quality) exposed as a single `APIResponse`.
 - An agent layer: conversation memory, structured tool invocation, and a deterministic top-level
   planner.
-- A comprehensive test suite (813 tests) and per-stage reproducibility of content (see Determinism above).
+- A comprehensive test suite (871 tests) and per-stage reproducibility of content (see Determinism above).
 
 ## Known limitations
 
@@ -303,10 +303,15 @@ Expected: **All tests passing**. Run a single stage's tests with, e.g.,
 - **Query/agent stages are verified by unit tests over in-memory adapters**, not by an end-to-end run
   against a live LLM; real-provider behaviour depends on the adapter supplied at wiring time.
 - **No plan/response caching across requests** beyond Stage 17's per-call LLM cache.
-- **`eval/gold_set` and `pages/` are reserved directories**, currently empty.
-- **Retrieval and answer quality are unmeasured.** There is no gold set; an informal 15-question
-  retrieval check (2026-11-23) found the right document ranked first for 9/9 document-specific
-  questions but many chunk-level misses, and no answer-level evaluation has been run.
+- **`pages/` is a reserved, empty directory.**
+- **Retrieval quality is measured (Phase 2), answer quality is not.** `eval/gold_set.jsonl` holds 66 AI-drafted, frozen questions
+  (56 answerable, 10 unanswerable; 14 dev / 52 test). Test-split results with confidence intervals, the configuration ladder and
+  every caveat are in [`reports/PHASE_2_REPORT.md`](reports/PHASE_2_REPORT.md). No answer-level evaluation has been run.
+- **Default retrieval configuration (stated explicitly).** `retrieve()` with no options is **dense only** (bge-small, FAISS flat).
+  The best measured setting is hybrid BM25 + dense with reciprocal rank fusion and must be requested:
+  `request["hybrid"] = {"rrf_k": 10, "w_bm25": 2.0, "depth": 50}` (test R@5 0.77 vs 0.57 for the baseline). The cross-encoder
+  reranker (`request["rerank"] = {"n": 20}`) and the low-confidence hint (`request["confidence_advisory"] = True`) are both
+  **off by default**; the hint never refuses a query. Making hybrid the library default is left to the deploy phase.
 - **7 of 13 source PDFs are scanned** and are quarantined at Stage 3 (`FATAL_NO_TEXT`); there is no OCR
   path yet. One further document fails Stage 6 (`DUPLICATE_SECTION_ID`).
 - **Windows:** directory swaps in Stage 9 retry a transient `PermissionError` (antivirus/indexer locks).

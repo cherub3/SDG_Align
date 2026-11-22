@@ -1,0 +1,516 @@
+{
+ "split": "test",
+ "rows": [
+  {
+   "config": "baseline (dense, original text)",
+   "file": "baseline.json",
+   "n": 44,
+   "recall@1": [
+    0.3182,
+    0.1818,
+    0.4545
+   ],
+   "recall@5": [
+    0.5682,
+    0.4091,
+    0.7045
+   ],
+   "recall@10": [
+    0.5909,
+    0.4318,
+    0.7273
+   ],
+   "mrr@10": [
+    0.4195,
+    0.2907,
+    0.5492
+   ],
+   "ndcg@10": [
+    0.4267,
+    0.3083,
+    0.5469
+   ],
+   "all_spans@10": [
+    0.3333,
+    0.1111,
+    0.5556,
+    18
+   ],
+   "latency_ms": {
+    "mean": 221.0,
+    "p50": 86.6,
+    "p95": 116.9
+   }
+  },
+  {
+   "config": "3a: embed text without heading/template prefixes",
+   "file": "3a_test_fast.json",
+   "n": 44,
+   "recall@1": [
+    0.3409,
+    0.2045,
+    0.4773
+   ],
+   "recall@5": [
+    0.5682,
+    0.4318,
+    0.7045
+   ],
+   "recall@10": [
+    0.6591,
+    0.5227,
+    0.7955
+   ],
+   "mrr@10": [
+    0.4342,
+    0.3064,
+    0.5641
+   ],
+   "ndcg@10": [
+    0.4458,
+    0.3267,
+    0.5669
+   ],
+   "all_spans@10": [
+    0.3333,
+    0.1111,
+    0.5556,
+    18
+   ],
+   "latency_ms": {
+    "mean": 205.0,
+    "p50": 41.4,
+    "p95": 73.4
+   }
+  },
+  {
+   "config": "3b: + BM25 hybrid, RRF (k=10, w_bm25=2)",
+   "file": "3b_test_fast.json",
+   "n": 44,
+   "recall@1": [
+    0.3864,
+    0.25,
+    0.5227
+   ],
+   "recall@5": [
+    0.7727,
+    0.6364,
+    0.8864
+   ],
+   "recall@10": [
+    0.8864,
+    0.7727,
+    0.9773
+   ],
+   "mrr@10": [
+    0.5471,
+    0.4308,
+    0.6626
+   ],
+   "ndcg@10": [
+    0.5762,
+    0.4783,
+    0.6739
+   ],
+   "all_spans@10": [
+    0.5,
+    0.2778,
+    0.7222,
+    18
+   ],
+   "latency_ms": {
+    "mean": 211.0,
+    "p50": 45.4,
+    "p95": 76.9
+   }
+  },
+  {
+   "config": "3c: + MiniLM reranker N=20 (OFF by default)",
+   "file": "3c_test.json",
+   "n": 44,
+   "recall@1": [
+    0.5455,
+    0.4091,
+    0.6818
+   ],
+   "recall@5": [
+    0.6818,
+    0.5455,
+    0.8182
+   ],
+   "recall@10": [
+    0.8636,
+    0.75,
+    0.9545
+   ],
+   "mrr@10": [
+    0.6223,
+    0.4956,
+    0.7467
+   ],
+   "ndcg@10": [
+    0.6174,
+    0.5045,
+    0.7268
+   ],
+   "all_spans@10": [
+    0.4444,
+    0.2222,
+    0.6667,
+    18
+   ],
+   "latency_ms": {
+    "mean": 3179.9,
+    "p50": 3182.6,
+    "p95": 3306.9
+   }
+  },
+  {
+   "config": "3d: advisory flag on 3b (same retrieval as 3b)",
+   "file": "3d_test_hybrid.json",
+   "n": 44,
+   "recall@1": [
+    0.3864,
+    0.25,
+    0.5227
+   ],
+   "recall@5": [
+    0.7727,
+    0.6364,
+    0.8864
+   ],
+   "recall@10": [
+    0.8864,
+    0.7727,
+    0.9773
+   ],
+   "mrr@10": [
+    0.5471,
+    0.4308,
+    0.6626
+   ],
+   "ndcg@10": [
+    0.5762,
+    0.4783,
+    0.6739
+   ],
+   "all_spans@10": [
+    0.5,
+    0.2778,
+    0.7222,
+    18
+   ],
+   "latency_ms": {
+    "mean": 233.0,
+    "p50": 53.9,
+    "p95": 85.6
+   }
+  }
+ ],
+ "paired_vs_previous": [
+  {
+   "from": "baseline (dense, original text)",
+   "to": "3a: embed text without heading/template prefixes",
+   "paired": {
+    "recall@1": {
+     "n": 44,
+     "delta": 0.0227,
+     "ci95": [
+      0.0,
+      0.0682
+     ],
+     "wilcoxon_p": 1.0,
+     "improved": 1,
+     "worsened": 0,
+     "mcnemar_exact_p": 1.0
+    },
+    "recall@5": {
+     "n": 44,
+     "delta": 0.0,
+     "ci95": [
+      -0.0682,
+      0.0682
+     ],
+     "wilcoxon_p": 1.0,
+     "improved": 1,
+     "worsened": 1,
+     "mcnemar_exact_p": 1.0
+    },
+    "recall@10": {
+     "n": 44,
+     "delta": 0.0682,
+     "ci95": [
+      0.0,
+      0.1591
+     ],
+     "wilcoxon_p": 0.25,
+     "improved": 3,
+     "worsened": 0,
+     "mcnemar_exact_p": 0.25
+    },
+    "mrr@10": {
+     "n": 44,
+     "delta": 0.0147,
+     "ci95": [
+      -0.0095,
+      0.0455
+     ],
+     "wilcoxon_p": 0.4766
+    },
+    "ndcg@10": {
+     "n": 44,
+     "delta": 0.019,
+     "ci95": [
+      -0.0054,
+      0.0498
+     ],
+     "wilcoxon_p": 0.3086
+    },
+    "all_spans@10 (multi+cross)": {
+     "n": 18,
+     "delta": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "wilcoxon_p": 1.0,
+     "improved": 0,
+     "worsened": 0,
+     "mcnemar_exact_p": 1.0
+    },
+    "latency_ms_p50": {
+     "A": 86.6,
+     "B": 41.4
+    }
+   }
+  },
+  {
+   "from": "3a: embed text without heading/template prefixes",
+   "to": "3b: + BM25 hybrid, RRF (k=10, w_bm25=2)",
+   "paired": {
+    "recall@1": {
+     "n": 44,
+     "delta": 0.0455,
+     "ci95": [
+      -0.0682,
+      0.1818
+     ],
+     "wilcoxon_p": 0.7266,
+     "improved": 5,
+     "worsened": 3,
+     "mcnemar_exact_p": 0.7266
+    },
+    "recall@5": {
+     "n": 44,
+     "delta": 0.2045,
+     "ci95": [
+      0.0909,
+      0.3182
+     ],
+     "wilcoxon_p": 0.0039,
+     "improved": 9,
+     "worsened": 0,
+     "mcnemar_exact_p": 0.0039
+    },
+    "recall@10": {
+     "n": 44,
+     "delta": 0.2273,
+     "ci95": [
+      0.1136,
+      0.3636
+     ],
+     "wilcoxon_p": 0.002,
+     "improved": 10,
+     "worsened": 0,
+     "mcnemar_exact_p": 0.002
+    },
+    "mrr@10": {
+     "n": 44,
+     "delta": 0.1129,
+     "ci95": [
+      0.0165,
+      0.2146
+     ],
+     "wilcoxon_p": 0.0214
+    },
+    "ndcg@10": {
+     "n": 44,
+     "delta": 0.1304,
+     "ci95": [
+      0.0532,
+      0.2149
+     ],
+     "wilcoxon_p": 0.0047
+    },
+    "all_spans@10 (multi+cross)": {
+     "n": 18,
+     "delta": 0.1667,
+     "ci95": [
+      -0.0556,
+      0.3889
+     ],
+     "wilcoxon_p": 0.375,
+     "improved": 4,
+     "worsened": 1,
+     "mcnemar_exact_p": 0.375
+    },
+    "latency_ms_p50": {
+     "A": 41.4,
+     "B": 45.4
+    }
+   }
+  },
+  {
+   "from": "3b: + BM25 hybrid, RRF (k=10, w_bm25=2)",
+   "to": "3c: + MiniLM reranker N=20 (OFF by default)",
+   "paired": {
+    "recall@1": {
+     "n": 44,
+     "delta": 0.1591,
+     "ci95": [
+      0.0227,
+      0.2955
+     ],
+     "wilcoxon_p": 0.0654,
+     "improved": 9,
+     "worsened": 2,
+     "mcnemar_exact_p": 0.0654
+    },
+    "recall@5": {
+     "n": 44,
+     "delta": -0.0909,
+     "ci95": [
+      -0.1818,
+      -0.0227
+     ],
+     "wilcoxon_p": 0.125,
+     "improved": 0,
+     "worsened": 4,
+     "mcnemar_exact_p": 0.125
+    },
+    "recall@10": {
+     "n": 44,
+     "delta": -0.0227,
+     "ci95": [
+      -0.0682,
+      0.0
+     ],
+     "wilcoxon_p": 1.0,
+     "improved": 0,
+     "worsened": 1,
+     "mcnemar_exact_p": 1.0
+    },
+    "mrr@10": {
+     "n": 44,
+     "delta": 0.0752,
+     "ci95": [
+      -0.0158,
+      0.1736
+     ],
+     "wilcoxon_p": 0.2047
+    },
+    "ndcg@10": {
+     "n": 44,
+     "delta": 0.0412,
+     "ci95": [
+      -0.0209,
+      0.1067
+     ],
+     "wilcoxon_p": 0.2583
+    },
+    "all_spans@10 (multi+cross)": {
+     "n": 18,
+     "delta": -0.0556,
+     "ci95": [
+      -0.1667,
+      0.0
+     ],
+     "wilcoxon_p": 1.0,
+     "improved": 0,
+     "worsened": 1,
+     "mcnemar_exact_p": 1.0
+    },
+    "latency_ms_p50": {
+     "A": 45.4,
+     "B": 3182.6
+    }
+   }
+  },
+  {
+   "from": "3b: + BM25 hybrid, RRF (k=10, w_bm25=2)",
+   "to": "3d: advisory flag on 3b (same retrieval as 3b)",
+   "paired": {
+    "recall@1": {
+     "n": 44,
+     "delta": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "wilcoxon_p": 1.0,
+     "improved": 0,
+     "worsened": 0,
+     "mcnemar_exact_p": 1.0
+    },
+    "recall@5": {
+     "n": 44,
+     "delta": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "wilcoxon_p": 1.0,
+     "improved": 0,
+     "worsened": 0,
+     "mcnemar_exact_p": 1.0
+    },
+    "recall@10": {
+     "n": 44,
+     "delta": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "wilcoxon_p": 1.0,
+     "improved": 0,
+     "worsened": 0,
+     "mcnemar_exact_p": 1.0
+    },
+    "mrr@10": {
+     "n": 44,
+     "delta": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "wilcoxon_p": 1.0
+    },
+    "ndcg@10": {
+     "n": 44,
+     "delta": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "wilcoxon_p": 1.0
+    },
+    "all_spans@10 (multi+cross)": {
+     "n": 18,
+     "delta": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "wilcoxon_p": 1.0,
+     "improved": 0,
+     "worsened": 0,
+     "mcnemar_exact_p": 1.0
+    },
+    "latency_ms_p50": {
+     "A": 45.4,
+     "B": 53.9
+    }
+   }
+  }
+ ]
+}

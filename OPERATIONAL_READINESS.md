@@ -16,7 +16,7 @@ verification steps below against a real deployment — it is a snapshot, not a l
 | Mode A auto-detection | ✅ Implemented and verified (Phase 16) |
 | Mode A query flow (Pipeline Explorer, home demo) | ✅ Fixed and verified (Phase 16) — see below |
 | `ExecutionTimeline` empty-stages crash | ✅ Fixed and verified (Phase 16) |
-| Full pytest suite | ✅ 813 passed, 0 failures (re-run 2026-11-23 on the Phase 1 branch; 633 at the original Phase 16 snapshot) |
+| Full pytest suite | ✅ 871 passed, 0 failures (re-run 2026-11-23 on the Phase 2 branch; 633 at the original Phase 16 snapshot) |
 | Frontend type-check / lint / build | ✅ Clean |
 | Gemini planner/LLM calls (real answers) | ❌ Blocked — quota (external, see below) |
 | Retrieval-backed queries | ⚠️ A 384-dim Hugging Face index exists only in the author's local working copy (corpus data is git-ignored); rebuild per [`DEPLOYMENT.md` §5](DEPLOYMENT.md#5-retrieval-index). Not run end-to-end through the backend |
@@ -54,7 +54,7 @@ FastAPI backend — not mocked, not inferred from source reading alone.
 
 ## Runtime validation performed (this session)
 
-- `python -m pytest` → 633 passed, 0 failures (Phase 16 snapshot; 813 passed on 2026-11-23, see summary table).
+- `python -m pytest` → 633 passed, 0 failures (Phase 16 snapshot; 871 passed on 2026-11-23, see summary table).
 - `npx tsc -b && npm run lint && npm run build` → clean, 0 errors.
 - Backend started via `python -m uvicorn scripts.backend_server:app`, with a real `.env` and real
   (but quota-exhausted) `GEMINI_API_KEY` — bootstrap, `compose_application()`, provider wiring all
