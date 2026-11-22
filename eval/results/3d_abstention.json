@@ -1,0 +1,512 @@
+{
+ "rule": "(stated before it was computed, from the user's instruction):\n  refuse a query iff dense_score(top-1) < t.\n  t = the LARGEST threshold for which the DEV ANSWERABLE items (12) false-refuse at most 10% (<=1 of 12).\n  The 2 dev unanswerable items are NOT used for tuning (far too few). No margin rule: a single score is simpler.",
+ "dev_answerable_n": 12,
+ "dev_answerable_scores_sorted": [
+  0.6303,
+  0.6604,
+  0.6949,
+  0.6967,
+  0.7072,
+  0.7443,
+  0.7528,
+  0.7556,
+  0.763,
+  0.7638,
+  0.7667,
+  0.7904
+ ],
+ "threshold": 0.6604,
+ "dev_check": {
+  "threshold": 0.6604,
+  "false_refusal_answerable": {
+   "n": 12,
+   "k": 1,
+   "rate": 0.083,
+   "ci95": [
+    0.0,
+    0.25
+   ]
+  },
+  "refusal_unanswerable_all": {
+   "n": 2,
+   "k": 1,
+   "rate": 0.5,
+   "ci95": [
+    0.0,
+    1.0
+   ]
+  },
+  "refusal_near_miss": {
+   "n": 1,
+   "k": 0,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "refusal_off_corpus": {
+   "n": 1,
+   "k": 1,
+   "rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  "recall@5_all_answerable": 0.833,
+  "recall@5_answered_subset": {
+   "n": 11,
+   "value": 0.818,
+   "ci95": [
+    0.545,
+    1.0
+   ]
+  },
+  "unanswerable_answered_anyway": [
+   {
+    "qid": "Q061",
+    "kind": "near_miss",
+    "dense": 0.6951
+   }
+  ]
+ },
+ "test": {
+  "threshold": 0.6604,
+  "false_refusal_answerable": {
+   "n": 44,
+   "k": 5,
+   "rate": 0.114,
+   "ci95": [
+    0.023,
+    0.205
+   ]
+  },
+  "refusal_unanswerable_all": {
+   "n": 8,
+   "k": 4,
+   "rate": 0.5,
+   "ci95": [
+    0.125,
+    0.875
+   ]
+  },
+  "refusal_near_miss": {
+   "n": 4,
+   "k": 2,
+   "rate": 0.5,
+   "ci95": [
+    0.0,
+    1.0
+   ]
+  },
+  "refusal_off_corpus": {
+   "n": 4,
+   "k": 2,
+   "rate": 0.5,
+   "ci95": [
+    0.0,
+    1.0
+   ]
+  },
+  "recall@5_all_answerable": 0.773,
+  "recall@5_answered_subset": {
+   "n": 39,
+   "value": 0.769,
+   "ci95": [
+    0.641,
+    0.897
+   ]
+  },
+  "unanswerable_answered_anyway": [
+   {
+    "qid": "Q062",
+    "kind": "near_miss",
+    "dense": 0.7171
+   },
+   {
+    "qid": "Q063",
+    "kind": "near_miss",
+    "dense": 0.7288
+   },
+   {
+    "qid": "Q069",
+    "kind": "off_corpus",
+    "dense": 0.7397
+   },
+   {
+    "qid": "Q070",
+    "kind": "off_corpus",
+    "dense": 0.7264
+   }
+  ]
+ },
+ "test_curve_DESCRIPTIVE_ONLY_not_used_for_selection": [
+  {
+   "t": 0.6103,
+   "false_refusal": 0.0,
+   "refuse_near_miss": 0.0,
+   "refuse_off_corpus": 0.0
+  },
+  {
+   "t": 0.6316,
+   "false_refusal": 0.0,
+   "refuse_near_miss": 0.0,
+   "refuse_off_corpus": 0.25
+  },
+  {
+   "t": 0.6352,
+   "false_refusal": 0.0,
+   "refuse_near_miss": 0.0,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.6451,
+   "false_refusal": 0.023,
+   "refuse_near_miss": 0.0,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.6491,
+   "false_refusal": 0.045,
+   "refuse_near_miss": 0.0,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.6494,
+   "false_refusal": 0.068,
+   "refuse_near_miss": 0.0,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.6496,
+   "false_refusal": 0.068,
+   "refuse_near_miss": 0.25,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.6518,
+   "false_refusal": 0.091,
+   "refuse_near_miss": 0.25,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.6577,
+   "false_refusal": 0.114,
+   "refuse_near_miss": 0.25,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.6628,
+   "false_refusal": 0.114,
+   "refuse_near_miss": 0.5,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.6879,
+   "false_refusal": 0.136,
+   "refuse_near_miss": 0.5,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.6992,
+   "false_refusal": 0.159,
+   "refuse_near_miss": 0.5,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.7095,
+   "false_refusal": 0.182,
+   "refuse_near_miss": 0.5,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.7138,
+   "false_refusal": 0.205,
+   "refuse_near_miss": 0.5,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.7171,
+   "false_refusal": 0.227,
+   "refuse_near_miss": 0.5,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.7243,
+   "false_refusal": 0.227,
+   "refuse_near_miss": 0.75,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.7248,
+   "false_refusal": 0.25,
+   "refuse_near_miss": 0.75,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.7264,
+   "false_refusal": 0.273,
+   "refuse_near_miss": 0.75,
+   "refuse_off_corpus": 0.5
+  },
+  {
+   "t": 0.7273,
+   "false_refusal": 0.273,
+   "refuse_near_miss": 0.75,
+   "refuse_off_corpus": 0.75
+  },
+  {
+   "t": 0.7288,
+   "false_refusal": 0.295,
+   "refuse_near_miss": 0.75,
+   "refuse_off_corpus": 0.75
+  },
+  {
+   "t": 0.7294,
+   "false_refusal": 0.295,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 0.75
+  },
+  {
+   "t": 0.7364,
+   "false_refusal": 0.318,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 0.75
+  },
+  {
+   "t": 0.7373,
+   "false_refusal": 0.341,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 0.75
+  },
+  {
+   "t": 0.7386,
+   "false_refusal": 0.364,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 0.75
+  },
+  {
+   "t": 0.7397,
+   "false_refusal": 0.386,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 0.75
+  },
+  {
+   "t": 0.7481,
+   "false_refusal": 0.386,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7535,
+   "false_refusal": 0.409,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.754,
+   "false_refusal": 0.432,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7564,
+   "false_refusal": 0.455,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7594,
+   "false_refusal": 0.477,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7631,
+   "false_refusal": 0.5,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7642,
+   "false_refusal": 0.523,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7665,
+   "false_refusal": 0.545,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.768,
+   "false_refusal": 0.568,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7695,
+   "false_refusal": 0.591,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7699,
+   "false_refusal": 0.614,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.771,
+   "false_refusal": 0.636,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7763,
+   "false_refusal": 0.659,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7776,
+   "false_refusal": 0.682,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7802,
+   "false_refusal": 0.705,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7803,
+   "false_refusal": 0.727,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7862,
+   "false_refusal": 0.75,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.7901,
+   "false_refusal": 0.795,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.8025,
+   "false_refusal": 0.818,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.813,
+   "false_refusal": 0.841,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.8142,
+   "false_refusal": 0.864,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.8278,
+   "false_refusal": 0.886,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.8321,
+   "false_refusal": 0.909,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.8367,
+   "false_refusal": 0.932,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.8497,
+   "false_refusal": 0.955,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  },
+  {
+   "t": 0.8854,
+   "false_refusal": 0.977,
+   "refuse_near_miss": 1.0,
+   "refuse_off_corpus": 1.0
+  }
+ ],
+ "test_score_summary": {
+  "answerable": [
+   0.6352,
+   0.6451,
+   0.6491,
+   0.6496,
+   0.6518,
+   0.6628,
+   0.6879,
+   0.6992,
+   0.7095,
+   0.7138,
+   0.7243,
+   0.7248,
+   0.7273,
+   0.7294,
+   0.7364,
+   0.7373,
+   0.7386,
+   0.7481,
+   0.7535,
+   0.754,
+   0.7564,
+   0.7594,
+   0.7631,
+   0.7642,
+   0.7665,
+   0.768,
+   0.7695,
+   0.7699,
+   0.771,
+   0.7763,
+   0.7776,
+   0.7802,
+   0.7803,
+   0.7862,
+   0.7862,
+   0.7901,
+   0.8025,
+   0.813,
+   0.8142,
+   0.8278,
+   0.8321,
+   0.8367,
+   0.8497,
+   0.8854
+  ],
+  "near_miss": [
+   0.6494,
+   0.6577,
+   0.7171,
+   0.7288
+  ],
+  "off_corpus": [
+   0.6103,
+   0.6316,
+   0.7264,
+   0.7397
+  ]
+ }
+}
