@@ -63,6 +63,24 @@ def test_expected_quarantine_exits_0_but_strict_exits_1():
     assert s.exit_code(strict=True) == 1
 
 
+def test_strict_looks_at_the_whole_manifest_not_only_documents_attempted_this_run():
+    # A re-run skips documents that are already quarantined; strict must still see them.
+    run = StageRun("stage3")
+    run.attempt("ok")                      # this run only touched a healthy document
+    s = run.summarize(_manifest())         # manifest still contains scan, bad, failed, skipped
+    assert s.exit_code() == 0
+    assert s.exit_code(strict=True) == 1
+    assert {d for d, _ in s.manifest_quarantined} == {"scan", "bad", "failed", "skipped"}
+    assert "FAILED (strict, in manifest) skipped" in s.render(strict=True)
+
+
+def test_strict_is_clean_when_nothing_in_the_manifest_is_quarantined():
+    manifest = {"a": _rec("a", DocumentStatus.READY_FOR_CHUNKING), "b": _rec("b", DocumentStatus.REGISTERED)}
+    run = StageRun("stageX")
+    run.attempt("a")
+    assert run.summarize(manifest).exit_code(strict=True) == 0
+
+
 def test_stage_level_failure_exits_1_even_with_no_failed_documents():
     run = StageRun("stage8")
     run.fail("FATAL_EMBEDDING_PROVIDER_UNAVAILABLE: boom")
@@ -71,10 +89,11 @@ def test_stage_level_failure_exits_1_even_with_no_failed_documents():
 
 
 def test_clean_run_exits_0_and_attempting_twice_counts_once():
+    clean = {"ok": _rec("ok", DocumentStatus.READY_FOR_CHUNKING)}
     run = StageRun("stageX")
     run.attempt("ok")
     run.attempt("ok")
-    s = run.summarize(_manifest())
+    s = run.summarize(clean)
     assert (s.attempted, s.succeeded, s.exit_code(), s.exit_code(strict=True)) == (1, 1, 0, 0)
 
 
@@ -94,13 +113,14 @@ def test_render_lists_every_problem(capsys):
     assert "FAILED       bad (FATAL_UNREADABLE)" in text
     assert "quarantined   scan (FATAL_NO_TEXT)" in text
     assert "STAGE FAILURE: index abc: corrupt" in text
-    assert "FAILED (strict) scan" in s.render(strict=True)
+    assert "FAILED (strict, in manifest) scan (FATAL_NO_TEXT)" in s.render(strict=True)
     assert finish(s) == 1
     assert "[stage3] attempted=2" in capsys.readouterr().out
 
 
 def test_cli_main_exits_with_the_summary_code_and_honours_strict():
-    ok_but_scanned = lambda: StageSummary(stage="s", expected_quarantines=[("d", "FATAL_NO_TEXT")])  # noqa: E731
+    ok_but_scanned = lambda: StageSummary(  # noqa: E731
+        stage="s", expected_quarantines=[("d", "FATAL_NO_TEXT")], manifest_quarantined=[("d", "FATAL_NO_TEXT")])
     with pytest.raises(SystemExit) as plain:
         cli_main(ok_but_scanned, argv=[])
     assert plain.value.code == 0

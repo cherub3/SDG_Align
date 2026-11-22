@@ -12,7 +12,9 @@ Policy
   scanned PDF with no OCR path is an expected, documented outcome, not a malfunction).
 * Stage-level failures that are not tied to one document (embedding provider unavailable, an index
   build that aborted) are always failures.
-* ``--strict`` turns expected quarantines into failures as well.
+* ``--strict`` is stricter in two ways: expected quarantines count as failures, and it looks at the
+  WHOLE manifest, not just the documents this run attempted. A re-run skips documents that are already
+  quarantined, so without this a second ``--strict`` run would wrongly report success.
 * Exit codes: 0 = no failures, 1 = at least one failure.
 """
 import argparse
@@ -36,12 +38,12 @@ class StageSummary:
     failed: List[Tuple[str, Optional[str]]] = field(default_factory=list)               # (doc_id, error_code)
     expected_quarantines: List[Tuple[str, Optional[str]]] = field(default_factory=list)  # (doc_id, error_code)
     stage_failures: List[str] = field(default_factory=list)                              # not tied to one document
+    manifest_quarantined: List[Tuple[str, Optional[str]]] = field(default_factory=list)  # every failed-status doc in the manifest
 
     def failure_count(self, strict: bool = False) -> int:
-        count = len(self.failed) + len(self.stage_failures)
         if strict:
-            count += len(self.expected_quarantines)
-        return count
+            return len(self.manifest_quarantined) + len(self.stage_failures)
+        return len(self.failed) + len(self.stage_failures)
 
     def exit_code(self, strict: bool = False) -> int:
         return 1 if self.failure_count(strict) else 0
@@ -55,8 +57,10 @@ class StageSummary:
         for doc_id, code in self.failed:
             lines.append(f"  FAILED       {doc_id} ({code})")
         for doc_id, code in self.expected_quarantines:
-            label = "FAILED (strict)" if strict else "quarantined  "
-            lines.append(f"  {label} {doc_id} ({code})")
+            lines.append(f"  quarantined   {doc_id} ({code})")
+        if strict:
+            for doc_id, code in self.manifest_quarantined:
+                lines.append(f"  FAILED (strict, in manifest) {doc_id} ({code})")
         for reason in self.stage_failures:
             lines.append(f"  STAGE FAILURE: {reason}")
         lines.append(f"[{self.stage}] exit code {self.exit_code(strict)}" + (" (--strict)" if strict else ""))
@@ -89,6 +93,8 @@ class StageRun:
     def summarize(self, manifest: Dict[str, ManifestRecord]) -> StageSummary:
         summary = StageSummary(stage=self.stage, attempted=len(self._attempted),
                                stage_failures=list(self._stage_failures))
+        summary.manifest_quarantined = [(doc_id, record.error_code) for doc_id, record in manifest.items()
+                                        if record.status in _FAILED_STATUSES]
         for doc_id in self._attempted:
             record = manifest.get(doc_id)
             if record is not None and record.status in _FAILED_STATUSES:
