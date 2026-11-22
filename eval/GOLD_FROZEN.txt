@@ -1,0 +1,12 @@
+seed=20261123
+dev_fraction=0.2
+gold_set.jsonl=3cfbd266d00d32845306a4644e76a557ba10174fd5e2bfc29dada84a4b70e017
+gold_split.json=dae3c19878f35e5a94ab1273a06b5e92313ac02a7ae5f10eced2ee423328d6c6
+clean_text:cameroon_biodiversity_iplc_conservation=80562847184f84b509349b12f90946aa0dcabc1938ce177aa732d4c54c17959e
+clean_text:cuba_clean_energy=cef68965bf85e473d4b26bb4cd549d074f3d78c9bd388b3aebc245648612be8f
+clean_text:ecuador_biodiversity=95137888ee9e3f8751062fb28663a8f6feb70a3446d6490becc101b0e768ecb9
+clean_text:ecuador_jaguar_landscape_connectivity=3e1dd0a1c7ad0f17240cc26472d2fac167f8d7bb4bf7a62e8654a92d3c2db878
+clean_text:ecuador_marine_biodiversity=37c855370df9411315fa7c54af66f40a47de752efde0911d95ecc54a2c0514ad
+clean_text:mozambique_planetgold=98874d04d83d6faf6ff850a0c1b2ef25699b6ebbc0c6717d43a9dc5cc8ee77cf
+hit_rule=same doc_id; chunk [char_start,char_end) in stage-4 clean text overlaps a gold span by >= min(50 chars, 50% of span length)
+note=Step 3a (Q3 heading fix) must not change stage-4 clean text; eval_retrieval.py refuses to run if any hash differs.

@@ -1,0 +1,100 @@
+# verify_gold.py report
+
+items: 70  | answerable: 60  | paraphrased answerable: 43
+per type: {'single_fact': 20, 'numbers_tables': 14, 'multi_passage': 12, 'cross_document': 14, 'unanswerable': 10}
+unanswerable kinds: {'near_miss': 5, 'off_corpus': 5}
+evidence spans per document: {'cameroon_biodiversity_iplc_conservation': 15, 'ecuador_biodiversity': 14, 'ecuador_jaguar_landscape_connectivity': 16, 'ecuador_marine_biodiversity': 14, 'cuba_clean_energy': 15, 'mozambique_planetgold': 17}
+
+ERRORS: 0
+
+REVIEW flags: 40
+  Q016: raw_match=derived on cuba_clean_energy p.22 (table-rewritten text)
+  Q019: raw_match=derived on mozambique_planetgold p.27 (table-rewritten text)
+  Q021: raw_match=derived on cameroon_biodiversity_iplc_conservation p.6 (table-rewritten text)
+  Q024: raw_match=derived on ecuador_biodiversity p.36 (table-rewritten text)
+  Q026: raw_match=derived on ecuador_biodiversity p.35 (table-rewritten text)
+  Q028: raw_match=derived on ecuador_jaguar_landscape_connectivity p.39 (table-rewritten text)
+  Q029: raw_match=derived on ecuador_marine_biodiversity p.7 (table-rewritten text)
+  Q030: raw_match=derived on ecuador_marine_biodiversity p.28 (table-rewritten text)
+  Q031: raw_match=derived on cuba_clean_energy p.6 (table-rewritten text)
+  Q032: raw_match=derived on cuba_clean_energy p.19 (table-rewritten text)
+  Q033: raw_match=derived on mozambique_planetgold p.44 (table-rewritten text)
+  Q034: raw_match=derived on mozambique_planetgold p.45 (table-rewritten text)
+  Q036: raw_match=derived on cameroon_biodiversity_iplc_conservation p.25 (table-rewritten text)
+  Q037: raw_match=derived on ecuador_biodiversity p.30 (table-rewritten text)
+  Q042: raw_match=derived on ecuador_marine_biodiversity p.11 (table-rewritten text)
+  Q043: raw_match=derived on cuba_clean_energy p.22 (table-rewritten text)
+  Q043: raw_match=derived on cuba_clean_energy p.21 (table-rewritten text)
+  Q044: raw_match=derived on cuba_clean_energy p.8 (table-rewritten text)
+  Q044: raw_match=derived on cuba_clean_energy p.24 (table-rewritten text)
+  Q047: raw_match=derived on ecuador_jaguar_landscape_connectivity p.34 (table-rewritten text)
+  Q047: raw_match=derived on ecuador_marine_biodiversity p.22 (table-rewritten text)
+  Q048: raw_match=derived on ecuador_biodiversity p.35 (table-rewritten text)
+  Q048: raw_match=derived on ecuador_jaguar_landscape_connectivity p.38 (table-rewritten text)
+  Q048: quote occurs 2x in its own document ecuador_jaguar_landscape_connectivity
+  Q048: raw_match=derived on ecuador_marine_biodiversity p.27 (table-rewritten text)
+  Q048: quote occurs 2x in its own document ecuador_marine_biodiversity
+  Q049: raw_match=derived on cameroon_biodiversity_iplc_conservation p.28 (table-rewritten text)
+  Q049: raw_match=derived on mozambique_planetgold p.45 (table-rewritten text)
+  Q049: raw_match=derived on cuba_clean_energy p.27 (table-rewritten text)
+  Q050: raw_match=derived on cuba_clean_energy p.19 (table-rewritten text)
+  Q052: raw_match=derived on cuba_clean_energy p.17 (table-rewritten text)
+  Q053: raw_match=derived on cuba_clean_energy p.20 (table-rewritten text)
+  Q053: raw_match=derived on ecuador_biodiversity p.29 (table-rewritten text)
+  Q054: quote occurs 2x in its own document mozambique_planetgold
+  Q058: raw_match=derived on cuba_clean_energy p.27 (table-rewritten text)
+  Q058: quote occurs 2x in its own document cuba_clean_energy
+  Q058: raw_match=derived on ecuador_marine_biodiversity p.27 (table-rewritten text)
+  Q058: quote occurs 2x in its own document ecuador_marine_biodiversity
+  Q059: raw_match=derived on ecuador_jaguar_landscape_connectivity p.32 (table-rewritten text)
+  Q059: raw_match=derived on ecuador_marine_biodiversity p.20 (table-rewritten text)
+
+Unanswerable absence-term hits (term -> documents containing it):
+  Q061 [near_miss] What monthly salary do the ecoguards at Boumba Bek National Park in Cameroon receive?
+      'salary': []
+      'salaries': []
+      'monthly wage': []
+      'pay scale': []
+      'XAF per month': []
+  Q062 [near_miss] Which company supplies the wind turbines for the repowering of the Gibara I wind farm in Cuba?
+      'turbine supplier': []
+      'Vestas': []
+      'Goldwind': []
+      'Siemens Gamesa': []
+      'turbine manufacturer': []
+  Q063 [near_miss] What mercury concentration in micrograms per litre was measured in the Chua River in Manica Province?
+      'micrograms per litre': []
+      'ug/L': []
+      'mg/L': []
+      'ppb': []
+      'parts per billion': []
+  Q064 [near_miss] How many hectares of tropical dry forest remain in Manabí and Santa Elena provinces?
+      'remaining dry forest': []
+      'hectares of dry forest remain': []
+      'remaining forest cover': []
+      'km2 of dry forest': []
+  Q065 [near_miss] How many jaguars are estimated to live in the Yasuní landscape?
+      'jaguars in Yasuní': []
+      'jaguar population estimate': []
+      'individuals in Yasuní': []
+      'jaguar density': []
+  Q066 [off_corpus] What is the GEF-funded budget for the sustainable fisheries project in Indonesia?
+      'Indonesia': []
+      'Jakarta': []
+      'Indonesian fisheries': []
+  Q067 [off_corpus] How many solar mini-grids has UNDP's Nepal rural electrification programme installed so far?
+      'Nepal': []
+      'mini-grid': []
+      'Kathmandu': []
+  Q068 [off_corpus] What is the annual Amazon deforestation rate in Brazil reported by the PRODES monitoring system?
+      'PRODES': []
+      'Brazil': []
+      'INPE': []
+  Q069 [off_corpus] Which coral reef restoration techniques does the Philippines use under its GEF-8 coastal project?
+      'Philippines': []
+      'Manila': []
+      'coral restoration': []
+  Q070 [off_corpus] What is the implementation timeline of the GEF-funded Kenya wildlife corridor project?
+      'Kenya': []
+      'Nairobi': ['mozambique_planetgold']
+      'Maasai Mara': []
