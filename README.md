@@ -176,15 +176,17 @@ source .venv/bin/activate
 
 # 3. Install dependencies
 pip install -r requirements.txt
+pip install -r requirements-dev.txt   # only to run the tests
 ```
 
 ### Dependencies
 
-[`requirements.txt`](requirements.txt) is the single, exactly-pinned source of truth (CI installs from it
-and runs `pip check`; `pyproject.toml` deliberately holds no second list). It covers PDF extraction
+[`requirements.txt`](requirements.txt) is the single, exactly-pinned source of truth for running the pipeline
+and [`requirements-dev.txt`](requirements-dev.txt) pins the test tools (CI installs both and runs `pip check`;
+`pyproject.toml` deliberately holds no second list). It covers PDF extraction
 (`pymupdf`, `pymupdf4llm`), artifacts and search (`pyarrow`, `pandas`, `numpy`, `faiss-cpu`), the provider
-SDKs (`google-genai`, `groq`, `openai`, `requests`), the API server (`fastapi`, `uvicorn`, `pydantic`) and
-the test tools (`pytest`, `pytest-cov`, `httpx`).
+SDKs (`google-genai`, `groq`, `openai`, `requests`) and the API server (`fastapi`, `uvicorn`, `pydantic`).
+The dev file adds `pytest`, `pytest-cov` and `httpx`.
 
 **The test suite needs no credentials and no network.** Running the ingestion pipeline on real documents
 needs an embedding provider at Stage 8 (Hugging Face Inference API or Gemini: a hosted, rate- or

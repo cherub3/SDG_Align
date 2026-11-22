@@ -23,7 +23,4 @@ fastapi==0.139.2
 uvicorn==0.51.0
 pydantic==2.13.4
 
-# --- Tests ---
-pytest==9.0.3
-pytest-cov==6.0.0
-httpx==0.28.1            # fastapi.testclient
+# Test tools live in requirements-dev.txt.

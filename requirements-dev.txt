@@ -1,0 +1,5 @@
+# Test tools (not needed to run the pipeline). Install after requirements.txt:
+#   pip install -r requirements.txt -r requirements-dev.txt
+pytest==9.0.3
+pytest-cov==6.0.0
+httpx==0.28.1            # fastapi.testclient

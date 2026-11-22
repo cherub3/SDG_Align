@@ -27,6 +27,7 @@ venv_*/
 env/
 
 # Review / scratch artifacts
+reports/PHASE_1_PROGRESS.md
 review_artifacts/
 
 # Node
