@@ -1,0 +1,27 @@
+{
+ "passages": 20,
+ "mean_chars": 1230,
+ "logical_cores": 20,
+ "rows": [
+  {
+   "threads": 1,
+   "ms_for_20_passages_median_of_3": 3041,
+   "max_abs_score_diff_vs_1_thread": 0.0
+  },
+  {
+   "threads": 2,
+   "ms_for_20_passages_median_of_3": 1925,
+   "max_abs_score_diff_vs_1_thread": 9.5367431640625e-07
+  },
+  {
+   "threads": 4,
+   "ms_for_20_passages_median_of_3": 1240,
+   "max_abs_score_diff_vs_1_thread": 9.5367431640625e-07
+  },
+  {
+   "threads": 8,
+   "ms_for_20_passages_median_of_3": 1171,
+   "max_abs_score_diff_vs_1_thread": 1.9073486328125e-06
+  }
+ ]
+}

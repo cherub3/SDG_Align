@@ -1,0 +1,71 @@
+{
+ "split": "dev",
+ "fusion": {
+  "rrf_k": 10,
+  "w_bm25": 2.0,
+  "depth": 50
+ },
+ "selection_rule": "max dev MRR@10; tie: smaller N",
+ "reference_no_rerank": {
+  "n_rerank": 0,
+  "recall@1": 0.4167,
+  "recall@5": 0.8333,
+  "recall@10": 0.9167,
+  "mrr@10": 0.6,
+  "ndcg@10": 0.6362,
+  "n": 12,
+  "latency_ms_p50": 49.7,
+  "latency_ms_p95": 3233.0,
+  "rerank_ms_p50": null
+ },
+ "grid": [
+  {
+   "n_rerank": 20,
+   "recall@1": 0.6667,
+   "recall@5": 0.75,
+   "recall@10": 0.8333,
+   "mrr@10": 0.6968,
+   "ndcg@10": 0.6732,
+   "n": 12,
+   "latency_ms_p50": 3218.0,
+   "latency_ms_p95": 3503.4,
+   "rerank_ms_p50": 3185.1
+  },
+  {
+   "n_rerank": 30,
+   "recall@1": 0.6667,
+   "recall@5": 0.75,
+   "recall@10": 0.8333,
+   "mrr@10": 0.6958,
+   "ndcg@10": 0.6699,
+   "n": 12,
+   "latency_ms_p50": 4275.5,
+   "latency_ms_p95": 4873.4,
+   "rerank_ms_p50": 4164.5
+  },
+  {
+   "n_rerank": 50,
+   "recall@1": 0.6667,
+   "recall@5": 0.75,
+   "recall@10": 0.75,
+   "mrr@10": 0.6875,
+   "ndcg@10": 0.6542,
+   "n": 12,
+   "latency_ms_p50": 6601.3,
+   "latency_ms_p95": 8119.5,
+   "rerank_ms_p50": 6564.3
+  }
+ ],
+ "chosen": {
+  "n_rerank": 20,
+  "recall@1": 0.6667,
+  "recall@5": 0.75,
+  "recall@10": 0.8333,
+  "mrr@10": 0.6968,
+  "ndcg@10": 0.6732,
+  "n": 12,
+  "latency_ms_p50": 3218.0,
+  "latency_ms_p95": 3503.4,
+  "rerank_ms_p50": 3185.1
+ }
+}

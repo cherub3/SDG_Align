@@ -315,11 +315,16 @@ def validate_retrieval_result(result: Dict) -> None:
         if c["index_fingerprint"] not in searched_fps:
             raise RetrievalInternalError("index_fingerprint not in searched_index_fingerprints")
 
+def reranker_default_n() -> int:
+    return 30
+
+
 def retrieve(
     request: Dict[str, Any], 
     manifest: Dict[str, ManifestRecord],
     provider_adapter_factory: Callable[[str, str, str], ProviderAdapter],
-    index_adapter_factory: Callable[[str], IndexAdapter]
+    index_adapter_factory: Callable[[str], IndexAdapter],
+    rerank_adapter_factory: Optional[Callable[[], Any]] = None
 ) -> Dict[str, Any]:
     
     findings = []
@@ -502,7 +507,23 @@ def retrieve(
     filtered_candidates = apply_metadata_filters(all_candidates, filters, chunks_by_doc)
     
     assembled = assemble_results(filtered_candidates, chunks_by_doc, index_fingerprint="")
-    results = select_top_k(assembled, top_k)
+    rerank = request.get("rerank")          # None/False = no reranking; {"n": N} = cross-encoder over the first N results (step 3c)
+    rerank_info = None
+    if rerank:
+        if rerank_adapter_factory is None:
+            raise RetrievalInternalError("request asks for reranking but no rerank_adapter_factory was wired")
+        from scripts import reranker
+        from scripts.stage8_embedding_generation import embedding_text
+        n = int(rerank["n"] if isinstance(rerank, dict) else reranker_default_n())
+        pool = select_top_k(assembled, min(max(n, top_k), MAX_TOP_K))
+        n = min(n, len(pool)) if pool else 1
+        adapter = rerank_adapter_factory()
+        rr = reranker.rerank_results(pool, query, adapter, lambda r: embedding_text(chunks_by_doc[r["doc_id"]][r["chunk_id"]]),
+                                     max(n, 1), top_k) if pool else {"results": [], "ms": 0.0, "n_scored": 0}
+        results = rr["results"]
+        rerank_info = {"model": adapter.model_name, "revision": adapter.revision, "n": n, "n_scored": rr["n_scored"], "ms": rr["ms"]}
+    else:
+        results = select_top_k(assembled, top_k)
     
     if not results:
         zero_results = True
@@ -519,6 +540,8 @@ def retrieve(
         "results": results,
         "findings": findings
     }
+    if rerank_info:
+        res["rerank"] = rerank_info
     
     validate_retrieval_result(res)
     return res

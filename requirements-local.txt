@@ -2,3 +2,6 @@
 # Install after requirements.txt:   pip install -r requirements-local.txt
 sentence-transformers==6.3.0
 torch==2.15.0
+# The reranker (step 3c) needs no extra pip package: it is sentence-transformers' CrossEncoder.
+# Its model id + pinned revision + sha256 live in config/rerank_model.json (NOT here). One-time download, then run offline:
+#   HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1

@@ -1,0 +1,13 @@
+{
+  "_comment": "Step 3c reranker. The model id + revision are pinned HERE (config), not in requirements-local.txt (pip packages only). Recorded in every eval results file.",
+  "model_id": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+  "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+  "source": "https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2",
+  "license": "apache-2.0",
+  "weights_file": "model.safetensors",
+  "weights_bytes": 90870598,
+  "downloaded": "2026-11-23, once, with the user's approval; every run since is HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1",
+  "max_length": 512,
+  "output": "raw relevance logit (unbounded, NOT a probability)",
+  "weights_sha256": "821d1aa69520101d6e0737f78a042ae25b19e5cb9160701909d10434f4aeb0ae"
+}

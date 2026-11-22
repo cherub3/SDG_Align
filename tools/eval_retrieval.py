@@ -93,7 +93,7 @@ def summarize(rows):
     return out
 
 
-def build_retriever(top_k=TOP_K, hybrid=None):
+def build_retriever(top_k=TOP_K, hybrid=None, rerank=None):
     """Real stage-10 retrieve() over the local index (same as tools/retrieval_eval.py): fn(query) -> [(doc_id,start,end,score)]."""
     os.chdir(REPO)
     from scripts.embedding_provider_local import LocalEmbeddingAdapter
@@ -117,10 +117,23 @@ def build_retriever(top_k=TOP_K, hybrid=None):
             for c in json.load(open(p, encoding="utf-8"))["chunks"]:
                 spans[c["chunk_id"]] = (c["doc_id"], c["char_start"], c["char_end"])
 
+    rr_adapter = None
+    if rerank:
+        from scripts.reranker import CrossEncoderReranker
+        rr_adapter = CrossEncoderReranker()          # model id + pinned revision come from config/rerank_model.json
+        rr_adapter.score("warm up", ["warm up"])     # load the weights now so the first query's latency is inference only (load time is reported separately)
+
     def run(q):
-        r = retrieve({"query": q, "index_fingerprints": fps, "top_k": top_k, "hybrid": hybrid}, manifest,
-                     lambda p, m, v: ad, lambda m: FAISSAdapter(m))
+        req = {"query": q, "index_fingerprints": fps, "top_k": top_k, "hybrid": hybrid}
+        if rerank:
+            req["rerank"] = rerank
+        r = retrieve(req, manifest, lambda p, m, v: ad, lambda m: FAISSAdapter(m), (lambda: rr_adapter) if rr_adapter else None)
+        run.last = r
+        if r.get("rerank"):
+            run.rerank_ms.append(r["rerank"]["ms"])
         return [(*spans[x["chunk_id"]], x["score"]) for x in r["results"]]
+    run.last, run.rerank_ms = None, []
+    run.meta = {"hybrid": hybrid, "rerank": ({**rerank, "model": rr_adapter.model_name, "revision": rr_adapter.revision} if rerank else None)}
     return run
 
 
@@ -135,11 +148,20 @@ def evaluate(split, retriever, label):
         lat.append((time.perf_counter() - t) * 1000)
         base = {"qid": it["qid"], "type": it["type"], "paraphrased": bool(it.get("paraphrased")), "kind": it.get("kind"),
                 "top1_score": round(float(ranked[0][3]), 4) if ranked else None}
+        last = getattr(retriever, "last", None)
+        if last and last.get("results"):      # every score the first hit carries, so abstention (3d) can compare them on one footing
+            base["top1_scores"] = {k: round(float(last["results"][0][k]), 4) for k in ("dense_score", "bm25_score", "fused_score", "rerank_score")
+                                   if k in last["results"][0]}
+            base["top_scores"] = [round(float(x["score"]), 4) for x in last["results"][:5]]
         if it["type"] != "unanswerable":
             base.update(score_item(it, [(d, s, e) for d, s, e, _ in ranked]))
         rows.append(base)
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=REPO).stdout.strip()
+    rms = getattr(retriever, "rerank_ms", None)
     return {"label": label, "split": split, "git_commit": commit, "top_k": TOP_K, "bootstrap": {"resamples": BOOT, "seed": 1},
+            "retrieval_config": getattr(retriever, "meta", None),
+            "latency_ms_rerank_only": ({"mean": round(float(np.mean(rms)), 1), "p50": round(float(np.percentile(rms, 50)), 1),
+                                        "p95": round(float(np.percentile(rms, 95)), 1)} if rms else None),
             "frozen_file_sha256": fg.sha_file(fg.FROZEN),
             "latency_ms_per_query": {"mean": round(float(np.mean(lat)), 1), "p50": round(float(np.percentile(lat, 50)), 1),
                                      "p95": round(float(np.percentile(lat, 95)), 1)},
@@ -214,6 +236,7 @@ if __name__ == "__main__":
     ap.add_argument("--label")
     ap.add_argument("--out")
     ap.add_argument("--compare", nargs=2)
+    ap.add_argument("--rerank", help="JSON dict, e.g. '{\"n\":30}': cross-encoder over the first N fused results (needs --hybrid for 3c)")
     ap.add_argument("--hybrid", help="JSON dict of hybrid params, e.g. '{\"rrf_k\":60,\"w_bm25\":1,\"depth\":50}'; omit for dense only")
     a = ap.parse_args()
     if a.compare:
@@ -221,7 +244,7 @@ if __name__ == "__main__":
         print(json.dumps(c, indent=1))
         print(compare_table(c, *[os.path.basename(p) for p in a.compare]))
     else:
-        res = evaluate(a.split, build_retriever(hybrid=json.loads(a.hybrid) if a.hybrid else None), a.label)
+        res = evaluate(a.split, build_retriever(hybrid=json.loads(a.hybrid) if a.hybrid else None, rerank=json.loads(a.rerank) if a.rerank else None), a.label)
         os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
         json.dump(res, open(a.out, "w", encoding="utf-8", newline="\n"), indent=1)
         print(table(res))
