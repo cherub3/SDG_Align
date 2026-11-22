@@ -1,0 +1,109 @@
+{
+ "n": 124,
+ "agree": 111,
+ "raw_agreement": 0.8952,
+ "kappa_unweighted": 0.8426,
+ "kappa_linear_weighted": 0.884,
+ "confusion_rows_A_cols_B_order_N_P_U": [
+  [
+   39,
+   4,
+   0
+  ],
+  [
+   2,
+   32,
+   5
+  ],
+  [
+   0,
+   2,
+   40
+  ]
+ ],
+ "per_question": {
+  "1": {
+   "n": 10,
+   "agree": 8,
+   "raw": 0.8
+  },
+  "2": {
+   "n": 9,
+   "agree": 8,
+   "raw": 0.8889
+  },
+  "3": {
+   "n": 10,
+   "agree": 8,
+   "raw": 0.8
+  },
+  "4": {
+   "n": 9,
+   "agree": 9,
+   "raw": 1.0
+  },
+  "5": {
+   "n": 9,
+   "agree": 5,
+   "raw": 0.5556
+  },
+  "6": {
+   "n": 10,
+   "agree": 7,
+   "raw": 0.7
+  },
+  "7": {
+   "n": 9,
+   "agree": 9,
+   "raw": 1.0
+  },
+  "8": {
+   "n": 9,
+   "agree": 9,
+   "raw": 1.0
+  },
+  "9": {
+   "n": 10,
+   "agree": 10,
+   "raw": 1.0
+  },
+  "10": {
+   "n": 10,
+   "agree": 10,
+   "raw": 1.0
+  },
+  "11": {
+   "n": 10,
+   "agree": 9,
+   "raw": 0.9
+  },
+  "12": {
+   "n": 9,
+   "agree": 9,
+   "raw": 1.0
+  },
+  "13": {
+   "n": 10,
+   "agree": 10,
+   "raw": 1.0
+  }
+ },
+ "disputed_ids": [
+  "B0ce54",
+  "B0f549",
+  "B2af42",
+  "B2f9ef",
+  "B3cacf",
+  "B57442",
+  "B7c783",
+  "B89ae2",
+  "Bb9099",
+  "Bc7ab4",
+  "Bcac25",
+  "Bd412a",
+  "Bddcfa"
+ ],
+ "a": "J1frozen",
+ "b": "J2",
+ "questions": "1-13"
+}

@@ -73,7 +73,7 @@ def to_markdown(name_a: str, name_b: str, s: Dict) -> str:
              f"n = {s['n']} items, exact agreement {s['agree']}/{s['n']} = {s['raw_agreement']}",
              f"Cohen's kappa unweighted = {s['kappa_unweighted']}, linear-weighted = {s['kappa_linear_weighted']}", "",
              f"Confusion matrix (rows {name_a}, columns {name_b}):", "",
-             f"| {name_a} \ {name_b} | N | P | U |", "|---|---|---|---|"]
+             f"| {name_a} vs {name_b} | N | P | U |", "|---|---|---|---|"]
     for i, nm in enumerate("NPU"):
         lines.append(f"| {nm} | {c[i][0]} | {c[i][1]} | {c[i][2]} |")
     lines += ["", "Per question:", "", "| Q | n | agree | raw |", "|---|---|---|---|"]
