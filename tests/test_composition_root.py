@@ -6,7 +6,7 @@ from unittest.mock import patch, Mock
 src_path = Path(__file__).parent.parent
 sys.path.append(str(src_path))
 
-from scripts.composition_root import compose_application, build_retrieval_closures
+from scripts.composition_root import compose_application
 from scripts.phase1_1_configuration_layer import (
     ConfigurationInputError,
     ConfigurationWiringError,
@@ -42,15 +42,11 @@ class TestCompositionRoot(unittest.TestCase):
         self.assertIn("llm_adapter", app_graph)
         self.assertIn("embedding_adapter", app_graph)
         self.assertIn("agent_dependencies", app_graph)
-        self.assertIn("retrieval_closures", app_graph)
         
         agent_deps = app_graph["agent_dependencies"]
         self.assertIsInstance(agent_deps, AgentDependencies)
         self.assertEqual(agent_deps.default_planner_model_name, "gemini-test-model")
         self.assertIsNotNone(agent_deps.planner_llm_adapter)
-        
-        closures = app_graph["retrieval_closures"]
-        self.assertIn("embed_query", closures)
 
     def test_duplicate_registration_propagates(self):
         # Return duplicate registrations
@@ -114,20 +110,6 @@ class TestCompositionRoot(unittest.TestCase):
         with self.assertRaises(ConfigurationInternalError) as cm:
             compose_application(self.registrations, env=self.valid_env)
         self.assertTrue(str(cm.exception).startswith("WIRING_SETTINGS_FINGERPRINT_MISMATCH"))
-
-    def test_retrieval_closures(self):
-        # F4 - Retrieval closure unit test reflects frozen Stage 8 contract
-        mock_emb_adapter = Mock()
-        # Stage 8 embed_batch returns List[List[float]]
-        mock_emb_adapter.embed_batch.return_value = [[0.1, 0.2]]
-        
-        closures = build_retrieval_closures(mock_emb_adapter)
-        embed_query = closures["embed_query"]
-        
-        result = embed_query("test text")
-        self.assertEqual(result, [0.1, 0.2])
-        mock_emb_adapter.embed_batch.assert_called_once_with(["test text"])
-
 
     def test_full_agent_dependencies_wiring(self):
         """compose_application() now wires all AgentDependencies fields (Phase 13)."""

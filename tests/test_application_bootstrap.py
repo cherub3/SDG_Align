@@ -19,7 +19,6 @@ class TestApplicationBootstrap(unittest.TestCase):
             "llm_adapter": Mock(),
             "embedding_adapter": Mock(),
             "agent_dependencies": Mock(),
-            "retrieval_closures": {"embed_query": Mock()}
         }
         self.dummy_registrations = [Mock()]
         self.dummy_env = {"DUMMY_KEY": "DUMMY_VALUE"}

@@ -1,6 +1,5 @@
-import os
 import functools
-from typing import Dict, Any, Sequence, Optional, Callable, List
+from typing import Dict, Any, Sequence, Optional, List
 
 from scripts.phase1_1_configuration_layer import (
     load_raw_settings,
@@ -23,20 +22,6 @@ from scripts.stage20_tool_function_calling import execute_tool as _stage20_execu
 from scripts.cache_adapter import InMemoryCacheAdapter
 from scripts.pipeline_deps_factory import build_pipeline_deps
 from scripts.stage18_api_response_serving import handle_request as _stage18_handle_request
-
-
-def build_retrieval_closures(embedding_adapter: Any) -> Dict[str, Callable]:
-    """
-    Constructs the retrieval closures Stage 10 expects, using the wired EMBEDDING_PROVIDER.
-    """
-    def embed_query(query: str) -> List[float]:
-        # Stage 8 ProviderAdapter contract expects a list of strings and returns List[List[float]]
-        res = embedding_adapter.embed_batch([query])
-        return res[0]
-
-    return {
-        "embed_query": embed_query
-    }
 
 
 def _discover_index_fingerprints(embedding_adapter: Any) -> List[str]:
@@ -176,15 +161,9 @@ def compose_application(
         default_planner_model_name=default_planner_model,
     )
 
-    # Construct retrieval closures (kept for backward compatibility with callers that use them)
-    retrieval_closures = None
-    if embedding_adapter:
-        retrieval_closures = build_retrieval_closures(embedding_adapter)
-
     return {
         "settings": settings,
         "llm_adapter": llm_adapter,
         "embedding_adapter": embedding_adapter,
         "agent_dependencies": agent_deps,
-        "retrieval_closures": retrieval_closures
     }

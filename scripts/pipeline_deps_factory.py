@@ -7,10 +7,9 @@ Composes existing repository implementations:
   • cache_adapter         — InMemoryCacheAdapter (Phase 11)
   • default_model_name    — deployment scalar from configuration
 
-The retrieve closure follows the same pattern as build_retrieval_closures()
-in composition_root.py: it wraps the already-wired embedding_adapter rather
-than introducing a separate provider-dispatch table.  The simplification is
-valid for the current single-provider demo deployment.
+The retrieve closure wraps the already-wired embedding_adapter rather than
+introducing a separate provider-dispatch table.  The simplification is valid
+for the current single-provider deployment.
 """
 
 from typing import Any, Dict
@@ -45,7 +44,6 @@ def build_pipeline_deps(
     def _provider_adapter_factory(provider: str, model: str, version: str):
         # Single-provider deployment: return the wired adapter regardless of
         # the index metadata's (provider, model, version) discriminator.
-        # Consistent with build_retrieval_closures()'s embed_query closure.
         return embedding_adapter
 
     def _index_adapter_factory(metric: str) -> IndexAdapter:
