@@ -39,3 +39,6 @@ npm-debug.log*
 .claude/
 .vscode/
 .idea/
+
+# Private study notes (kept local)
+LEARN_*.md
