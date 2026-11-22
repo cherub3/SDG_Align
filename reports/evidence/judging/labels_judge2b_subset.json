@@ -1,0 +1,126 @@
+{
+ "judge": "Judge 2b (fresh sub-agent, sonnet), self-consistency subset",
+ "source": "raw/judge2b_subset.json",
+ "labels": {
+  "Bc953b": {
+   "label": 2,
+   "reason": "Interventions in Boumba Bek National Park and surrounding landscape within TRIDOM"
+  },
+  "B32c69": {
+   "label": 0,
+   "reason": "Ecuador Tropical Dry Forest logframe, nothing on Kathmandu water"
+  },
+  "B8199b": {
+   "label": 2,
+   "reason": "States social and political risks with mitigation measures such as grievance mechanism and gender-responsive outreach"
+  },
+  "B8a9a8": {
+   "label": 2,
+   "reason": "Lists elite capture and enforcement risks with 'Mitigation measures' (FPIC, GRM)"
+  },
+  "Bd412a": {
+   "label": 1,
+   "reason": "Says project aligns with Tarea Vida and NDC 3.0 but mostly lists coordination with other initiatives"
+  },
+  "B1823f": {
+   "label": 2,
+   "reason": "Explains alignment with updated NDC 3.0 and how project feeds adaptation planning"
+  },
+  "B8a538": {
+   "label": 0,
+   "reason": "Coordination with other projects and institutional arrangements, no NDC contribution"
+  },
+  "B3cd44": {
+   "label": 0,
+   "reason": "Title and metadata table only"
+  },
+  "B9cb1e": {
+   "label": 2,
+   "reason": "Indicator 4.1 table gives 60,312 ha under improved management"
+  },
+  "B11ee0": {
+   "label": 2,
+   "reason": "Supports management across at least 30,000 hectares of priority landscapes"
+  },
+  "Bb53b0": {
+   "label": 2,
+   "reason": "CI 4.1: 60,312 hectares of landscapes under improved management"
+  },
+  "B1fb6d": {
+   "label": 2,
+   "reason": "Improving management of at least 30,000 hectares of landscapes"
+  },
+  "Bdf246": {
+   "label": 1,
+   "reason": "Mentions renewable energy, storage and grid solutions only as a general gap, not specific technologies"
+  },
+  "B2f9ef": {
+   "label": 1,
+   "reason": "Stakeholder table mentions wind parks and renewable shift but not planned deployments"
+  },
+  "B859b7": {
+   "label": 1,
+   "reason": "Objective mentions renewable, grid and storage solutions generally without specific technologies"
+  },
+  "Bd9fe5": {
+   "label": 2,
+   "reason": "Total GEF Financing 4,927,500.00 for Mozambique"
+  },
+  "B3d325": {
+   "label": 2,
+   "reason": "Total GEF Financing 4,371,000.00"
+  },
+  "Be5545": {
+   "label": 1,
+   "reason": "Only a confirmation 'Yes' that gender was addressed, no content"
+  },
+  "B8d9d3": {
+   "label": 2,
+   "reason": "Gender-responsive considerations, sex-disaggregated data and gender-sensitive indicators in design and monitoring"
+  },
+  "B927cc": {
+   "label": 0,
+   "reason": "Cameroon protected area governance, nothing on Karnataka schools"
+  },
+  "B5bc4c": {
+   "label": 0,
+   "reason": "Ecuador biodiversity logframe, nothing on Karnataka schools"
+  },
+  "Bca8a0": {
+   "label": 0,
+   "reason": "Colombia Choco partners and Indigenous Peoples standard, not Cameroon"
+  },
+  "B9ab5c": {
+   "label": 0,
+   "reason": "Describes terrestrial Tropical Dry Forest, not marine protected areas"
+  },
+  "B6cf6e": {
+   "label": 1,
+   "reason": "Marine-coastal project across five provinces but names no specific marine protected areas"
+  },
+  "B0e3da": {
+   "label": 1,
+   "reason": "Describes Ecuador marine coastal ecosystems but no protected areas"
+  },
+  "Bd6c6f": {
+   "label": 2,
+   "reason": "Four components for formalization, finance, technical solutions and mercury-free gold production, 80% reduction"
+  },
+  "B3a1fe": {
+   "label": 1,
+   "reason": "General biodiversity pressures in Ecuador, not specifically coastal and marine"
+  },
+  "B5108b": {
+   "label": 1,
+   "reason": "General biodiversity pressures, not specific to coastal ecosystems"
+  },
+  "B3d03e": {
+   "label": 0,
+   "reason": "Baseline policy and initiatives, no threats listed"
+  },
+  "B31e76": {
+   "label": 2,
+   "reason": "States 'four integrated components' and names each"
+  }
+ }
+}

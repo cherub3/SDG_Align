@@ -52,6 +52,23 @@ MUTATIONS = [
      "                    if max_val is not None and value > max_val:", "                    if False:"),
     ("M12", "tool schema: required arguments not enforced", "scripts/stage20_tool_function_calling.py",
      "            if req not in arguments:", "            if False:"),
+    # --- Phase 1 rules ---
+    ("M14", "exact-duplicate chunk drop disabled", "scripts/stage7_chunking.py",
+     "        if key and key in seen:", "        if False:"),
+    ("M15", "heading-only chunk drop disabled", "scripts/stage7_chunking.py",
+     "        if _span_len(s) < MIN_CHUNK_CHARS and _is_markdown_heading_only(text):", "        if False:"),
+    ("M16", "split no longer prefers sentence ends", "scripts/stage7_chunking.py",
+     "_ends_sentence(text[max(0, p - 12):p])", "False"),
+    ("M17", "repeated section ids not disambiguated", "scripts/stage5_structure.py",
+     "        if section_id in used_ids:", "        if False:"),
+    ("M18", "inline HTML tags (<mark>, <u>) not stripped", "scripts/stage4_cleaning.py",
+     '    text = _INLINE_TAG_RE.sub("", text)', "    pass"),
+    ("M19", "table-of-contents removal disabled", "scripts/stage4_cleaning.py",
+     "    if sum(leader) < MIN_TOC_LEADER_LINES:\n        return text", "    if True:\n        return text"),
+    ("M20", "stage 6 failure code reverts to FATAL_UNREADABLE", "scripts/stage6_validation.py",
+     "            record.error_code = ERROR_FAILED_VALIDATION", '            record.error_code = "FATAL_UNREADABLE"'),
+    ("M21", "local embedder no longer L2-normalises", "scripts/embedding_provider_local.py",
+     "        vectors = vectors / norms", "        vectors = vectors"),
 ]
 
 

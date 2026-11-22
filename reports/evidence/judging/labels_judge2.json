@@ -1,0 +1,582 @@
+{
+ "judge": "Judge 2 (fresh sub-agent, sonnet), frozen rubric",
+ "source": "raw/judge2_full.json",
+ "labels": {
+  "B0ce54": {
+   "label": 0,
+   "reason": "Only 'Indigenous Peoples and Local Communities: Yes' consulted; no groups named"
+  },
+  "Bcac25": {
+   "label": 0,
+   "reason": "Checklist 'Yes' entries, no groups named"
+  },
+  "Ba21eb": {
+   "label": 1,
+   "reason": "Mentions IP&LC livelihoods in Component 2 but names no specific peoples"
+  },
+  "B4390e": {
+   "label": 0,
+   "reason": "Mozambique IPLCs (Makonde, Yao), not Cameroon"
+  },
+  "B01c83": {
+   "label": 0,
+   "reason": "Alignment text, no communities named"
+  },
+  "B67734": {
+   "label": 0,
+   "reason": "Alignment text, no communities named"
+  },
+  "Bca8a0": {
+   "label": 0,
+   "reason": "Colombia Choco project, not Cameroon"
+  },
+  "Bc68a1": {
+   "label": 0,
+   "reason": "Single 'Yes' line without groups"
+  },
+  "B427a5": {
+   "label": 0,
+   "reason": "Ecuador coastal communities, not Cameroon"
+  },
+  "Bf9179": {
+   "label": 0,
+   "reason": "Mozambique IPLCs, not Cameroon"
+  },
+  "Bc953b": {
+   "label": 2,
+   "reason": "Interventions in Boumba Bek National Park and surrounding landscape within TRIDOM"
+  },
+  "B2ebbc": {
+   "label": 2,
+   "reason": "Describes TRIDOM and Boumba Bek National Park (238,255 ha)"
+  },
+  "Becc68": {
+   "label": 1,
+   "reason": "Mentions gaps around BBNP only"
+  },
+  "Bc353b": {
+   "label": 1,
+   "reason": "Title names Boumba Bek National Parc of TRIDOM landscape in a general info table"
+  },
+  "Bb3f65": {
+   "label": 1,
+   "reason": "Mentions BBNP only in passing"
+  },
+  "B0b327": {
+   "label": 2,
+   "reason": "Annex C: interventions in Boumba Bek National Park and periphery within TRIDOM"
+  },
+  "B7d9bf": {
+   "label": 1,
+   "reason": "States BBNP is part of TRIDOM but in alignment context"
+  },
+  "Bd652a": {
+   "label": 1,
+   "reason": "Baseline about TRIDOM initiatives and BBNP, not a clear target statement"
+  },
+  "B4ac0a": {
+   "label": 1,
+   "reason": "Mentions BBNP part of TRIDOM in alignment text"
+  },
+  "Ba8ab1": {
+   "label": 0,
+   "reason": "Ecuador marine indicators, no Kathmandu water"
+  },
+  "B566bb": {
+   "label": 0,
+   "reason": "Ecuador marine indicators"
+  },
+  "B7bca7": {
+   "label": 0,
+   "reason": "Energy indicator template"
+  },
+  "B95036": {
+   "label": 0,
+   "reason": "Energy indicator template"
+  },
+  "B94009": {
+   "label": 0,
+   "reason": "Ecuador biodiversity objective"
+  },
+  "B2b3dc": {
+   "label": 0,
+   "reason": "Cuba sector table"
+  },
+  "Bb9727": {
+   "label": 0,
+   "reason": "Cuba sector table"
+  },
+  "Be5487": {
+   "label": 0,
+   "reason": "Ecuador coastal baseline"
+  },
+  "B94bde": {
+   "label": 0,
+   "reason": "Ecuador protected area plans"
+  },
+  "B32c69": {
+   "label": 0,
+   "reason": "Ecuador theory of change"
+  },
+  "B20998": {
+   "label": 1,
+   "reason": "Mentions the 2030 Agenda commitments and GBF targets but no SDG numbers"
+  },
+  "B658c4": {
+   "label": 0,
+   "reason": "Project objective, no SDGs"
+  },
+  "Be181a": {
+   "label": 0,
+   "reason": "Rationale, no SDGs"
+  },
+  "Bfe12c": {
+   "label": 0,
+   "reason": "Project summary, no SDGs"
+  },
+  "B297e8": {
+   "label": 0,
+   "reason": "Project summary, no SDGs"
+  },
+  "Bc7afc": {
+   "label": 0,
+   "reason": "GBF/sustainable development generic, no SDGs"
+  },
+  "Be5cda": {
+   "label": 0,
+   "reason": "Ecuador coastal project summary, no SDGs"
+  },
+  "B4713d": {
+   "label": 0,
+   "reason": "Policy frameworks, no SDGs"
+  },
+  "Bfae90": {
+   "label": 0,
+   "reason": "Rationale text, no SDGs"
+  },
+  "B93372": {
+   "label": 0,
+   "reason": "Policy frameworks, no SDGs"
+  },
+  "Bbc317": {
+   "label": 0,
+   "reason": "Cameroon park project, not Karnataka schools"
+  },
+  "Bd3a4f": {
+   "label": 0,
+   "reason": "Cameroon objective"
+  },
+  "B3e184": {
+   "label": 0,
+   "reason": "Cameroon objective"
+  },
+  "B5bc4c": {
+   "label": 0,
+   "reason": "Ecuador theory of change"
+  },
+  "B33ad8": {
+   "label": 0,
+   "reason": "Ecuador marine pathways"
+  },
+  "B927cc": {
+   "label": 0,
+   "reason": "Cameroon governance components"
+  },
+  "B2dfe0": {
+   "label": 0,
+   "reason": "Cameroon objective"
+  },
+  "B10cc5": {
+   "label": 0,
+   "reason": "Table of contents"
+  },
+  "B1d2b5": {
+   "label": 0,
+   "reason": "Cameroon budget table"
+  },
+  "Ba2aa0": {
+   "label": 0,
+   "reason": "Cameroon summary"
+  },
+  "Bd7c80": {
+   "label": 2,
+   "reason": "Four components to enable mercury-free gold production and 80% reduction target"
+  },
+  "Be1159": {
+   "label": 1,
+   "reason": "Background on mercury in ASGM, no project actions"
+  },
+  "B935ab": {
+   "label": 1,
+   "reason": "Template plus background on mercury"
+  },
+  "B45847": {
+   "label": 1,
+   "reason": "Alignment text on reducing mercury, little mechanism"
+  },
+  "Ba2e81": {
+   "label": 1,
+   "reason": "Baseline barriers to mercury-free technology adoption"
+  },
+  "B7fa11": {
+   "label": 1,
+   "reason": "Alignment text on reducing mercury, little mechanism"
+  },
+  "B2af42": {
+   "label": 1,
+   "reason": "List of NAP goals 'reduction and/or elimination of mercury use', not project-specific"
+  },
+  "B54bfa": {
+   "label": 2,
+   "reason": "Component 3: awareness, mercury-free technologies, demonstration, training, adoption support"
+  },
+  "Bd6c6f": {
+   "label": 2,
+   "reason": "Four components and mercury-free pathways with 80% reduction target"
+  },
+  "B0e3da": {
+   "label": 1,
+   "reason": "Ecuador marine ecosystems context but no MPAs named"
+  },
+  "B5dae7": {
+   "label": 0,
+   "reason": "Baseline policy, no MPAs"
+  },
+  "B16835": {
+   "label": 0,
+   "reason": "Strategic fit, no MPAs"
+  },
+  "B7f5c1": {
+   "label": 0,
+   "reason": "National protected area system mentioned generically"
+  },
+  "Bab2bd": {
+   "label": 1,
+   "reason": "Coastal context, no MPAs named"
+  },
+  "B20ebe": {
+   "label": 0,
+   "reason": "Title table"
+  },
+  "B9ab5c": {
+   "label": 0,
+   "reason": "Dry forest landscape"
+  },
+  "Bc1787": {
+   "label": 0,
+   "reason": "Fragment 'WWF Ecuador'"
+  },
+  "B6cf6e": {
+   "label": 1,
+   "reason": "Covers five coastal provinces and 178,661 ha marine habitat but no named MPAs"
+  },
+  "Bce4a8": {
+   "label": 0,
+   "reason": "Dry forest threats, not coastal marine"
+  },
+  "B5108b": {
+   "label": 0,
+   "reason": "General biodiversity rationale"
+  },
+  "B4f5ff": {
+   "label": 1,
+   "reason": "Coastal ecosystems context, threats not yet stated"
+  },
+  "Bf1b27": {
+   "label": 1,
+   "reason": "Mentions biodiversity loss driven by unsustainable coastal use and habitat degradation"
+  },
+  "B3d03e": {
+   "label": 0,
+   "reason": "Baseline policy"
+  },
+  "B41750": {
+   "label": 1,
+   "reason": "'increasingly exposed to cumulative pressures' but cut off before specifics"
+  },
+  "B3a1fe": {
+   "label": 0,
+   "reason": "General biodiversity rationale"
+  },
+  "B9364b": {
+   "label": 0,
+   "reason": "Dry forest threats"
+  },
+  "B747dd": {
+   "label": 0,
+   "reason": "Dry forest and ridges, not coastal"
+  },
+  "B31e76": {
+   "label": 2,
+   "reason": "'four integrated components: formalization...; finance...; technical solutions...; knowledge management'"
+  },
+  "B72602": {
+   "label": 0,
+   "reason": "National strategy alignment"
+  },
+  "B57442": {
+   "label": 1,
+   "reason": "Programme context, no component list"
+  },
+  "B5f16b": {
+   "label": 1,
+   "reason": "Objective and heading only"
+  },
+  "B520c3": {
+   "label": 0,
+   "reason": "National strategy alignment"
+  },
+  "Bdd7d7": {
+   "label": 0,
+   "reason": "Title table"
+  },
+  "B89ae2": {
+   "label": 1,
+   "reason": "Programme context, no component list"
+  },
+  "Bc61b6": {
+   "label": 2,
+   "reason": "Lists four integrated components"
+  },
+  "B6e2fd": {
+   "label": 0,
+   "reason": "Title table"
+  },
+  "B7763f": {
+   "label": 1,
+   "reason": "Only Component 1 shown"
+  },
+  "Bb87a6": {
+   "label": 2,
+   "reason": "Cuba total GEF financing 2,890,500"
+  },
+  "Ba6635": {
+   "label": 2,
+   "reason": "Ecuador total GEF financing 4,945,250"
+  },
+  "B3d325": {
+   "label": 2,
+   "reason": "Ecuador CAF total GEF financing 4,371,000"
+  },
+  "B4e7e6": {
+   "label": 2,
+   "reason": "Cameroon total GEF financing 3,836,500"
+  },
+  "Bd9fe5": {
+   "label": 2,
+   "reason": "Mozambique total GEF financing 4,927,500"
+  },
+  "B2a49e": {
+   "label": 1,
+   "reason": "Component balances, project cost 4,010,092 but not the GEF financing table"
+  },
+  "B9d4af": {
+   "label": 2,
+   "reason": "Mozambique total GEF financing 4,927,500"
+  },
+  "B1d205": {
+   "label": 1,
+   "reason": "Total project cost GEF financing 4,516,210 but no agency fee"
+  },
+  "Bfcaa0": {
+   "label": 2,
+   "reason": "Cuba total GEF financing 2,890,500"
+  },
+  "B2faa1": {
+   "label": 2,
+   "reason": "Ecuador total GEF financing 4,945,250"
+  },
+  "B38ae6": {
+   "label": 2,
+   "reason": "Risks with mitigation measures: FPIC, GRM, human rights training"
+  },
+  "B35ec7": {
+   "label": 2,
+   "reason": "Stakeholder and external risks with mitigation measures"
+  },
+  "Bfc205": {
+   "label": 2,
+   "reason": "Risk table with ratings and mitigation"
+  },
+  "B8a9a8": {
+   "label": 2,
+   "reason": "Elite capture and enforcement risks with mitigation measures"
+  },
+  "Ba5f11": {
+   "label": 2,
+   "reason": "Climate and social risks with mitigation"
+  },
+  "B7c783": {
+   "label": 1,
+   "reason": "Fragment of risk table with mitigation"
+  },
+  "B25dc5": {
+   "label": 2,
+   "reason": "Climate risk with mitigation measure"
+  },
+  "B1c309": {
+   "label": 2,
+   "reason": "Institutional risk with risk mitigation measures"
+  },
+  "B8199b": {
+   "label": 2,
+   "reason": "Social and political risks with mitigation measures"
+  },
+  "B62a50": {
+   "label": 2,
+   "reason": "Key risks with mitigation for Cuba"
+  },
+  "Bc7ab4": {
+   "label": 2,
+   "reason": "Aligned with Tarea Vida and updated NDC 3.0 framing adaptation"
+  },
+  "Bd412a": {
+   "label": 2,
+   "reason": "Aligns closely with national priorities including NDC 3.0"
+  },
+  "Bac419": {
+   "label": 1,
+   "reason": "Alignment with national priorities, no NDC mention"
+  },
+  "B3cd44": {
+   "label": 0,
+   "reason": "Title table"
+  },
+  "B87aaf": {
+   "label": 0,
+   "reason": "Coordination with other initiatives"
+  },
+  "Bddcfa": {
+   "label": 2,
+   "reason": "Aligns with Tarea Vida and NDC 3.0"
+  },
+  "B1823f": {
+   "label": 2,
+   "reason": "Explains alignment with NDC 3.0 and Tarea Vida and feeding the NAP"
+  },
+  "Bc4ca2": {
+   "label": 0,
+   "reason": "Project objective only"
+  },
+  "B8a538": {
+   "label": 0,
+   "reason": "Coordination with other projects"
+  },
+  "Bb470c": {
+   "label": 1,
+   "reason": "National priorities alignment, no NDC mention"
+  },
+  "B9cb1e": {
+   "label": 2,
+   "reason": "Indicator 4.1 expected 60,312 hectares"
+  },
+  "B6b786": {
+   "label": 2,
+   "reason": "CI 4.1 estimated 80,000 ha, net 72,000 ha"
+  },
+  "B389b4": {
+   "label": 1,
+   "reason": "Protected area and restoration areas, not landscape improved management"
+  },
+  "B11ee0": {
+   "label": 2,
+   "reason": "At least 30,000 hectares of priority landscapes"
+  },
+  "B1805e": {
+   "label": 2,
+   "reason": "Indicator 4.1 30,000 ha"
+  },
+  "Bb53b0": {
+   "label": 2,
+   "reason": "CI 4.1: 60,312 hectares"
+  },
+  "B1a67e": {
+   "label": 2,
+   "reason": "Indicator 4.1 60,312 ha"
+  },
+  "Bce337": {
+   "label": 2,
+   "reason": "Indicator 4.1 30,000 ha"
+  },
+  "B1fb6d": {
+   "label": 2,
+   "reason": "Improving management of at least 30,000 hectares"
+  },
+  "B0f549": {
+   "label": 1,
+   "reason": "Consultation notes on renewable shift, no technologies deployed"
+  },
+  "Bb9099": {
+   "label": 2,
+   "reason": "Wind turbines, solar PV parks, underground power lines resilience measures"
+  },
+  "B6e5c8": {
+   "label": 1,
+   "reason": "Describes existing solar PV expansion, not deployment by the project"
+  },
+  "B859b7": {
+   "label": 1,
+   "reason": "Objective mentions renewable energy, grid and storage solutions generally"
+  },
+  "B51db6": {
+   "label": 1,
+   "reason": "Describes existing solar parks"
+  },
+  "B75477": {
+   "label": 1,
+   "reason": "Demonstration projects, no technologies named"
+  },
+  "B2f9ef": {
+   "label": 1,
+   "reason": "Stakeholder consultation table"
+  },
+  "Bdf246": {
+   "label": 1,
+   "reason": "Mentions renewable energy, storage and grid solutions generally"
+  },
+  "B3cacf": {
+   "label": 2,
+   "reason": "Wind turbines, solar PV reinforcement, underground lines, grid monitoring"
+  },
+  "Ba0cb8": {
+   "label": 0,
+   "reason": "Taxonomy keywords and financing table"
+  },
+  "Bc5eff": {
+   "label": 2,
+   "reason": "Gender-responsive approaches: equitable participation, women's leadership, equal access"
+  },
+  "B910eb": {
+   "label": 2,
+   "reason": "Sex-disaggregated indicators and budget for gender mainstreaming"
+  },
+  "Be5545": {
+   "label": 0,
+   "reason": "Only 'We confirm... Yes'"
+  },
+  "B87523": {
+   "label": 1,
+   "reason": "Outcome indicator on gender tools, little detail"
+  },
+  "B60359": {
+   "label": 0,
+   "reason": "Taxonomy keywords and financing table"
+  },
+  "B9b2ae": {
+   "label": 2,
+   "reason": "Gender dimensions: inclusive participation, gender analysis, sex-disaggregated data"
+  },
+  "B902bf": {
+   "label": 2,
+   "reason": "Outcome 3.2 integrates gender mainstreaming strategies across components"
+  },
+  "B10009": {
+   "label": 2,
+   "reason": "Gender-responsive measures and indicators in monitoring"
+  },
+  "B8d9d3": {
+   "label": 2,
+   "reason": "Gender dimensions: inclusive participation and gender-responsive monitoring"
+  }
+ }
+}
