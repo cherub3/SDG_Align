@@ -4,8 +4,6 @@
 **Status:** Approved for build · v1.0 · 2026-07-17
 **Scope:** Portfolio-grade MVP. Deployable entirely free. Single reviewer. No production SaaS ambitions in v1.
 
-> Guiding principle: every component must be explainable in one sentence in an interview. If it can't be, it's too complex for this project.
-
 ---
 
 > ## ⚠️ Delivery status (Phase 1 vs. this blueprint)
