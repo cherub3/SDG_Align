@@ -208,8 +208,16 @@ def assign_heading_levels(headings: List[Dict]) -> List[Dict]:
 def generate_section_ids(headings: List[Dict]) -> List[Dict]:
     """Walks the leveled heading list with a level-indexed stack, assigning section_id and
     parent_section to each entry (numeric numbering used directly, roman/alpha dot-joined to
-    parent, unnumbered headings get a synthetic id)."""
+    parent, unnumbered headings get a synthetic id).
+
+    A section_id must be unique. When a heading number repeats (a numbered list restarting at 1,
+    or the same number used in two parts of a document), the 2nd, 3rd ... occurrence gets the
+    suffix '-2', '-3' ... ('3', '3-2', '3-3'). The first occurrence keeps its plain id, so
+    documents without repeats get exactly the ids they always had. Children take their parent's
+    (already disambiguated) id, and a repeated child id is suffixed the same way."""
     stack: List[tuple] = []  # (level, section_id), outermost first
+    used_ids: set = set()
+    occurrences: Dict[str, int] = {}
     synthetic_counters: Dict[Optional[str], int] = {}
 
     for h in headings:
@@ -232,6 +240,14 @@ def generate_section_ids(headings: List[Dict]) -> List[Dict]:
             else:
                 letter = chr(ord('a') + n - 1)
                 section_id = f"{parent_id}{letter}"
+
+        if section_id in used_ids:
+            n = occurrences.get(section_id, 1)
+            while f"{section_id}-{n + 1}" in used_ids:
+                n += 1
+            occurrences[section_id] = n + 1
+            section_id = f"{section_id}-{n + 1}"
+        used_ids.add(section_id)
 
         h["section_id"] = section_id
         h["parent_section"] = parent_id

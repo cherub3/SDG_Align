@@ -342,3 +342,36 @@ class TestStage5Integration(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def _h(style, numbering, level, title="T"):
+    return {"style": style, "numbering": numbering, "section_level": level, "title": title, "page_number": 1}
+
+
+class TestRepeatedSectionIds(unittest.TestCase):
+    """A repeated heading number must not produce a repeated section_id (stage 6 rejects those)."""
+
+    def test_two_and_three_repeats_get_occurrence_suffixes(self):
+        hs = stage5.generate_section_ids([_h("numeric", n, 1) for n in ("3", "3", "3", "4")])
+        self.assertEqual([h["section_id"] for h in hs], ["3", "3-2", "3-3", "4"])
+
+    def test_nested_repeats_stay_unique_and_parents_resolve(self):
+        hs = stage5.generate_section_ids([
+            _h("numeric", "3", 1), _h("numeric", "3.1", 2), _h("alpha", "a", 3),
+            _h("numeric", "3", 1), _h("numeric", "3.1", 2), _h("alpha", "a", 3),
+        ])
+        ids = [h["section_id"] for h in hs]
+        self.assertEqual(ids, ["3", "3.1", "3.1.a", "3-2", "3.1-2", "3.1-2.a"])
+        self.assertEqual(len(set(ids)), len(ids))
+        tree = stage5.build_section_tree(hs)          # asserts every parent was seen earlier
+        self.assertEqual(tree[5]["parent_section"], "3.1-2")
+
+    def test_suffix_does_not_collide_with_a_natural_id(self):
+        hs = stage5.generate_section_ids([_h("numeric", n, 1) for n in ("3", "3-2", "3")])
+        ids = [h["section_id"] for h in hs]
+        self.assertEqual(len(set(ids)), 3)
+
+    def test_documents_without_repeats_keep_their_ids(self):
+        hs = stage5.generate_section_ids([_h("numeric", "1", 1), _h("numeric", "1.1", 2), _h("numeric", "2", 1),
+                                          _h("caps_unnumbered", None, 1)])
+        self.assertEqual([h["section_id"] for h in hs], ["1", "1.1", "2", "s1"])

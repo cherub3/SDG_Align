@@ -1,0 +1,7 @@
+docs with section trees before: 6 after: 6
+doc_2bfb8f4c19d6 UNCHANGED sections 75 duplicate ids 0 suffixed: []
+doc_6f1ac2315be2 CHANGED sections 97 duplicate ids 0 suffixed: ['3-2']
+doc_d01bd4278178 UNCHANGED sections 97 duplicate ids 0 suffixed: []
+doc_e2fd661744c7 UNCHANGED sections 84 duplicate ids 0 suffixed: []
+doc_e72e747170fa UNCHANGED sections 59 duplicate ids 0 suffixed: []
+doc_e75ba796c7d5 UNCHANGED sections 78 duplicate ids 0 suffixed: []
