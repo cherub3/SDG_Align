@@ -167,3 +167,31 @@ def test_prose_and_blank_lines_are_untouched():
 def test_two_tables_stay_separate():
     text = "|A|B|\n|---|---|\n|1|2|\n\n|C|D|\n|---|---|\n|3|4|"
     assert s4.convert_markdown_tables(text) == "A: 1; B: 2\n\nC: 3; D: 4"
+
+
+# ---- footer glued into a sentence, and blank lines at page edges ------------------------------
+
+def test_footer_glued_inside_a_sentence_is_cut_out_in_both_shapes():
+    a = "capacities of IP&LC will be 5/13/2026 Page 41 of 75 Official Use Only reinforced in different domains"
+    b = "Funds flow Official Use Only Page 7 of 75 to the agency"
+    assert s4.remove_page_markers(a) == "capacities of IP&LC will be reinforced in different domains"
+    assert s4.remove_page_markers(b) == "Funds flow to the agency"
+
+
+def test_a_sentence_that_cites_a_page_is_not_a_footer():
+    text = "The map is on Page 3 of 31 of the annex."
+    assert s4.remove_page_markers(text) == text
+
+
+def test_page_edges_have_no_blank_line_runs_and_offsets_still_add_up():
+    raw = {"doc_id": "doc_y", "pages": [
+        {"page_number": 1, "raw_text": "\n\n\nOfficial Use Only Page 1 of 3\n\n\n\n", "excluded": False},
+        {"page_number": 2, "raw_text": "\n\nBody text one.\n\n\n\n", "excluded": False},
+        {"page_number": 3, "raw_text": "Body text two.", "excluded": False},
+    ]}
+    clean = s4.build_clean_text(raw)
+    joined = "".join(p["text"] for p in clean["pages"])
+    assert joined == "Body text one.\n\nBody text two.\n\n"
+    assert "\n\n\n" not in joined
+    assert clean["pages"][0]["text"] == ""                      # a page left empty stays in the list
+    assert clean["full_text_char_count"] == len(joined)

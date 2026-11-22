@@ -81,13 +81,20 @@ _PAGE_MARKER_LINE_RE = re.compile(r"^\s*(?:Official Use Only\s*)?Page \d+ of \d+
 _OFFICIAL_USE_LINE_RE = re.compile(r"^\s*Official Use Only\s*$", re.IGNORECASE)
 
 
+_INLINE_FOOTER_RE = re.compile(
+    r"\s*(?:\d{1,2}/\d{1,2}/\d{4}\s+Page \d+ of \d+\s+Official Use Only|Official Use Only\s+Page \d+ of \d+)")
+
+
 def remove_page_markers(text: str) -> str:
     """Drops lines that are only a page marker ("Page 3 of 31", optionally prefixed by
     "Official Use Only"). The generic repeated-line rule cannot catch them because the
-    page number makes every line different."""
+    page number makes every line different. A footer that the converter glued into the
+    middle of a sentence ("... will be 5/13/2026 Page 41 of 75 Official Use Only reinforced ...")
+    is cut out too, but only in the two exact footer shapes seen in the corpus, so a sentence
+    such as "see Page 3 of 31" is never touched."""
     kept = [ln for ln in text.split("\n")
             if not (_PAGE_MARKER_LINE_RE.match(ln) or _OFFICIAL_USE_LINE_RE.match(ln))]
-    return "\n".join(kept)
+    return _INLINE_FOOTER_RE.sub("", "\n".join(kept))
 
 
 _BR_TAG_RE = re.compile(r"<br\s*/?>", re.IGNORECASE)
@@ -357,6 +364,11 @@ def build_clean_text(raw_extraction: Dict) -> Dict:
 
     pages = []
     for page_number, text, is_excluded in zip(page_numbers, stripped_texts, excluded_flags):
+        if not is_excluded:
+            # pages are concatenated for chunking: empty lines left where content was removed
+            # must not pile up at page edges (they made 8-blank-line "preamble" chunks)
+            text = text.strip("\n")
+            text = text + "\n\n" if text.strip() else ""
         pages.append({
             "page_number": page_number,
             "text": text,
