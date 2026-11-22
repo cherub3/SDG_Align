@@ -10,6 +10,7 @@ src_path = Path(__file__).parent.parent
 sys.path.append(str(src_path))
 
 from src.ingestion_types import ManifestRecord, DocumentStatus
+from src.stage_summary import StageRun, StageSummary, cli_main
 
 logging.basicConfig(
     level=logging.INFO,
@@ -59,7 +60,7 @@ def discover_documents() -> Iterator[Path]:
         if file_path.is_file():
             yield file_path
 
-def register_document(file_path: Path, manifest: Dict[str, ManifestRecord]) -> None:
+def register_document(file_path: Path, manifest: Dict[str, ManifestRecord]) -> bool:
     """Registers a single document into the manifest if not already present."""
     logger.info(f"Document discovered: {file_path}")
 
@@ -72,7 +73,7 @@ def register_document(file_path: Path, manifest: Dict[str, ManifestRecord]) -> N
         doc_id = f"doc_{file_hash}"
     except Exception as e:
         logger.error(f"Failed to read file {file_path}: {e}")
-        return
+        return False
 
     source_path = str(file_path).replace("\\", "/")
 
@@ -83,7 +84,7 @@ def register_document(file_path: Path, manifest: Dict[str, ManifestRecord]) -> N
             logger.info(f"Backfilled source_path for existing record: {doc_id}")
         else:
             logger.warning(f"Duplicate skipped: Document with doc_id {doc_id} is already registered.")
-        return
+        return True
 
     # Register document
     record = ManifestRecord(
@@ -95,15 +96,20 @@ def register_document(file_path: Path, manifest: Dict[str, ManifestRecord]) -> N
 
     manifest[doc_id] = record
     logger.info(f"Document registered: {doc_id}")
+    return True
 
-def register_documents() -> None:
+def register_documents() -> StageSummary:
     """Orchestrates the manifest registration process."""
     manifest = load_manifest()
+    run = StageRun("stage0")
 
     for file_path in discover_documents():
-        register_document(file_path, manifest)
+        run.attempt(str(file_path))
+        if register_document(file_path, manifest) is False:
+            run.fail(f"could not read {file_path}")
 
     save_manifest(manifest)
+    return run.summarize(manifest)
 
 if __name__ == "__main__":
-    register_documents()
+    cli_main(register_documents)

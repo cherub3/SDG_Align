@@ -23,6 +23,7 @@ from scripts.stage0_register import load_manifest, save_manifest
 from scripts.stage1_integrity import get_now_iso, PIPELINE_VERSION
 from scripts.stage2_extraction import EXTRACTED_DIR
 from src.ingestion_types import ManifestRecord, DocumentStatus
+from src.stage_summary import StageRun, StageSummary, cli_main
 
 logging.basicConfig(
     level=logging.INFO,
@@ -230,9 +231,10 @@ def clean_document(record: ManifestRecord) -> None:
         logger.exception(f"Stage 4 failed for: {record.doc_id}")
 
 
-def run_stage4() -> None:
+def run_stage4() -> StageSummary:
     """Orchestrator: clean every document with a Stage 2 raw_extraction artifact, skip everything else."""
     manifest = load_manifest()
+    run = StageRun("stage4")
     for doc_id, record in manifest.items():
         if record.status != DocumentStatus.REGISTERED:
             logger.info(f"Skipping {doc_id}: status is {record.status}, expected registered")
@@ -240,12 +242,14 @@ def run_stage4() -> None:
         if not record.artifact_paths.get("raw_extraction"):
             logger.info(f"Skipping {doc_id}: Stage 2 raw_extraction artifact missing in manifest")
             continue
+        run.attempt(doc_id)
         clean_document(record)
     save_manifest(manifest)
+    return run.summarize(manifest)
 
 
 if __name__ == "__main__":
-    run_stage4()
+    cli_main(run_stage4)
 
 
 # Clean stage completes the raw textual pipeline. Not implemented here. Stage 4 only cleans text.

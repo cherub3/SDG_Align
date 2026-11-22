@@ -24,6 +24,7 @@ sys.path.append(str(src_path))
 from scripts.stage0_register import load_manifest, save_manifest
 from scripts.stage1_integrity import get_now_iso, PIPELINE_VERSION
 from src.ingestion_types import ManifestRecord, DocumentStatus
+from src.stage_summary import StageRun, StageSummary, cli_main
 
 EXTRACTED_DIR = Path("data/proposals/extracted")
 VALIDATION_REPORTS_DIR = Path("data/proposals/validation_reports")
@@ -695,9 +696,10 @@ def validate_document(record: ManifestRecord) -> None:
 # BATCH ORCHESTRATOR
 # ===========================================================================
 
-def run_stage6() -> None:
+def run_stage6() -> StageSummary:
     """Orchestrator: validates every non-quarantined document with a clean_text artifact."""
     manifest = load_manifest()
+    run = StageRun("stage6")
 
     for doc_id, record in manifest.items():
         if record.status == DocumentStatus.QUARANTINED:
@@ -706,10 +708,12 @@ def run_stage6() -> None:
         if not record.artifact_paths.get("clean_text"):
             logger.info(f"Skipping {doc_id}: clean_text artifact missing — Stage 4/5 not completed")
             continue
+        run.attempt(doc_id)
         validate_document(record)
 
     save_manifest(manifest)
+    return run.summarize(manifest)
 
 
 if __name__ == "__main__":
-    run_stage6()
+    cli_main(run_stage6)

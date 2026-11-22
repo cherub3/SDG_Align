@@ -10,6 +10,7 @@ src_path = Path(__file__).parent.parent
 sys.path.append(str(src_path))
 
 from src.ingestion_types import ManifestRecord, DocumentStatus
+from src.stage_summary import StageRun, StageSummary, cli_main
 from scripts.stage0_register import load_manifest, save_manifest
 
 logging.basicConfig(
@@ -70,17 +71,20 @@ def verify_document_integrity(record: ManifestRecord) -> None:
         record.error_code = "FATAL_UNREADABLE"
         record.completed_at = get_now_iso()
 
-def run_stage1() -> None:
+def run_stage1() -> StageSummary:
     """Orchestrates Stage 1 integrity check."""
     manifest = load_manifest()
+    run = StageRun("stage1")
     
     for doc_id, record in manifest.items():
         if record.status != DocumentStatus.REGISTERED:
             continue
             
+        run.attempt(doc_id)
         verify_document_integrity(record)
 
     save_manifest(manifest)
+    return run.summarize(manifest)
 
 if __name__ == "__main__":
-    run_stage1()
+    cli_main(run_stage1)

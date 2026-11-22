@@ -27,6 +27,7 @@ sys.path.append(str(src_path))
 from scripts.stage0_register import load_manifest, save_manifest
 from scripts.stage1_integrity import get_now_iso, PIPELINE_VERSION
 from src.ingestion_types import ManifestRecord, DocumentStatus
+from src.stage_summary import StageRun, StageSummary, cli_main
 
 EXTRACTED_DIR = Path("data/proposals/extracted")
 CHUNKS_DIR = Path("data/proposals/chunks")
@@ -685,10 +686,11 @@ def chunk_document(record: ManifestRecord, clean_text: Dict, metadata: Dict) -> 
 # BATCH ORCHESTRATOR
 # ===========================================================================
 
-def run_stage7() -> None:
+def run_stage7() -> StageSummary:
     """Orchestrator: chunks every document marked READY_FOR_CHUNKING with both
     clean_text and metadata artifacts registered."""
     manifest = load_manifest()
+    run = StageRun("stage7")
 
     for doc_id, record in manifest.items():
         if record.status != DocumentStatus.READY_FOR_CHUNKING:
@@ -697,6 +699,7 @@ def run_stage7() -> None:
             logger.info(f"Skipping {doc_id}: clean_text/metadata artifact missing")
             continue
 
+        run.attempt(doc_id)
         try:
             with open(record.artifact_paths["clean_text"], "r", encoding="utf-8") as f:
                 clean_text = json.load(f)
@@ -711,7 +714,8 @@ def run_stage7() -> None:
             record.pipeline_version = PIPELINE_VERSION
 
     save_manifest(manifest)
+    return run.summarize(manifest)
 
 
 if __name__ == "__main__":
-    run_stage7()
+    cli_main(run_stage7)

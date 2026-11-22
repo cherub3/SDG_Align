@@ -10,6 +10,7 @@ sys.path.append(str(src_path))
 from scripts.stage0_register import load_manifest, save_manifest
 from scripts.stage1_integrity import get_now_iso, PIPELINE_VERSION
 from src.ingestion_types import ManifestRecord, DocumentStatus
+from src.stage_summary import StageRun, StageSummary, cli_main
 
 EXTRACTED_DIR = Path("data/proposals/extracted")
 
@@ -109,9 +110,10 @@ def process_document(record: ManifestRecord) -> None:
         record.error_code = "FATAL_UNREADABLE"
         record.completed_at = get_now_iso()
 
-def run_stage3() -> None:
+def run_stage3() -> StageSummary:
     """Orchestrator: process every document that successfully completed Stage 2."""
     manifest = load_manifest()
+    run = StageRun("stage3")
     
     for doc_id, record in manifest.items():
         if record.status != DocumentStatus.REGISTERED:
@@ -122,9 +124,11 @@ def run_stage3() -> None:
             logger.info(f"Skipping {doc_id}: Stage 2 raw_extraction artifact missing in manifest")
             continue
             
+        run.attempt(doc_id)
         process_document(record)
         
     save_manifest(manifest)
+    return run.summarize(manifest)
 
 if __name__ == "__main__":
-    run_stage3()
+    cli_main(run_stage3)

@@ -29,6 +29,7 @@ sys.path.append(str(src_path))
 from scripts.stage0_register import load_manifest, save_manifest
 from scripts.stage1_integrity import get_now_iso, PIPELINE_VERSION
 from src.ingestion_types import ManifestRecord, DocumentStatus
+from src.stage_summary import StageRun, StageSummary, finish, parse_strict
 
 EMBEDDINGS_DIR = Path("data/proposals/embeddings")
 CHUNKS_DIR = Path("data/proposals/chunks")
@@ -599,8 +600,9 @@ def _discover_dimension_from_parquet(
     return None
 
 
-def run_stage8(provider: ProviderAdapter) -> None:
+def run_stage8(provider: ProviderAdapter) -> StageSummary:
     manifest = load_manifest()
+    run = StageRun("stage8")
 
     # Finding 4: Defer dimension discovery to avoid unnecessary provider calls.
     # First try to read from an existing parquet; only call the provider when
@@ -626,6 +628,7 @@ def run_stage8(provider: ProviderAdapter) -> None:
             chunks = chunks_data.get("chunks", [])
             if not chunks:
                 continue
+            run.attempt(doc_id)
 
             # Lazy dimension discovery: call provider only when we actually
             # need to generate and haven't discovered dimensions yet.
@@ -635,7 +638,8 @@ def run_stage8(provider: ProviderAdapter) -> None:
                     dim = len(dummy_vec)
                 except Exception as exc:
                     logger.error(f"FATAL_EMBEDDING_PROVIDER_UNAVAILABLE: {exc}")
-                    return
+                    run.fail(f"FATAL_EMBEDDING_PROVIDER_UNAVAILABLE: {exc}")
+                    return run.summarize(manifest)
 
             outcome, findings, total, reused, generated = process_document(record, chunks, provider, dim)
 
@@ -650,12 +654,14 @@ def run_stage8(provider: ProviderAdapter) -> None:
 
         except Exception as exc:
             logger.error(f"Stage 8 crashed for {doc_id}: {exc}")
+            run.attempt(doc_id)
             record.status = DocumentStatus.QUARANTINED
             record.error_code = "FATAL_EMBEDDING_FAILED"
             record.completed_at = get_now_iso()
             record.pipeline_version = PIPELINE_VERSION
 
     save_manifest(manifest)
+    return run.summarize(manifest)
 
 if __name__ == "__main__":
     # Uses the provider configured in .env (EMBEDDING_PROVIDER + credential), the same
@@ -665,4 +671,5 @@ if __name__ == "__main__":
     from scripts.application_bootstrap import bootstrap_application
 
     _app = bootstrap_application(registrations=_build_registrations(), env=None, dotenv_path=".env")
-    run_stage8(_app["embedding_adapter"])
+    _strict = parse_strict()
+    sys.exit(finish(run_stage8(_app["embedding_adapter"]), _strict))

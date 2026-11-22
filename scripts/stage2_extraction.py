@@ -22,6 +22,7 @@ import pymupdf4llm
 from scripts.stage0_register import load_manifest, save_manifest
 from scripts.stage1_integrity import get_now_iso, PIPELINE_VERSION
 from src.ingestion_types import ManifestRecord, DocumentStatus
+from src.stage_summary import StageRun, StageSummary, cli_main
 
 EXTRACTED_DIR = Path("data/proposals/extracted")
 
@@ -154,16 +155,19 @@ def extract_document(record: ManifestRecord) -> None:
         logger.exception(f"Extraction failed: {record.doc_id}")
 
 
-def run_stage2() -> None:
+def run_stage2() -> StageSummary:
     """Orchestrator: extract every document that passed Stage 1, skip everything else."""
     manifest = load_manifest()
+    run = StageRun("stage2")
     for doc_id, record in manifest.items():
         if record.status != DocumentStatus.REGISTERED or record.page_count is None:
             logger.info(f"Skipping {doc_id}: has not passed Stage 1")
             continue
+        run.attempt(doc_id)
         extract_document(record)
     save_manifest(manifest)
+    return run.summarize(manifest)
 
 
 if __name__ == "__main__":
-    run_stage2()
+    cli_main(run_stage2)

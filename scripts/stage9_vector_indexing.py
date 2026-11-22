@@ -33,6 +33,7 @@ sys.path.append(str(src_path))
 from scripts.stage0_register import load_manifest, save_manifest
 from scripts.stage1_integrity import get_now_iso, PIPELINE_VERSION
 from src.ingestion_types import ManifestRecord, DocumentStatus
+from src.stage_summary import StageRun, StageSummary, cli_main
 
 INDEX_DIR = Path("data/proposals/vector_index")
 INDEX_PIPELINE_VERSION = "1.0.0"
@@ -705,19 +706,22 @@ def update_manifest_for_fingerprint(
             manifest[doc_id].error_code = "FATAL_INDEXING_FAILED"
 
 
-def run_stage9(adapter_factory, metric: str = "cosine") -> None:
+def run_stage9(adapter_factory, metric: str = "cosine") -> StageSummary:
     manifest = load_manifest()
+    run = StageRun("stage9")
     eligible_records = load_eligible_documents(manifest)
+    for _record in eligible_records:
+        run.attempt(_record.doc_id)
     
     if not eligible_records:
         logger.info("No eligible documents found for Stage 9.")
-        return
+        return run.summarize(manifest)
         
     config_fingerprints = discover_config_fingerprints(eligible_records)
     
     if not config_fingerprints:
         logger.info("No config_fingerprints discovered in the corpus.")
-        return
+        return run.summarize(manifest)
         
     adapter_stub = adapter_factory(metric=metric)
     backend_name = adapter_stub.backend_name
@@ -745,6 +749,7 @@ def run_stage9(adapter_factory, metric: str = "cosine") -> None:
             existing_result = load_existing_index(index_fingerprint, lambda metric=metric: adapter_factory(metric=metric))
         except CorruptedArtifactError as e:
             logger.error(f"FATAL_INDEX_BUILD_FAILED: {e}")
+            run.fail(f"index {index_fingerprint[:12]}: {e}")
             findings = [{
                 "severity": "FAIL", "code": "INDEX_ARTIFACT_READABLE",
                 "message": str(e)
@@ -875,6 +880,7 @@ def run_stage9(adapter_factory, metric: str = "cosine") -> None:
         critical_findings = [f for f in findings if f["severity"] == "FAIL"]
         if critical_findings:
             logger.error(f"Critical findings in {index_fingerprint}, aborting build. Findings: {critical_findings}")
+            run.fail(f"index {index_fingerprint[:12]}: critical findings {[f['code'] for f in critical_findings]}")
             write_index_validation_report(index_fingerprint, config_fingerprint, findings, "FAIL", stats)
             continue
             
@@ -888,6 +894,7 @@ def run_stage9(adapter_factory, metric: str = "cosine") -> None:
 
     save_manifest(manifest)
     logger.info("Stage 9 Vector Indexing completed.")
+    return run.summarize(manifest)
 
 if __name__ == "__main__":
-    run_stage9(FAISSAdapter, metric="cosine")
+    cli_main(lambda: run_stage9(FAISSAdapter, metric="cosine"))

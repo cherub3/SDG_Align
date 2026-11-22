@@ -24,6 +24,7 @@ sys.path.append(str(src_path))
 from scripts.stage0_register import load_manifest, save_manifest
 from scripts.stage1_integrity import get_now_iso, PIPELINE_VERSION
 from src.ingestion_types import ManifestRecord, DocumentStatus
+from src.stage_summary import StageRun, StageSummary, cli_main
 
 logging.basicConfig(
     level=logging.INFO,
@@ -364,9 +365,10 @@ def tag_document(record: ManifestRecord) -> None:
         logger.exception(f"Stage 5 failed for: {record.doc_id}")
 
 
-def run_stage5() -> None:
+def run_stage5() -> StageSummary:
     """Orchestrator: tag every document with a Stage 4 clean_text artifact, skip everything else."""
     manifest = load_manifest()
+    run = StageRun("stage5")
     for doc_id, record in manifest.items():
         if record.status != DocumentStatus.REGISTERED:
             logger.info(f"Skipping {doc_id}: status is {record.status}, expected registered")
@@ -374,9 +376,11 @@ def run_stage5() -> None:
         if not record.artifact_paths.get("clean_text"):
             logger.info(f"Skipping {doc_id}: Stage 4 clean_text artifact missing in manifest")
             continue
+        run.attempt(doc_id)
         tag_document(record)
     save_manifest(manifest)
+    return run.summarize(manifest)
 
 
 if __name__ == "__main__":
-    run_stage5()
+    cli_main(run_stage5)
