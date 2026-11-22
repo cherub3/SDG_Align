@@ -1,0 +1,7 @@
+Question:
+{{query}}
+
+Context:
+{{context_text}}
+
+Answer the question using only the context above.

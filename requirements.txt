@@ -1,0 +1,12 @@
+# Ingestion pipeline (Stages 1-9)
+# As an application (not a library), dependencies are strictly pinned to guarantee reproducible deployments.
+pymupdf==1.28.0
+pymupdf4llm==1.28.0
+pyarrow==24.0.0
+faiss-cpu==1.14.3
+google-genai==2.10.0
+groq>=0.13.0
+openai>=1.0.0
+
+# Testing
+pytest==9.0.3

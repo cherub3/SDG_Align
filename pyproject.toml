@@ -1,0 +1,21 @@
+[project]
+name = "sdg-align"
+version = "0.1.0"
+description = "Retrieval-Augmented Generation (RAG) + agent-orchestration pipeline for SDG alignment."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pymupdf==1.28.0",
+    "pymupdf4llm==1.28.0",
+    "pyarrow==24.0.0",
+    "faiss-cpu==1.14.3",
+    "google-genai==2.10.0",
+    "fastapi>=0.120",
+    "uvicorn>=0.46",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.0.3",
+    "httpx>=0.28",
+]
