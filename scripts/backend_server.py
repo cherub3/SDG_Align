@@ -34,6 +34,7 @@ from scripts.planner_provider_gemini import get_provider_registration as get_pla
 from scripts.llm_provider_groq import get_provider_registration as get_groq_llm_registration
 from scripts.planner_provider_groq import get_provider_registration as get_groq_planner_registration
 from scripts.embedding_provider_huggingface import get_provider_registration as get_huggingface_embedding_registration
+from scripts.embedding_provider_local import get_provider_registration as get_local_embedding_registration
 from scripts.llm_provider_openrouter import get_provider_registration as get_openrouter_llm_registration
 from scripts.planner_provider_openrouter import get_provider_registration as get_openrouter_planner_registration
 from scripts.request_observability import get_observation_records, observe_request
@@ -56,7 +57,7 @@ def _max_query_chars() -> int:
 
 
 def _build_registrations() -> List[Any]:
-    """Every available provider registration (Gemini, Groq, OpenRouter, Hugging Face); the
+    """Every available provider registration (Gemini, Groq, OpenRouter, Hugging Face, local); the
     configured LLM_PROVIDER / PLANNER_LLM_PROVIDER / EMBEDDING_PROVIDER decide which are used."""
     return [
         get_llm_registration(),
@@ -65,6 +66,7 @@ def _build_registrations() -> List[Any]:
         get_groq_llm_registration(),
         get_groq_planner_registration(),
         get_huggingface_embedding_registration(),
+        get_local_embedding_registration(),
         get_openrouter_llm_registration(),
         get_openrouter_planner_registration(),
     ]

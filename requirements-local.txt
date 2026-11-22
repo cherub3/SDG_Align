@@ -1,0 +1,4 @@
+# Optional: local embeddings (EMBEDDING_PROVIDER=local). Not needed for the core pipeline or its tests.
+# Install after requirements.txt:   pip install -r requirements-local.txt
+sentence-transformers==6.3.0
+torch==2.15.0
