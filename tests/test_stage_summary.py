@@ -187,7 +187,10 @@ def test_stage9_with_nothing_to_index_is_a_clean_run():
 # ---------------------------------------------------------------------------
 
 def _run_stage(module, cwd, *args):
-    env = dict(os.environ, PYTHONPATH=str(REPO_ROOT))
+    # The child process must not be measured by pytest-cov: it runs in a temp cwd without the
+    # repo's coverage config, so its data would be non-branch and break coverage combination.
+    env = {k: v for k, v in os.environ.items() if not k.startswith("COV_CORE")}
+    env["PYTHONPATH"] = str(REPO_ROOT)
     return subprocess.run([sys.executable, "-m", module, *args], cwd=cwd, env=env,
                           capture_output=True, text=True, timeout=120)
 
