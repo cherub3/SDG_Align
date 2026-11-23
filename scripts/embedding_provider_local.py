@@ -14,6 +14,7 @@ Determinism: CPU only, one torch thread (fixed reduction order), eval mode, no d
 L2-normalised, and the model weights pinned to a hub commit hash. Same input on the same machine
 gives the same vectors (checked by tools/ and recorded in reports/evidence/).
 """
+import os
 import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
@@ -32,7 +33,25 @@ DEFAULT_BATCH_SIZE = 32
 _UNPINNED_ALIASES = {"latest", "stable", "preview", "beta"}
 
 
+ALLOW_DOWNLOAD_ENV = "ALLOW_MODEL_DOWNLOAD"
+
+
+class LocalModelUnavailableError(RuntimeError):
+    """The local embedding model is not in the local cache and downloading is not allowed."""
+
+
+def _download_allowed() -> bool:
+    return (os.environ.get(ALLOW_DOWNLOAD_ENV) or "").strip().lower() in ("1", "true", "yes")
+
+
 def _load_sentence_transformer(model_name: str, revision: Optional[str], num_threads: int) -> Any:
+    # Offline by default: the model is read from the local Hugging Face cache only, so a query can never trigger a
+    # silent download. Setting the env vars BEFORE the import matters (huggingface_hub reads them at import time);
+    # local_files_only=True below is the belt to that braces. A one-time download needs ALLOW_MODEL_DOWNLOAD=true.
+    offline = not _download_allowed()
+    if offline:
+        os.environ["HF_HUB_OFFLINE"] = "1"
+        os.environ["TRANSFORMERS_OFFLINE"] = "1"
     try:
         import torch
         from sentence_transformers import SentenceTransformer
@@ -42,7 +61,15 @@ def _load_sentence_transformer(model_name: str, revision: Optional[str], num_thr
             "pip install -r requirements-local.txt"
         ) from exc
     torch.set_num_threads(num_threads)
-    model = SentenceTransformer(model_name, device="cpu", revision=revision)
+    try:
+        model = SentenceTransformer(model_name, device="cpu", revision=revision, local_files_only=offline)
+    except Exception as exc:
+        if offline:
+            raise LocalModelUnavailableError(
+                f"local embedding model {model_name!r} (revision {revision}) is not in the local Hugging Face cache and "
+                f"downloads are disabled. Place the model in the cache once (set {ALLOW_DOWNLOAD_ENV}=true for a single "
+                f"run on a trusted network), or bake it into the image. Cause: {exc}") from exc
+        raise
     model.eval()
     return model
 
@@ -82,6 +109,11 @@ class LocalEmbeddingAdapter(ProviderAdapter):
         if self._embedding_dimension is None:
             raise RuntimeError("embedding_dimension not yet discovered (embed_batch has not returned any vectors)")
         return self._embedding_dimension
+
+    def warm_up(self) -> None:
+        """Loads the model now (idempotent). Used at server startup so a missing model fails there, loudly."""
+        if self._model is None:
+            self._model = self._loader()
 
     def embed_batch(self, texts: List[str]) -> List[List[float]]:
         import numpy as np

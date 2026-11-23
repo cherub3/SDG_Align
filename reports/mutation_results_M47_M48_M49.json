@@ -1,0 +1,23 @@
+[
+  {
+    "id": "M47",
+    "description": "RETRIEVAL_MODE validation skipped in compose_application",
+    "file": "scripts/composition_root.py",
+    "result": "SETUP_ERROR",
+    "pytest": "1 error in 33.08s"
+  },
+  {
+    "id": "M48",
+    "description": "NETWORK_CALLS_PERMITTED default flipped to true",
+    "file": "scripts/phase1_1_configuration_layer.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 38 passed, 6 subtests passed in 11.95s"
+  },
+  {
+    "id": "M49",
+    "description": "per-request LLM call cap ignored",
+    "file": "scripts/call_budget.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 50 passed, 6 subtests passed in 10.84s"
+  }
+]

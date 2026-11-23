@@ -28,24 +28,23 @@ cp .env.example .env
 Edit `.env`:
 
 ```bash
-# All three provider seams share one Gemini key by default.
-# For Groq or OpenRouter, you can specify GROQ_API_KEY or OPENROUTER_API_KEY instead, and change the provider values.
-# For Hugging Face Embeddings, you can specify HF_API_KEY.
-GEMINI_API_KEY=<your real key>
-GROQ_API_KEY=<your groq key>
-HF_API_KEY=<your hf key>
-
-# Embedding provider identity — must match the index you actually built (see §5).
-# Note: Groq does not support embeddings.
-# For a local, network-free embedder set EMBEDDING_PROVIDER=local (pip install -r requirements-local.txt first).
-# If using Hugging Face, change EMBEDDING_PROVIDER to 'huggingface' and model to 'BAAI/bge-small-en-v1.5' (with version 'v1.5').
-EMBEDDING_PROVIDER_EXTRA_MODEL_NAME=text-embedding-004
-EMBEDDING_PROVIDER_EXTRA_MODEL_VERSION=004
-
-# Planner's effective model — read directly by compose_application(), not via the
-# PLANNER_LLM_PROVIDER_EXTRA_ passthrough (the planner factory takes no extra settings).
-DEFAULT_PLANNER_MODEL_NAME=gemini-2.0-flash
+# The shipped example is SAFE BY DEFAULT: local embeddings (free, offline, matches the index) and
+#   NETWORK_CALLS_PERMITTED=false  -> no paid or quota-limited call is possible.
+# To answer questions you must opt in to a paid LLM + planner:
+#   NETWORK_CALLS_PERMITTED=true
+#   LLM_PROVIDER=gemini  LLM_PROVIDER_CREDENTIAL_REF=env:GEMINI_API_KEY  LLM_PROVIDER_EXTRA_MODEL=gemini-3.5-flash-lite
+#   PLANNER_LLM_PROVIDER=gemini  PLANNER_LLM_PROVIDER_CREDENTIAL_REF=env:GEMINI_API_KEY  DEFAULT_PLANNER_MODEL_NAME=gemini-3.5-flash-lite
+#   GEMINI_API_KEY=<your real key>        (or the OpenRouter / Groq blocks in .env.example)
+# MAX_LLM_CALLS_PER_REQUEST (default 6) is a hard cap on LLM calls for one request.
+#
+# Embedding provider identity must match the index you actually built (see §5). pip install -r requirements-local.txt first.
+EMBEDDING_PROVIDER=local
+EMBEDDING_PROVIDER_EXTRA_MODEL_NAME=BAAI/bge-small-en-v1.5
+EMBEDDING_PROVIDER_EXTRA_MODEL_VERSION=v1.5
 ```
+
+At startup the server refuses to start (non-zero exit) if the manifest, chunks or index are missing or empty, if the index
+was built with a different embedding model than configured, or if the local model is not in the Hugging Face cache.
 
 See [`.env.example`](.env.example) for the full annotated list, including why `INDEX_BACKEND` is
 commented out (no provider registration exists for that seam — `FAISSAdapter` is constructed

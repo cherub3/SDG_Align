@@ -10,7 +10,11 @@
  */
 import { BACKEND_URL } from "./backend-adapter"
 
-const DETECTION_TIMEOUT_MS = 1500
+// A scale-to-zero backend (Cloud Run, min-instances 0) took 41 s to start in Phase 3, so the check must outlive
+// that. The page never waits for it: sample data is shown at once, with a banner while the check runs.
+export const DETECTION_TIMEOUT_MS = 60000
+// After this long without an answer the UI says the backend is waking up rather than saying nothing.
+export const WAKING_NOTICE_AFTER_MS = 1500
 
 export async function detectLiveBackend(): Promise<boolean> {
   const controller = new AbortController()

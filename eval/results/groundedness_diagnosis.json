@@ -1,0 +1,202 @@
+{
+ "arm": "eval/results/test_noplanner_v21.jsonl",
+ "answered_rows": 38,
+ "spans": 96,
+ "spans_ngram_overlap_ge_0.6 (cited)": 58,
+ "spans_lcs_ratio_ge_0.8 (GROUNDED)": 16,
+ "median_ngram_overlap": 0.71,
+ "median_lcs_ratio": 0.404,
+ "rows_groundedness_0": 27,
+ "rows": [
+  {
+   "qid": "Q001",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q002",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.3333333333333333
+  },
+  {
+   "qid": "Q003",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.0
+  },
+  {
+   "qid": "Q004",
+   "groundedness_score": 1.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q006",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q009",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q010",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q011",
+   "groundedness_score": 1.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q014",
+   "groundedness_score": 1.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q015",
+   "groundedness_score": 1.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q016",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q018",
+   "groundedness_score": 1.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q019",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q021",
+   "groundedness_score": 1.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q024",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q025",
+   "groundedness_score": 1.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q026",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.5
+  },
+  {
+   "qid": "Q027",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.6666666666666666
+  },
+  {
+   "qid": "Q029",
+   "groundedness_score": 0.6666666666666666,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q030",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q031",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q033",
+   "groundedness_score": 1.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q034",
+   "groundedness_score": 1.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q035",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.3333333333333333
+  },
+  {
+   "qid": "Q036",
+   "groundedness_score": 0.3333333333333333,
+   "citation_presence_ratio": 0.6666666666666666
+  },
+  {
+   "qid": "Q038",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 1.0
+  },
+  {
+   "qid": "Q039",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.5
+  },
+  {
+   "qid": "Q042",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.3333333333333333
+  },
+  {
+   "qid": "Q045",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.75
+  },
+  {
+   "qid": "Q046",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.6666666666666666
+  },
+  {
+   "qid": "Q047",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.0
+  },
+  {
+   "qid": "Q049",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.0
+  },
+  {
+   "qid": "Q051",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.6666666666666666
+  },
+  {
+   "qid": "Q053",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.5
+  },
+  {
+   "qid": "Q055",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.75
+  },
+  {
+   "qid": "Q056",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.2
+  },
+  {
+   "qid": "Q057",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.3333333333333333
+  },
+  {
+   "qid": "Q060",
+   "groundedness_score": 0.0,
+   "citation_presence_ratio": 0.42857142857142855
+  }
+ ]
+}

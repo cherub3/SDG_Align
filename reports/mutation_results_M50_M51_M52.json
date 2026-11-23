@@ -1,0 +1,23 @@
+[
+  {
+    "id": "M50",
+    "description": "per-request LLM call cap default raised to 600",
+    "file": "scripts/call_budget.py",
+    "result": "SETUP_ERROR",
+    "pytest": "no tests ran in 22.72s"
+  },
+  {
+    "id": "M51",
+    "description": "invalid cap value means unlimited-ish (no fallback to default)",
+    "file": "scripts/call_budget.py",
+    "result": "SETUP_ERROR",
+    "pytest": ""
+  },
+  {
+    "id": "M52",
+    "description": "request budget not activated per request",
+    "file": "scripts/runtime_orchestration.py",
+    "result": "SETUP_ERROR",
+    "pytest": ""
+  }
+]

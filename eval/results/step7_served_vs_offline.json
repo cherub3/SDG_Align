@@ -1,0 +1,37 @@
+{
+ "note": "served (Cloud Run retrieval_only) vs stored offline hybrid runs eval/results/3d_{dev,test}_hybrid.json",
+ "splits": {
+  "test": {
+   "n_answerable": 44,
+   "recall@5_served": 0.7727,
+   "recall@5_offline": 0.7727,
+   "items_with_different_first_hit_rank": [],
+   "items_with_top1_score_differing_over_1e-3": [],
+   "served_latency_ms": {
+    "p50": 104.9,
+    "p95": 139.2
+   },
+   "offline_latency_ms": {
+    "mean": 233.0,
+    "p50": 53.9,
+    "p95": 85.6
+   }
+  },
+  "dev": {
+   "n_answerable": 12,
+   "recall@5_served": 0.8333,
+   "recall@5_offline": 0.8333,
+   "items_with_different_first_hit_rank": [],
+   "items_with_top1_score_differing_over_1e-3": [],
+   "served_latency_ms": {
+    "p50": 124.4,
+    "p95": 494.8
+   },
+   "offline_latency_ms": {
+    "mean": 698.2,
+    "p50": 47.1,
+    "p95": 3241.8
+   }
+  }
+ }
+}

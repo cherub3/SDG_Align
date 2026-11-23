@@ -38,6 +38,7 @@ from scripts.embedding_provider_local import get_provider_registration as get_lo
 from scripts.llm_provider_openrouter import get_provider_registration as get_openrouter_llm_registration
 from scripts.planner_provider_openrouter import get_provider_registration as get_openrouter_planner_registration
 from scripts.request_observability import get_observation_records, observe_request
+from scripts.startup_checks import verify_serving_data
 from scripts.stage21_agent_planning import AgentPlanningInputError
 
 logger = logging.getLogger("backend_server")
@@ -77,11 +78,20 @@ def _create_application_instance() -> ApplicationInstance:
     Any exception here (missing credentials, a provider-registration failure, any
     `compose_application` error) is intentionally not caught — it must prevent the server from
     ever starting, never yield a partially-initialized instance."""
-    return bootstrap_application(
+    instance = bootstrap_application(
         registrations=_build_registrations(),
         env=None,
         dotenv_path=".env",
     )
+    # Fail fast: a server with no (or a mismatched) corpus must not start. Raises StartupCheckError / ValueError.
+    summary = verify_serving_data(instance.get("embedding_adapter"))
+    # Load the embedding model now (local provider: offline, from cache only) so a missing model is a startup error,
+    # not a first-query surprise, and the first query does not pay the cold start.
+    warm_up = getattr(instance.get("embedding_adapter"), "warm_up", None)
+    if callable(warm_up):
+        warm_up()
+    logger.info("Serving data verified: %s", summary)
+    return instance
 
 
 @asynccontextmanager
@@ -119,6 +129,7 @@ app.add_middleware(
 class RunQueryRequest(BaseModel):
     query: str
     conversation_id: Optional[str] = None
+    retrieval_only: Optional[bool] = None   # true: return ranked chunks, no LLM call
 
     @field_validator("query")
     @classmethod
@@ -154,6 +165,8 @@ async def run_query(payload: RunQueryRequest, request: Request) -> JSONResponse:
     agent_request: Dict[str, Any] = {"query": payload.query}
     if payload.conversation_id is not None:
         agent_request["conversation_id"] = payload.conversation_id
+    if payload.retrieval_only:
+        agent_request["retrieval_only"] = True
 
     try:
         # observe_request is synchronous/blocking — run it in a worker thread so the event loop
@@ -182,6 +195,12 @@ async def run_query(payload: RunQueryRequest, request: Request) -> JSONResponse:
 
     # Native AgentResult, returned unchanged — no frontend-shaped mapping happens here.
     return JSONResponse(content=result)
+
+
+@app.get("/health")
+async def health() -> JSONResponse:
+    """Liveness/readiness: the app only starts if startup checks passed. Makes no LLM, retrieval or embedding call."""
+    return JSONResponse(content={"status": "ok"})
 
 
 @app.get("/observation-records")

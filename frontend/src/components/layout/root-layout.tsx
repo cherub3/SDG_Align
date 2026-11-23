@@ -3,6 +3,7 @@ import { ThemeProvider } from "../../providers/theme-provider"
 import { OperatingModeProvider } from "../../providers/operating-mode-provider"
 import { ReducedMotionProvider } from "../../providers/reduced-motion-provider"
 import { NavBar } from "./nav-bar"
+import { BackendStatusBanner } from "./backend-status-banner"
 
 export function RootLayout() {
   return (
@@ -17,6 +18,7 @@ export function RootLayout() {
               Skip to content
             </a>
             <NavBar />
+            <BackendStatusBanner />
             <main id="main-content" className="flex-1 focus-visible:outline-none" tabIndex={-1}>
               <Outlet />
             </main>

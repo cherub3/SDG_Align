@@ -99,6 +99,90 @@ MUTATIONS = [
      "    need = min(50, 0.5 * (gold_end - gold_start))", "    need = 1"),
     ("M35", "span-overlap hit rule: 50-char cap removed", "tools/gold_common.py",
      "    need = min(50, 0.5 * (gold_end - gold_start))", "    need = 0.5 * (gold_end - gold_start)"),
+    ("M36", "served default flipped to dense", "scripts/pipeline_deps_factory.py",
+     'DEFAULT_RETRIEVAL_MODE = "hybrid"', 'DEFAULT_RETRIEVAL_MODE = "dense"'),
+    ("M37", "invalid RETRIEVAL_MODE silently accepted", "scripts/pipeline_deps_factory.py",
+     "    if raw not in RETRIEVAL_MODES:", "    if False:"),
+    ("M38", "served hybrid params changed (rrf_k 10 -> 60)", "scripts/pipeline_deps_factory.py",
+     'SERVED_HYBRID_PARAMS = {"rrf_k": 10, "w_bm25": 2.0, "depth": 50}', 'SERVED_HYBRID_PARAMS = {"rrf_k": 60, "w_bm25": 2.0, "depth": 50}'),
+    ("M39", "served path never injects hybrid", "scripts/pipeline_deps_factory.py",
+     '        if retrieval_mode == "hybrid" and "hybrid" not in request:', "        if False:"),
+    ("M40", "served path overrides a request's own hybrid setting", "scripts/pipeline_deps_factory.py",
+     '        if retrieval_mode == "hybrid" and "hybrid" not in request:', '        if retrieval_mode == "hybrid":'),
+    # --- Phase 2.5 hardening ---
+    ("M41", "missing-index check removed (server starts with no index)", "scripts/startup_checks.py",
+     "    if not found:", "    if False:"),
+    ("M42", "embedding-model mismatch check removed", "scripts/startup_checks.py",
+     "    if not matching:", "    if False:"),
+    ("M43", "empty-manifest check removed", "scripts/startup_checks.py",
+     "    if not servable:", "    if False:"),
+    ("M44", "empty-chunks check removed", "scripts/startup_checks.py",
+     "        if n == 0:", "        if False:"),
+    ("M45", "server startup skips the data checks", "scripts/backend_server.py",
+     "    summary = verify_serving_data(instance.get(\"embedding_adapter\"))", "    summary = {}"),
+    ("M46", "server startup skips the embedder warm-up (missing model found only on first query)", "scripts/backend_server.py",
+     "    if callable(warm_up):\n        warm_up()", "    if False:\n        warm_up()"),
+    ("M47", "RETRIEVAL_MODE validation skipped in compose_application", "scripts/composition_root.py",
+     "    resolve_retrieval_mode(raw.get(\"values\", {}))", "    pass"),
+    ("M48", "NETWORK_CALLS_PERMITTED default flipped to true", "scripts/phase1_1_configuration_layer.py",
+     'values.get("NETWORK_CALLS_PERMITTED", "false")', 'values.get("NETWORK_CALLS_PERMITTED", "true")'),
+    ("M49", "per-request LLM call cap ignored", "scripts/call_budget.py",
+     "    if not budget.take():", "    if False:"),
+    ("M50", "per-request LLM call cap default raised to 600", "scripts/call_budget.py",
+     "DEFAULT_MAX_LLM_CALLS_PER_REQUEST = 6", "DEFAULT_MAX_LLM_CALLS_PER_REQUEST = 600"),
+    ("M51", "invalid cap value means unlimited-ish (no fallback to default)", "scripts/call_budget.py",
+     "    return value if value >= 1 else DEFAULT_MAX_LLM_CALLS_PER_REQUEST", "    return value if value >= 1 else 10 ** 6"),
+    ("M52", "request budget not activated per request", "scripts/runtime_orchestration.py",
+     "    with request_budget():", "    if True:"),
+    ("M53", "local embedder: offline mode removed (downloads allowed by default)", "scripts/embedding_provider_local.py",
+     "    offline = not _download_allowed()", "    offline = False"),
+    ("M54", "local embedder: local_files_only ignored", "scripts/embedding_provider_local.py",
+     "local_files_only=offline)", "local_files_only=False)"),
+    ("M55", "index cache key ignores file changes (stale index served)", "scripts/stage10_retrieval.py",
+     "            key = _file_key(path) + (metric,)", "            key = (str(path), metric)"),
+    ("M56", "index cache never hits (reloads every query)", "scripts/stage10_retrieval.py",
+     "            if hit is not None:", "            if False:"),
+    ("M57", "index cache switched off by default", "scripts/stage10_retrieval.py",
+     "INDEX_CACHE_ENABLED = True", "INDEX_CACHE_ENABLED = False"),
+    ("M58", "scipy pin removed from requirements-dev.txt", "requirements-dev.txt",
+     "scipy==1.18.1", "# scipy removed"),
+
+    # --- Phase 3: served flags, abstention, quota guard, planner fix ---
+    ("M59", "planner ON by default (flag default flipped)", "scripts/composition_root.py",
+     'values.get("PLANNER_ENABLED", "false")', 'values.get("PLANNER_ENABLED", "true")'),
+    ("M60", "PLANNER_ENABLED accepts any value as true", "scripts/composition_root.py",
+     '.strip().lower() == "true" and wired_planner is not None', '.strip().lower() != "zzz" and wired_planner is not None'),
+    ("M61", "direct planner never issues the query step", "scripts/direct_planner.py",
+     "        if not executed:", "        if executed:"),
+    ("M62", "direct planner completes with the wrong step index", "scripts/direct_planner.py",
+     'len(executed) - 1}', 'len(executed)}'),
+    ("M63", "/health reports not ok", "scripts/backend_server.py",
+     'content={"status": "ok"}', 'content={"status": "down"}'),
+    ("M64", "retrieval_only ignored by execute_request", "scripts/runtime_orchestration.py",
+     '    if agent_request.get("retrieval_only") is True:', "    if False:"),
+    ("M65", "retrieval_only reports a nonzero LLM call count", "scripts/runtime_orchestration.py",
+     '"llm_calls": 0,', '"llm_calls": 1,'),
+    ("M66", "HTTP route drops the retrieval_only flag", "scripts/backend_server.py",
+     "    if payload.retrieval_only:", "    if False:"),
+    ("M67", "served default template reverted to 1.0.0", "scripts/stage12_prompt_construction.py",
+     'DEFAULT_TEMPLATE_VERSION = "2.1.0"', 'DEFAULT_TEMPLATE_VERSION = "1.0.0"'),
+    ("M68", "abstention: bare NOT_IN_CONTEXT no longer recognised", "scripts/abstention.py",
+     "    if core.upper() == SENTINEL:", "    if False:"),
+    ("M69", "abstention: sentinel mixed with an answer not flagged", "scripts/abstention.py",
+     "    if _SENTINEL_ANYWHERE.search(text):", "    if False:"),
+    ("M70", "daily LLM call cap not enforced", "scripts/quota_guard.py",
+     "            if self.used >= self.cap:", "            if False:"),
+    ("M71", "429 breaker not honoured", "scripts/quota_guard.py",
+     "            if self.tripped:", "            if False:"),
+    ("M72", "a 429 does not open the breaker (answer adapter)", "scripts/quota_guard.py",
+     "            return self._inner.invoke(system_prompt, user_prompt, config)\n        except LLMQuotaExhaustedError:\n            self.guard.trip()\n",
+     "            return self._inner.invoke(system_prompt, user_prompt, config)\n        except LLMQuotaExhaustedError:\n            pass\n"),
+    ("M73", "invalid COMPLETE finding renamed", "scripts/stage21_agent_planning.py",
+     '"code": "PLANNER_COMPLETE_WITHOUT_ANSWER",', '"code": "OTHER",'),
+    ("M74", "planner instruction loses the never-COMPLETE-first rule", "scripts/planner_provider_gemini.py",
+     "Never return COMPLETE or FAIL while executed_steps is empty.", ""),
+    ("M75", "retrieval_only searches no index", "scripts/composition_root.py",
+     '"index_fingerprints": list(default_fingerprints)}', '"index_fingerprints": []}'),
 
 ]
 
@@ -108,13 +192,16 @@ def run_one(mid, desc, rel, old, new):
     try:
         for d in ("scripts", "src", "tests", "config", "tools"):
             shutil.copytree(ROOT / d, work / d, ignore=shutil.ignore_patterns("__pycache__"))
+        shutil.copytree(ROOT / "eval", work / "eval", ignore=shutil.ignore_patterns("__pycache__", "results"))   # some tests read the gold files
         shutil.copy(ROOT / "pyproject.toml", work / "pyproject.toml")
+        for req in ROOT.glob("requirements*.txt"):          # tests/test_requirements_declared.py reads them
+            shutil.copy(req, work / req.name)
         target = work / rel
         text = target.read_text(encoding="utf-8")
         if text.count(old) != 1:
             return {"id": mid, "description": desc, "file": rel, "result": f"NOT_APPLIED (matches={text.count(old)})"}
         target.write_text(text.replace(old, new), encoding="utf-8", newline="\n")
-        proc = subprocess.run([sys.executable, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider"],
+        proc = subprocess.run([sys.executable, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider", f"--basetemp={work / '.pt'}"],
                               cwd=work, capture_output=True, text=True)
         out = proc.stdout.strip().splitlines()
         last = out[-1] if out else proc.stderr[-200:]
@@ -132,6 +219,11 @@ def run_one(mid, desc, rel, old, new):
 def main(argv):
     wanted = set(argv)
     results = []
+    control = run_one("C0", "no-op control (must survive)", "scripts/direct_planner.py", "        if not executed:", "        if not executed:  # control")
+    print(control, flush=True)
+    if control["result"] != "SURVIVED":
+        print("CONTROL FAILED: the unmutated copy does not pass the suite, so KILLED means nothing. Fix the copy first.")
+        return 2
     for m in MUTATIONS:
         if wanted and m[0] not in wanted:
             continue

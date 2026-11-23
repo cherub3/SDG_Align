@@ -1,0 +1,9 @@
+{
+  "provider": "gemini",
+  "model_name": "gemini-3.5-flash-lite",
+  "pinned_on": "2026-11-23",
+  "note": "gemini-2.5-flash-lite returned 404 'no longer available to new users' on 2026-11-23.",
+  "free_tier_limits_observed": {"source": "AI Studio Rate Limit page, Default Gemini Project, 2026-11-23", "rpm": 15, "tpm": 250000, "rpd": 500},
+  "pace_rpm": 12,
+  "data_use": "Free tier: 'Used to improve our products: Yes' (https://ai.google.dev/gemini-api/docs/pricing, read 2026-11-23). Paid tier: No."
+}

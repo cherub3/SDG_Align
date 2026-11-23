@@ -1,0 +1,23 @@
+[
+  {
+    "id": "M56",
+    "description": "index cache never hits (reloads every query)",
+    "file": "scripts/stage10_retrieval.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 346 passed, 1 skipped, 4 warnings, 18 subtests passed in 62.79s (0:01:02)"
+  },
+  {
+    "id": "M57",
+    "description": "index cache switched off by default",
+    "file": "scripts/stage10_retrieval.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 142 passed, 18 subtests passed in 29.70s"
+  },
+  {
+    "id": "M58",
+    "description": "scipy pin removed from requirements-dev.txt",
+    "file": "requirements-dev.txt",
+    "result": "KILLED",
+    "pytest": "1 failed, 286 passed, 1 skipped, 4 warnings, 18 subtests passed in 31.42s"
+  }
+]

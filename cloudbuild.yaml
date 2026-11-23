@@ -1,0 +1,9 @@
+# Build and push only. Nothing is deployed from here. Run only after explicit approval (billable: Cloud Build + Artifact Registry).
+# gcloud builds submit --config cloudbuild.yaml --substitutions=_IMAGE=asia-south1-docker.pkg.dev/sdg-align-fde/sdg-align/api:TAG
+substitutions:
+  _IMAGE: asia-south1-docker.pkg.dev/sdg-align-fde/sdg-align/api:latest
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_IMAGE}", "."]
+images: ["${_IMAGE}"]
+timeout: 1500s

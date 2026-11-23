@@ -1,0 +1,149 @@
+{
+ "label": "offline_planner",
+ "split": "dev",
+ "template_version": "2.0.0",
+ "prompt_sha256": "8962412d227d9f5da4d02e4eff987225111c1caa2bfb626417fb0c292d681248",
+ "fake_model": true,
+ "arm": "planner",
+ "items_in_split": 14,
+ "items_done": 14,
+ "calls_this_run": 14,
+ "stopped": null,
+ "guard_cap_this_run": 450,
+ "guard_used_this_run": 42,
+ "ledger_used_before_run": 0,
+ "day_pacific": "2026-11-23",
+ "frozen_file_sha256": "e6f15779c1ac281df774e78e5ecba85c673c0c45087298b3cd5686ad974eee3c",
+ "summary": {
+  "refusal_rate_unanswerable": {
+   "k": 1,
+   "n": 2,
+   "rate": 0.5,
+   "ci95": [
+    0.0,
+    1.0
+   ]
+  },
+  "false_refusal_rate_answerable": {
+   "k": 0,
+   "n": 12,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "answered_correct_proxy_rate_answerable": {
+   "k": 2,
+   "n": 12,
+   "rate": 0.167,
+   "ci95": [
+    0.0,
+    0.417
+   ]
+  },
+  "mixed_or_empty_or_implicit": {
+   "mixed": 0,
+   "empty": 0,
+   "implicit_refusals": 0
+  },
+  "unanswerable_answered_with_absence_term": {
+   "k": 0,
+   "n": 1,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "refusal_rate_near_miss": {
+   "k": 0,
+   "n": 1,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "refusal_rate_off_corpus": {
+   "k": 1,
+   "n": 1,
+   "rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  "false_refusal_by_type:cross_document": {
+   "k": 0,
+   "n": 3,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "false_refusal_by_type:multi_passage": {
+   "k": 0,
+   "n": 2,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "false_refusal_by_type:numbers_tables": {
+   "k": 0,
+   "n": 3,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "false_refusal_by_type:single_fact": {
+   "k": 0,
+   "n": 4,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "false_refusals_with_gold_in_context": 0,
+  "false_refusals_gold_not_in_context": 0,
+  "answerable_with_gold_in_context": 11,
+  "mean_groundedness_of_answered": 0.885,
+  "tokens": {
+   "prompt_tokens": 62606,
+   "completion_tokens": 653,
+   "total_tokens": 63259
+  },
+  "latency_ms_per_call": {
+   "p50": 142,
+   "max": 10101
+  },
+  "calls_per_request": {
+   "mean": 3.0,
+   "p50": 3,
+   "max": 3,
+   "total": 42
+  },
+  "latency_ms_per_request": {
+   "p50": 142,
+   "p95": 10101,
+   "max": 10101
+  },
+  "planner": {
+   "no_final_response": 0,
+   "query_rewritten": 0,
+   "mean_steps": 1.0,
+   "more_than_one_query_step": 0
+  }
+ },
+ "keep_rule": {
+  "refuses_majority_of_unanswerable": false,
+  "false_refusal_le_10pct": true,
+  "KEEP": false
+ }
+}

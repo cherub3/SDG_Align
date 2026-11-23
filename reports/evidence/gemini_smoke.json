@@ -1,0 +1,12 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "calls_made": 1,
+  "status": "ok",
+  "response_text": "OK",
+  "finish_reason": "other",
+  "prompt_tokens": 8,
+  "completion_tokens": 1,
+  "total_tokens": 9,
+  "model_version_reported": "gemini-3.5-flash-lite",
+  "latency_ms": 1823
+}

@@ -1,0 +1,84 @@
+{
+ "labeller": "two blind AI (Claude) runs + owner adjudication of Q036",
+ "AI_made_not_human": true,
+ "adjudicated_by_owner": [
+  "Q036"
+ ],
+ "labeller_agreement": {
+  "agree": 43,
+  "of": 44,
+  "cohens_kappa": 0.95
+ },
+ "counts": {
+  "correct": 31,
+  "refused": 6,
+  "wrong": 1,
+  "partial": 6
+ },
+ "correct_of_all_44_answerable": {
+  "k": 31,
+  "n": 44,
+  "rate": 0.705,
+  "wilson95": [
+   0.558,
+   0.818
+  ]
+ },
+ "correct_or_partial_of_44": {
+  "k": 37,
+  "n": 44,
+  "rate": 0.841,
+  "wilson95": [
+   0.706,
+   0.921
+  ]
+ },
+ "correct_of_answered_38": {
+  "k": 31,
+  "n": 38,
+  "rate": 0.816,
+  "wilson95": [
+   0.666,
+   0.908
+  ]
+ },
+ "wrong_of_answered_38": {
+  "k": 1,
+  "n": 38,
+  "rate": 0.026,
+  "wilson95": [
+   0.005,
+   0.135
+  ]
+ },
+ "refused_of_44": {
+  "k": 6,
+  "n": 44,
+  "rate": 0.136,
+  "wilson95": [
+   0.064,
+   0.267
+  ]
+ },
+ "by_type": {
+  "single_fact": {
+   "correct": 13,
+   "refused": 2
+  },
+  "numbers_tables": {
+   "correct": 9,
+   "wrong": 1,
+   "refused": 1
+  },
+  "multi_passage": {
+   "correct": 5,
+   "partial": 2,
+   "refused": 1
+  },
+  "cross_document": {
+   "correct": 4,
+   "refused": 2,
+   "partial": 4
+  }
+ }
+}

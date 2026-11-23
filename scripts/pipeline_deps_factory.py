@@ -12,7 +12,8 @@ introducing a separate provider-dispatch table.  The simplification is valid
 for the current single-provider deployment.
 """
 
-from typing import Any, Dict
+import os
+from typing import Any, Dict, Optional
 
 from scripts.stage0_register import load_manifest
 from scripts.stage9_vector_indexing import FAISSAdapter, IndexAdapter
@@ -20,6 +21,26 @@ from scripts.stage10_retrieval import EmbeddingModelMismatchError, retrieve
 from scripts.stage13_llm_execution import LLMAdapter
 from scripts.stage17_response_caching import CacheAdapter
 from scripts.stage18_api_response_serving import PipelineDependencies
+
+
+# Retrieval mode of the served backend. "hybrid" (BM25 + dense, reciprocal rank fusion) is the measured best configuration
+# (Phase 2, step 3b: test R@5 0.57 -> 0.77); "dense" is the Phase 1 baseline, kept for comparison and as a fallback.
+RETRIEVAL_MODES = ("hybrid", "dense")
+DEFAULT_RETRIEVAL_MODE = "hybrid"
+# Exactly the setting that was selected on the dev split and measured once on test. Do not edit without re-measuring.
+SERVED_HYBRID_PARAMS = {"rrf_k": 10, "w_bm25": 2.0, "depth": 50}
+
+
+def resolve_retrieval_mode(environ: Optional[Dict[str, str]] = None) -> str:
+    """Reads RETRIEVAL_MODE (unset or blank -> hybrid). Any value other than hybrid/dense raises ValueError, so a typo
+    fails at startup instead of silently serving a different retrieval than the one that was measured."""
+    env = os.environ if environ is None else environ
+    raw = (env.get("RETRIEVAL_MODE") or "").strip().lower()
+    if not raw:
+        return DEFAULT_RETRIEVAL_MODE
+    if raw not in RETRIEVAL_MODES:
+        raise ValueError(f"RETRIEVAL_MODE must be one of {list(RETRIEVAL_MODES)}, got {raw!r}")
+    return raw
 
 
 def make_provider_adapter_factory(embedding_adapter: Any):
@@ -60,6 +81,7 @@ def build_pipeline_deps(
         A fully-populated PipelineDependencies TypedDict ready for Stage 18.
     """
     manifest = load_manifest()
+    retrieval_mode = resolve_retrieval_mode()      # fails here, at startup, on an invalid value
 
     _provider_adapter_factory = make_provider_adapter_factory(embedding_adapter)
 
@@ -67,6 +89,10 @@ def build_pipeline_deps(
         return FAISSAdapter(metric)
 
     def _retrieve(request: Dict[str, Any]) -> Dict[str, Any]:
+        # The served default is the measured hybrid configuration. A request that carries its own "hybrid" key
+        # (including an explicit False for dense-only) is passed through untouched.
+        if retrieval_mode == "hybrid" and "hybrid" not in request:
+            request = {**request, "hybrid": dict(SERVED_HYBRID_PARAMS)}
         return retrieve(request, manifest, _provider_adapter_factory, _index_adapter_factory)
 
     return PipelineDependencies(

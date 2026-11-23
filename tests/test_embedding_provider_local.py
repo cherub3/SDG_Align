@@ -1,6 +1,7 @@
 """Local sentence-transformers embedding adapter. Unit tests use a fake model (no torch needed);
 the last test runs the real model and is skipped when requirements-local.txt is not installed."""
 import math
+import os
 import sys
 
 import numpy as np
@@ -113,3 +114,101 @@ def test_real_model_is_deterministic_and_normalised():
     v1, v2 = a.embed_batch(texts), a.embed_batch(texts)
     assert v1 == v2 and a.embedding_dimension == 384
     assert math.isclose(sum(x * x for x in v1[0]), 1.0, rel_tol=1e-5)
+
+
+# ---------------- fix 6: offline at query time, a missing model is a clear error, never a silent download ----------------
+
+@pytest.fixture(autouse=True)
+def _restore_offline_env():
+    """The loader sets HF_HUB_OFFLINE / TRANSFORMERS_OFFLINE in os.environ on purpose; do not leak that into other tests."""
+    keys = ("HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE", "ALLOW_MODEL_DOWNLOAD")
+    saved = {k: os.environ.get(k) for k in keys}
+    yield
+    for k, v in saved.items():
+        if v is None:
+            os.environ.pop(k, None)
+        else:
+            os.environ[k] = v
+
+
+class _FakeTorch:
+    def __init__(self):
+        self.threads = None
+
+    def set_num_threads(self, n):
+        self.threads = n
+
+
+def _install_fake_st(monkeypatch, behaviour):
+    """Puts fake torch / sentence_transformers modules in sys.modules; records the env and kwargs the loader sees."""
+    import types
+    seen = {}
+
+    class FakeST:
+        def __init__(self, name, **kw):
+            seen["kwargs"] = kw
+            seen["env"] = (os.environ.get("HF_HUB_OFFLINE"), os.environ.get("TRANSFORMERS_OFFLINE"))
+            behaviour(name, kw)
+
+        def eval(self):
+            seen["eval"] = True
+
+    st = types.ModuleType("sentence_transformers")
+    st.SentenceTransformer = FakeST
+    monkeypatch.setitem(sys.modules, "sentence_transformers", st)
+    monkeypatch.setitem(sys.modules, "torch", _FakeTorch())
+    return seen
+
+
+def test_loader_is_offline_by_default(monkeypatch):
+    from scripts.embedding_provider_local import _load_sentence_transformer
+    for v in ("HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE", "ALLOW_MODEL_DOWNLOAD"):
+        monkeypatch.delenv(v, raising=False)
+    seen = _install_fake_st(monkeypatch, lambda n, kw: None)
+    _load_sentence_transformer("m", "rev", 1)
+    assert seen["kwargs"]["local_files_only"] is True
+    assert seen["env"] == ("1", "1")                      # set before the model is touched, not left to the caller
+    assert seen["kwargs"]["revision"] == "rev" and seen["eval"] is True
+
+
+def test_offline_flags_override_a_hostile_environment(monkeypatch):
+    from scripts.embedding_provider_local import _load_sentence_transformer
+    monkeypatch.setenv("HF_HUB_OFFLINE", "0")
+    monkeypatch.delenv("ALLOW_MODEL_DOWNLOAD", raising=False)
+    seen = _install_fake_st(monkeypatch, lambda n, kw: None)
+    _load_sentence_transformer("m", "rev", 1)
+    assert seen["env"][0] == "1" and seen["kwargs"]["local_files_only"] is True
+
+
+def test_a_model_missing_from_the_cache_gives_a_clear_error(monkeypatch):
+    from scripts.embedding_provider_local import LocalModelUnavailableError, _load_sentence_transformer
+    monkeypatch.delenv("ALLOW_MODEL_DOWNLOAD", raising=False)
+
+    def boom(name, kw):
+        raise OSError("not in cache")
+    _install_fake_st(monkeypatch, boom)
+    with pytest.raises(LocalModelUnavailableError, match="not in the local Hugging Face cache") as e:
+        _load_sentence_transformer("BAAI/x", "rev", 1)
+    assert "ALLOW_MODEL_DOWNLOAD" in str(e.value) and "BAAI/x" in str(e.value)
+
+
+def test_download_needs_an_explicit_opt_in(monkeypatch):
+    from scripts.embedding_provider_local import _load_sentence_transformer
+    monkeypatch.setenv("ALLOW_MODEL_DOWNLOAD", "true")
+    monkeypatch.delenv("HF_HUB_OFFLINE", raising=False)
+    seen = _install_fake_st(monkeypatch, lambda n, kw: None)
+    _load_sentence_transformer("m", "rev", 1)
+    assert seen["kwargs"]["local_files_only"] is False and seen["env"][0] is None
+
+
+def test_warm_up_loads_the_model_once_and_surfaces_a_load_failure():
+    calls = []
+    a = LocalEmbeddingAdapter(model_loader=lambda: calls.append(1) or FakeModel())
+    a.warm_up()
+    a.warm_up()
+    assert calls == [1]
+
+    def bad():
+        raise RuntimeError("model missing")
+    with pytest.raises(RuntimeError, match="model missing"):
+        LocalEmbeddingAdapter(model_loader=bad).warm_up()

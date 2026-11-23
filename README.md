@@ -19,10 +19,10 @@ goal-level alignment features are intended to be built.
 | | Status |
 |---|---|
 | Stages 0–21 pipeline (ingestion → RAG → agent orchestration) | ✅ Implemented & frozen |
-| Test suite | ✅ 871 tests passing, 85% line+branch coverage (`python -m pytest --cov`) |
+| Test suite | ✅ 944 tests passing, 86% line+branch coverage in the CI scope (`python -m pytest --cov`) |
 | Ingestion (Stages 0–9) verified on a real 13-document corpus | ✅ |
 | Query/agent stages (10–21) verified via unit tests over abstract adapters | ✅ |
-| Track B backend (FastAPI) + frontend (React dashboard), Mode A (Live) | ✅ Implemented & verified — see [`DEPLOYMENT.md`](DEPLOYMENT.md) |
+| Track B backend (FastAPI) + frontend (React dashboard), Mode A (Live) | ⚠️ Implemented. **Not verified end to end** (no live LLM answer has been produced through backend and frontend; evidence is limited to unit tests and an earlier connectivity check with no saved evidence file). End-to-end verification is Phase 3 — see [`DEPLOYMENT.md`](DEPLOYMENT.md) |
 | SDG-target alignment product (extractor/verifier passes, evidence validator, gap analysis, UI) | ⛔ Goal — not yet built |
 
 **Running the backend + frontend (Track B):** see [`DEPLOYMENT.md`](DEPLOYMENT.md) for setup,
@@ -207,11 +207,23 @@ Recommended Configuration:
 ### Configuration
 
 * **Tests and library use:** no environment variables.
-* **Running the backend** (`scripts/backend_server.py`): copy [`.env.example`](.env.example) to `.env` and set
-  the provider selection (`LLM_PROVIDER`, `PLANNER_LLM_PROVIDER`, `EMBEDDING_PROVIDER`), the matching
-  credential variable (`GEMINI_API_KEY`, `GROQ_API_KEY`, `OPENROUTER_API_KEY` or `HF_API_KEY`), and
-  optionally `REQUEST_TIMEOUT_SECONDS` (default 60), `MAX_QUERY_CHARS` (default 4000; longer queries get
-  HTTP 422) and `FRONTEND_ORIGIN` (CORS). The backend refuses to start without valid provider settings.
+* **Running the backend** (`scripts/backend_server.py`): copy [`.env.example`](.env.example) to `.env`. The example is
+  **safe by default**: embeddings are the local model (`EMBEDDING_PROVIDER=local`, free, offline, matches the index) and
+  `NETWORK_CALLS_PERMITTED=false`, so **no paid or quota-limited call is possible** until you opt in.
+  * **Paid / quota-limited:** `LLM_PROVIDER` and `PLANNER_LLM_PROVIDER` (OpenRouter, Gemini, Groq) and the hosted embedding
+    providers (Hugging Face, Gemini). To use one: set `NETWORK_CALLS_PERMITTED=true` (only the exact word `true` opts in),
+    uncomment one provider block and set its key variable (`OPENROUTER_API_KEY`, `GEMINI_API_KEY`, `GROQ_API_KEY`,
+    `HF_API_KEY`). A hosted provider configured without the opt-in stops the server at startup (`NETWORK_CALLS_DISABLED`).
+  * **Hard cost cap:** `MAX_LLM_CALLS_PER_REQUEST` (default 6; invalid values fall back to 6) limits planner + answer calls,
+    retries included, for one request. A normal request uses 3.
+  * **Free:** the local embedder, retrieval, the tests and the evaluation tools. The local model is read from the local
+    Hugging Face cache **only** (offline mode is forced in code); a missing model stops the server at startup. Placing it in
+    the cache once needs `ALLOW_MODEL_DOWNLOAD=true` for a single run.
+  * Other settings: `REQUEST_TIMEOUT_SECONDS` (default 60), `MAX_QUERY_CHARS` (default 4000; longer queries get HTTP 422),
+    `FRONTEND_ORIGIN` (one CORS origin) and `RETRIEVAL_MODE` (below).
+* **Fail-fast startup:** the backend refuses to start (clear error, non-zero exit) when the manifest, chunks or vector index
+  under `data/proposals/` are missing or empty, when the index was built by a different embedding model than configured,
+  when the local model is not cached, or when `RETRIEVAL_MODE` is invalid (checked in every configuration).
 * **Embedding model consistency:** at query time Stage 10 only searches an index built with the *same*
   embedding provider, model and version as the wired adapter, and reports
   `INDEX_EMBEDDING_MODEL_MISMATCH` otherwise.
@@ -293,7 +305,7 @@ Expected: **All tests passing**. Run a single stage's tests with, e.g.,
   groundedness → quality) exposed as a single `APIResponse`.
 - An agent layer: conversation memory, structured tool invocation, and a deterministic top-level
   planner.
-- A comprehensive test suite (871 tests) and per-stage reproducibility of content (see Determinism above).
+- A comprehensive test suite (944 tests) and per-stage reproducibility of content (see Determinism above).
 
 ## Known limitations
 
@@ -307,11 +319,13 @@ Expected: **All tests passing**. Run a single stage's tests with, e.g.,
 - **Retrieval quality is measured (Phase 2), answer quality is not.** `eval/gold_set.jsonl` holds 66 AI-drafted, frozen questions
   (56 answerable, 10 unanswerable; 14 dev / 52 test). Test-split results with confidence intervals, the configuration ladder and
   every caveat are in [`reports/PHASE_2_REPORT.md`](reports/PHASE_2_REPORT.md). No answer-level evaluation has been run.
-- **Default retrieval configuration (stated explicitly).** `retrieve()` with no options is **dense only** (bge-small, FAISS flat).
-  The best measured setting is hybrid BM25 + dense with reciprocal rank fusion and must be requested:
-  `request["hybrid"] = {"rrf_k": 10, "w_bm25": 2.0, "depth": 50}` (test R@5 0.77 vs 0.57 for the baseline). The cross-encoder
+- **Default retrieval configuration (stated explicitly).** The **served backend defaults to hybrid** BM25 + dense with reciprocal
+  rank fusion, `{"rrf_k": 10, "w_bm25": 2.0, "depth": 50}` (test R@5 0.77 vs 0.57 for the dense baseline). Set
+  `RETRIEVAL_MODE=dense` to serve the baseline; any other value stops the server at startup. A request that carries its own
+  `hybrid` key is passed through unchanged. The library function `retrieve()` called directly with no options is still
+  **dense only**; the serving layer (`scripts/pipeline_deps_factory.py`) adds the hybrid setting. The cross-encoder
   reranker (`request["rerank"] = {"n": 20}`) and the low-confidence hint (`request["confidence_advisory"] = True`) are both
-  **off by default**; the hint never refuses a query. Making hybrid the library default is left to the deploy phase.
+  **off by default**; the hint never refuses a query.
 - **7 of 13 source PDFs are scanned** and are quarantined at Stage 3 (`FATAL_NO_TEXT`); there is no OCR
   path yet. One further document fails Stage 6 (`DUPLICATE_SECTION_ID`).
 - **Windows:** directory swaps in Stage 9 retry a transient `PermissionError` (antivirus/indexer locks).
@@ -324,3 +338,10 @@ See [`LICENSE`](LICENSE). **A license has not yet been chosen** — the current 
 ## Authors / contact
 
 - `<AUTHOR NAME>` — `<contact / email>` *(placeholder — fill in before submission)*
+
+## Served configuration (Phase 3): read this before relying on the answers
+
+- **Prompt template served by default: 2.1.0. It did NOT meet the pre-stated keep rule.** The rule was: refuse at least 5 of 8 unanswerable questions AND false-refuse at most 10% of answerable ones (at most 4 of 44). On the held-out TEST set 2.1.0 refused 8/8 unanswerable but false-refused 6/44 answerable (13.6%, 95% CI 4.5% to 25.0%). The earlier template 2.0.0 false-refused 13/44. 2.1.0 is the better of the two measured; it is served because it is the best available, not because it passed. Details: `reports/PHASE_3_STEP4_REPORT.md`.
+- **LLM planner: OFF by default** (`PLANNER_ENABLED=false`). A deterministic direct planner runs the question through the pipeline once: 1 Gemini call per request. Phase 3 step 5 measured the LLM planner on the TEST set at about 3 calls and about 3x latency per request with no change in refusals (6/44 -> 6/44; cross-document 2/10 -> 2/10). Set `PLANNER_ENABLED=true` to opt in. Details: `reports/PHASE_3_STEP5_REPORT.md`.
+- `GET /health` returns `{"status":"ok"}` and makes no model call.
+- `POST /run-query` with `"retrieval_only": true` returns the ranked chunks and makes no LLM call.

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "M47",
+    "description": "RETRIEVAL_MODE validation skipped in compose_application",
+    "file": "scripts/composition_root.py",
+    "result": "SETUP_ERROR",
+    "pytest": "1 error in 13.54s"
+  },
+  {
+    "id": "M50",
+    "description": "per-request LLM call cap default raised to 600",
+    "file": "scripts/call_budget.py",
+    "result": "SETUP_ERROR",
+    "pytest": ""
+  }
+]

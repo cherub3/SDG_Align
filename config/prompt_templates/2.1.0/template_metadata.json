@@ -1,0 +1,5 @@
+{
+  "template_version": "2.1.0",
+  "description": "Grounded QA with structured abstention and partial answers for multi-part questions: the model replies exactly NOT_IN_CONTEXT when the excerpts lack the requested detail; excerpts are framed as untrusted data.",
+  "placeholders": ["{{query}}", "{{context_text}}"]
+}

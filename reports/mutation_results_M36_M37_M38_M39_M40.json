@@ -1,0 +1,37 @@
+[
+  {
+    "id": "M36",
+    "description": "served default flipped to dense",
+    "file": "scripts/pipeline_deps_factory.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 209 passed, 1 skipped, 4 warnings, 18 subtests passed in 21.90s"
+  },
+  {
+    "id": "M37",
+    "description": "invalid RETRIEVAL_MODE silently accepted",
+    "file": "scripts/pipeline_deps_factory.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 213 passed, 1 skipped, 4 warnings, 18 subtests passed in 18.67s"
+  },
+  {
+    "id": "M38",
+    "description": "served hybrid params changed (rrf_k 10 -> 60)",
+    "file": "scripts/pipeline_deps_factory.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 219 passed, 1 skipped, 4 warnings, 18 subtests passed in 17.52s"
+  },
+  {
+    "id": "M39",
+    "description": "served path never injects hybrid",
+    "file": "scripts/pipeline_deps_factory.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 220 passed, 1 skipped, 4 warnings, 18 subtests passed in 17.36s"
+  },
+  {
+    "id": "M40",
+    "description": "served path overrides a request's own hybrid setting",
+    "file": "scripts/pipeline_deps_factory.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 223 passed, 1 skipped, 4 warnings, 18 subtests passed in 18.34s"
+  }
+]

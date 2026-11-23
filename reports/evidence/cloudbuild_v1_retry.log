@@ -1,0 +1,7 @@
+Creating temporary archive of 458 file(s) totalling 7.2 MiB before compression.
+Uploading tarball of [.] to [gs://sdg-align-fde_cloudbuild/source/1795433995.287952-32a3c7507af042ffa45f0f242b9b8c70.tgz]
+ERROR: (gcloud.builds.submit) INVALID_ARGUMENT: could not resolve source: googleapi: Error 403: 44714566212-compute@developer.gserviceaccount.com does not have storage.objects.get access to the Google Cloud Storage object. Permission 'storage.objects.get' denied on resource '//storage.googleapis.com/projects/_/buckets/sdg-align-fde_cloudbuild/objects/source/1795433995.287952-32a3c7507af042ffa45f0f242b9b8c70.tgz' (or it may not exist)., forbidden
+
+real	0m11.073s
+user	0m0.090s
+sys	0m0.091s

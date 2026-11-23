@@ -15,6 +15,7 @@ from scripts.stage21_agent_planning import (
     PlannerInvocationError
 )
 from scripts.phase1_1_configuration_layer import ProviderSettings, ProviderRegistration
+from scripts.llm_provider_gemini import _enum_name
 
 
 # Schema for structured output
@@ -49,6 +50,22 @@ _PLANNER_DECISION_SCHEMA = {
 }
 
 
+SYSTEM_INSTRUCTION = (
+    "You are an agentic planner orchestrating a sequence of steps. "
+    "You are provided with a context including the query, conversation memory, available tools, "
+    "and executed steps. Determine the next step by returning a structured decision. "
+    "Decision must be 'EXECUTE_STEP', 'COMPLETE', or 'FAIL'. "
+    "How to plan: the question is answered by the document question-answering pipeline, which is the step type QUERY_PIPELINE. "
+    "It is built in and does not appear in available_tools; an empty available_tools list only means there are no extra tools, "
+    "never that nothing can be done. "
+    "When executed_steps is empty, you must return decision EXECUTE_STEP with next_step.step_type QUERY_PIPELINE and "
+    "next_step.step_input {\"query\": <the question, copied exactly>}. "
+    "Never return COMPLETE or FAIL while executed_steps is empty. "
+    "After a QUERY_PIPELINE step has been executed, return decision COMPLETE with final_answer_step_index set to the step_index "
+    "of that step. Do not answer the question yourself."
+)
+
+
 class GeminiPlannerLLMAdapter(PlannerLLMAdapter):
     def __init__(self, client: genai.Client):
         self._client = client
@@ -57,13 +74,7 @@ class GeminiPlannerLLMAdapter(PlannerLLMAdapter):
         model_name = config["model_name"]
         temperature = config.get("temperature", 0.0)
         
-        # System instruction to guide the planner
-        system_instruction = (
-            "You are an agentic planner orchestrating a sequence of steps. "
-            "You are provided with a context including the query, conversation memory, available tools, "
-            "and executed steps. Determine the next step by returning a structured decision. "
-            "Decision must be 'EXECUTE_STEP', 'COMPLETE', or 'FAIL'."
-        )
+        system_instruction = SYSTEM_INSTRUCTION
 
         gemini_config = types.GenerateContentConfig(
             system_instruction=system_instruction,
@@ -80,6 +91,8 @@ class GeminiPlannerLLMAdapter(PlannerLLMAdapter):
             )
         except errors.APIError as e:
             code = getattr(e, "code", None)
+            if code == 429:
+                raise PlannerInvocationError(f"APIError: {e}", "QUOTA_EXHAUSTED") from e
             raise PlannerInvocationError(f"APIError: {e}", str(code)) from e
         except Exception as e:
             exc_type = type(e).__name__
@@ -94,7 +107,7 @@ class GeminiPlannerLLMAdapter(PlannerLLMAdapter):
         if not response_text:
             # Handle safety blocks or empty responses
             candidate = response.candidates[0] if response.candidates else None
-            native_finish_reason = str(candidate.finish_reason).upper() if candidate else ""
+            native_finish_reason = _enum_name(candidate.finish_reason) if candidate else ""
             prompt_blocked = False
             if hasattr(response, 'prompt_feedback') and response.prompt_feedback:
                 if getattr(response.prompt_feedback, 'block_reason', None):

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "M44",
+    "description": "empty-chunks check removed",
+    "file": "scripts/startup_checks.py",
+    "result": "SETUP_ERROR",
+    "pytest": "in\n  File \"D:\\Projects\\venvs\\sdg-align\\Lib\\site-packages\\pytest\\__main__.py\", line 9 in <module>\n  File \"<frozen runpy>\", line 88 in _run_code\n  File \"<frozen runpy>\", line 198 in _run_module_as_main\n"
+  },
+  {
+    "id": "M45",
+    "description": "server startup skips the data checks",
+    "file": "scripts/backend_server.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 923 passed, 1 skipped, 4 warnings, 18 subtests passed in 64.43s (0:01:04)"
+  },
+  {
+    "id": "M46",
+    "description": "server startup skips the embedder warm-up (missing model found only on first query)",
+    "file": "scripts/backend_server.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 924 passed, 1 skipped, 4 warnings, 18 subtests passed in 49.37s"
+  }
+]

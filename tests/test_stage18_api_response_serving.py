@@ -397,3 +397,43 @@ def test_internal_invariant_findings_incomplete():
             prompt_package={"findings": []}, cached_result={"llm_response": {"response_text": "text"}, "findings": []},
             cited_response={"spans": [], "citation_findings": []}, groundedness_report={"groundedness_findings": []}
         )
+
+
+# ---- Step 4: answer-level abstention ----
+
+def _deps_replying(text):
+    deps = get_base_deps()
+    deps["llm_adapter"] = StubLLMAdapter(RawLLMResult(text, "complete", 10, 5, 15, "r"))
+    return deps
+
+
+def test_a_not_in_context_reply_is_a_flagged_success_not_a_pipeline_failure():
+    resp = handle_request(get_base_request(), _deps_replying("NOT_IN_CONTEXT"))
+    assert resp["status"] == "SUCCESS"
+    assert resp["answer"]["abstained"] is True and resp["answer"]["decision"] == "NOT_IN_CONTEXT"
+    assert any(f["code"] == "ANSWER_ABSTAINED" for f in resp["findings"])
+    assert not any(f["code"] == "PIPELINE_STATUS_FAILED" for f in resp["findings"])
+
+
+def test_an_ordinary_reply_is_not_marked_abstained():
+    resp = handle_request(get_base_request(), _deps_replying("Test response"))
+    assert resp["answer"]["abstained"] is False and resp["answer"]["decision"] == "ANSWERED"
+    assert not any(f["code"] == "ANSWER_ABSTAINED" for f in resp["findings"])
+
+
+def test_the_sentinel_mixed_with_an_answer_is_not_an_abstention():
+    resp = handle_request(get_base_request(), _deps_replying("NOT_IN_CONTEXT but the answer is 5 hectares."))
+    assert resp["answer"]["abstained"] is False and resp["answer"]["decision"] == "MIXED"
+    assert resp["status"] != "SUCCESS" or not any(f["code"] == "ANSWER_ABSTAINED" for f in resp["findings"])
+
+
+def test_a_failed_generation_is_never_reported_as_an_abstention():
+    from scripts.stage13_llm_execution import LLMContentPolicyError
+
+    class Blocked(StubLLMAdapter):
+        def invoke(self, s, u, c):
+            raise LLMContentPolicyError("blocked")
+    deps = get_base_deps()
+    deps["llm_adapter"] = Blocked(get_success_raw_result())
+    resp = handle_request(get_base_request(), deps)
+    assert resp["answer"]["abstained"] is False and resp["status"] == "PIPELINE_FAILURE"

@@ -9,6 +9,7 @@ import hashlib
 import json
 import logging
 import os
+import re
 from typing import Any, Dict, List, Tuple, Optional
 from pathlib import Path
 
@@ -19,7 +20,7 @@ sys.path.append(str(src_path))
 from scripts.stage1_integrity import get_now_iso
 
 PROMPT_PIPELINE_VERSION = "1.0.0"
-DEFAULT_TEMPLATE_VERSION = "1.0.0"
+DEFAULT_TEMPLATE_VERSION = "2.1.0"  # served default; did NOT meet the Step 4 keep rule (6/44 false refusals > 10%); the better of the two measured
 DEFAULT_PROMPT_BUDGET_TOKENS = 8000
 MAX_PROMPT_BUDGET_TOKENS = 100000
 CHARS_PER_TOKEN_ESTIMATE = 4.0
@@ -106,6 +107,15 @@ def render_system_prompt(system_template_text: str) -> str:
     """Verbatim passthrough."""
     return system_template_text
 
+_CONTEXT_CLOSE_TAG = re.compile(r"</\s*context\s*>", re.IGNORECASE)
+
+
+def _neutralise_context_tags(text: str) -> str:
+    """Document text is data. A literal closing context tag inside it would end the <context> block that the 2.0.0 template
+    wraps around the excerpts and let the rest of the document pose as instructions, so it is defused (still readable)."""
+    return _CONTEXT_CLOSE_TAG.sub(lambda _m: "<\\/context>", text)
+
+
 def render_context_text(context_blocks: List[Dict[str, Any]]) -> str:
     """Renders blocks into a single string."""
     if not context_blocks:
@@ -119,7 +129,7 @@ def render_context_text(context_blocks: List[Dict[str, Any]]) -> str:
             f"Section: {heading_path}\n"
             f"Pages: {block['page_start']}-{block['page_end']}\n"
             f"Chunk ID: {block['chunk_id']}\n\n"
-            f"{block['text']}"
+            f"{_neutralise_context_tags(block['text'])}"
         )
         rendered_blocks.append(b)
         

@@ -1,0 +1,53 @@
+{
+  "shared_items": 44,
+  "raw_agreement_pct": 97.73,
+  "cohens_kappa": 0.9498,
+  "confusion_matrix": {
+    "rows": "labeller_A",
+    "cols": "labeller_B",
+    "categories": [
+      "correct",
+      "partial",
+      "wrong",
+      "refused"
+    ],
+    "matrix": {
+      "correct": {
+        "correct": 31,
+        "partial": 1,
+        "wrong": 0,
+        "refused": 0
+      },
+      "partial": {
+        "correct": 0,
+        "partial": 5,
+        "wrong": 0,
+        "refused": 0
+      },
+      "wrong": {
+        "correct": 0,
+        "partial": 0,
+        "wrong": 1,
+        "refused": 0
+      },
+      "refused": {
+        "correct": 0,
+        "partial": 0,
+        "wrong": 0,
+        "refused": 6
+      }
+    }
+  },
+  "num_disagreements": 1,
+  "disagreements": [
+    {
+      "qid": "Q036",
+      "type": "multi_passage",
+      "labeller_a": "correct",
+      "labeller_a_note": "",
+      "labeller_b": "partial",
+      "labeller_b_reason": "Reply mentions high taxation and scaling down but omits 'SIM has closed', job losses, forest pressure, and suspended ecoguard patrols. No contradictions.",
+      "labeller_b_confidence": "high"
+    }
+  ]
+}

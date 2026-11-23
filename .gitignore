@@ -43,3 +43,6 @@ npm-debug.log*
 
 # Private study notes (kept local)
 LEARN_*.md
+
+reports/ONBOARDING_UNDERSTANDING.md
+venvss*.ps1

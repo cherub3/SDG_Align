@@ -6,6 +6,7 @@ from copy import deepcopy
 import json
 import logging
 
+from scripts.abstention import decision as answer_decision
 from scripts.stage1_integrity import get_now_iso
 
 # Import dependencies from upstream stages
@@ -184,8 +185,10 @@ def build_api_response(
     answer = {
         "response_text": llm_response.get("response_text", ""),
         "finish_reason": llm_response.get("finish_reason"),
-        "spans": cited_response.get("spans", [])
+        "spans": cited_response.get("spans", []),
+        "decision": answer_decision(llm_response.get("response_text", "")),
     }
+    answer["abstained"] = answer["decision"] == "NOT_IN_CONTEXT"
     
     groundedness = {
         "groundedness_score": groundedness_report.get("groundedness_score", 0.0),
@@ -232,7 +235,10 @@ def validate_api_response(
     groundedness_report: Dict[str, Any]
 ) -> None:
     """Internal invariant self-check of the constructed APIResponse."""
-    if response["status"] != map_pipeline_status(quality_report["status"]):
+    # A deliberate NOT_IN_CONTEXT reply has nothing to cite, so the citation/groundedness stages score it as unsupported.
+    # It is a successful, correct outcome (the system declined), so it is reported as SUCCESS and flagged answer.abstained.
+    expected_status = "SUCCESS" if response["answer"].get("abstained") else map_pipeline_status(quality_report["status"])
+    if response["status"] != expected_status:
         raise APIResponseInternalError("RESPONSE_STATUS_MAPPING_MISMATCH")
         
     provenance = response.get("provenance", {})
@@ -350,12 +356,18 @@ def handle_request(request: Dict[str, Any], deps: PipelineDependencies) -> Dict[
         
         quality_report = evaluate_answer_quality(groundedness_report)
         
-        if quality_report["status"] == "PARTIAL":
-            findings.append({"severity": "WARNING", "code": "PIPELINE_STATUS_PARTIAL", "message": "Pipeline status is PARTIAL"})
-        elif quality_report["status"] in ("FAIL", "SKIPPED"):
-            findings.append({"severity": "WARNING", "code": "PIPELINE_STATUS_FAILED", "message": f"Pipeline status is {quality_report['status']}"})
-        
-        response_status = map_pipeline_status(quality_report["status"])
+        abstained = answer_decision(cached_result["llm_response"].get("response_text", "")) == "NOT_IN_CONTEXT"
+        if abstained:
+            # Nothing to cite or ground: the system declined. Reported as SUCCESS and flagged answer.abstained.
+            response_status = "SUCCESS"
+            findings.append({"severity": "INFO", "code": "ANSWER_ABSTAINED",
+                             "message": "The model replied NOT_IN_CONTEXT: the retrieved excerpts do not contain the requested detail"})
+        else:
+            if quality_report["status"] == "PARTIAL":
+                findings.append({"severity": "WARNING", "code": "PIPELINE_STATUS_PARTIAL", "message": "Pipeline status is PARTIAL"})
+            elif quality_report["status"] in ("FAIL", "SKIPPED"):
+                findings.append({"severity": "WARNING", "code": "PIPELINE_STATUS_FAILED", "message": f"Pipeline status is {quality_report['status']}"})
+            response_status = map_pipeline_status(quality_report["status"])
         resolved_at = get_now_iso()
         
         response = build_api_response(

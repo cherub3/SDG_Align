@@ -1,0 +1,23 @@
+[
+  {
+    "id": "M53",
+    "description": "local embedder: offline mode removed (downloads allowed by default)",
+    "file": "scripts/embedding_provider_local.py",
+    "result": "SETUP_ERROR",
+    "pytest": "1 error in 8.53s"
+  },
+  {
+    "id": "M54",
+    "description": "local embedder: local_files_only ignored",
+    "file": "scripts/embedding_provider_local.py",
+    "result": "SETUP_ERROR",
+    "pytest": ""
+  },
+  {
+    "id": "M55",
+    "description": "index cache key ignores file changes (stale index served)",
+    "file": "scripts/stage10_retrieval.py",
+    "result": "SETUP_ERROR",
+    "pytest": "1 error in 10.15s"
+  }
+]

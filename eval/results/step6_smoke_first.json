@@ -1,0 +1,53 @@
+{
+ "url": "https://sdg-align-api-44714566212.asia-south1.run.app",
+ "first_phase_source": "console output of the first run (its JSON write was cut off by a closed pipe); each connection new (no session)",
+ "calls": [
+  {
+   "label": "health_first",
+   "status": 200,
+   "ms": 1140,
+   "body": {
+    "status": "ok"
+   }
+  },
+  {
+   "label": "llm_0_Q007",
+   "status": 200,
+   "ms": 5073,
+   "agent_status": "PASS",
+   "steps": 1,
+   "answer_chars": 3318,
+   "findings": []
+  },
+  {
+   "label": "llm_1_Q008",
+   "status": 200,
+   "ms": 2297,
+   "agent_status": "PASS",
+   "steps": 1,
+   "answer_chars": 3482,
+   "findings": []
+  },
+  {
+   "label": "retrieval_0_Q013",
+   "status": 200,
+   "ms": 999,
+   "llm_calls": 0,
+   "n_chunks": 10
+  },
+  {
+   "label": "retrieval_1_Q017",
+   "status": 200,
+   "ms": 1055,
+   "llm_calls": 0,
+   "n_chunks": 10
+  },
+  {
+   "label": "retrieval_2_Q022",
+   "status": 200,
+   "ms": 1013,
+   "llm_calls": 0,
+   "n_chunks": 10
+  }
+ ]
+}

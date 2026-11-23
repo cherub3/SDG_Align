@@ -117,7 +117,7 @@ def validate_settings(raw: RawSettings) -> ApplicationSettings:
     if not isinstance(values, dict):
         raise ConfigurationInputError("FIELD_TYPE_INVALID: RawSettings.values must be a dict")
         
-    network_calls_permitted = values.get("NETWORK_CALLS_PERMITTED", "true").lower() == "true"
+    network_calls_permitted = values.get("NETWORK_CALLS_PERMITTED", "false").lower() == "true"
     
     providers: Dict[str, ProviderSettings] = {}
     

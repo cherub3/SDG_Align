@@ -55,6 +55,10 @@ class LLMContentPolicyError(Exception):
 class LLMInvalidRequestError(Exception):
     pass
 
+class LLMQuotaExhaustedError(LLMInvalidRequestError):
+    """HTTP 429 / daily cap: the quota is spent. Never retried (a retry only burns more quota); callers stop the run."""
+
+
 class RawLLMResult:
     def __init__(self, response_text: str, finish_reason: str, prompt_tokens: Optional[int], completion_tokens: Optional[int], total_tokens: Optional[int], provider_request_id: Optional[str]):
         self.response_text = response_text
@@ -107,6 +111,8 @@ def resolve_execution_config(config: Optional[Dict[str, Any]]) -> Dict[str, Any]
     return res
 
 def map_adapter_error(exception: Exception) -> str:
+    if isinstance(exception, LLMQuotaExhaustedError):
+        return "LLM_INVOCATION_QUOTA_EXHAUSTED"
     if isinstance(exception, LLMTransientError):
         # We don't distinguish rate-limit vs timeout cleanly here since both are LLMTransientError. 
         # But per Error Mapping table, timeout -> LLM_INVOCATION_TIMEOUT, rate/5xx -> LLM_INVOCATION_TRANSIENT_ERROR.

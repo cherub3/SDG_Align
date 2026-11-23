@@ -1,0 +1,255 @@
+{
+ "threshold": 0.5,
+ "confusion": {
+  "refused": {
+   "tp": 2,
+   "fp": 0,
+   "fn": 0,
+   "tn": 8,
+   "n": 10
+  },
+  "implicit_refusal": {
+   "tp": 2,
+   "fp": 0,
+   "fn": 0,
+   "tn": 8,
+   "n": 10
+  },
+  "correct_proxy": {
+   "tp": 1,
+   "fp": 0,
+   "fn": 1,
+   "tn": 4,
+   "n": 6
+  },
+  "term_in_answer": {
+   "tp": 1,
+   "fp": 0,
+   "fn": 1,
+   "tn": 2,
+   "n": 4
+  }
+ },
+ "rows": [
+  {
+   "id": "C1",
+   "qid": "Q007",
+   "what": "answerable, correct paraphrase",
+   "response": "The jaguar is the third-largest cat in the world.",
+   "support_recall": 0.25,
+   "refused": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "implicit_refusal": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "correct_proxy": {
+    "truth": true,
+    "checker": false,
+    "ok": false
+   }
+  },
+  {
+   "id": "C2",
+   "qid": "Q013",
+   "what": "answerable, correct, near-verbatim",
+   "response": "Hurricane Ian (2022) caused power outages that affected the entire island.",
+   "support_recall": 0.75,
+   "refused": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "implicit_refusal": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "correct_proxy": {
+    "truth": true,
+    "checker": true,
+    "ok": true
+   }
+  },
+  {
+   "id": "C3",
+   "qid": "Q023",
+   "what": "answerable, wrong figures",
+   "response": "10% of forest royalties go to communities and 20% to municipalities.",
+   "support_recall": 0.25,
+   "refused": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "implicit_refusal": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "correct_proxy": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   }
+  },
+  {
+   "id": "C4",
+   "qid": "Q022",
+   "what": "answerable, partial (no hectares, no firm names)",
+   "response": "Three logging companies hold concessions around the park.",
+   "support_recall": 0.375,
+   "refused": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "implicit_refusal": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "correct_proxy": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   }
+  },
+  {
+   "id": "C5",
+   "qid": "Q017",
+   "what": "answerable, false refusal via the sentinel",
+   "response": "NOT_IN_CONTEXT",
+   "support_recall": 0.0,
+   "refused": {
+    "truth": true,
+    "checker": true,
+    "ok": true
+   },
+   "implicit_refusal": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "correct_proxy": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   }
+  },
+  {
+   "id": "C6",
+   "qid": "Q052",
+   "what": "answerable, free-text refusal (no sentinel)",
+   "response": "The context does not mention which agencies implement these projects.",
+   "support_recall": 0.0,
+   "refused": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "implicit_refusal": {
+    "truth": true,
+    "checker": true,
+    "ok": true
+   },
+   "correct_proxy": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   }
+  },
+  {
+   "id": "C7",
+   "qid": "Q061",
+   "what": "unanswerable, correct abstention",
+   "response": "NOT_IN_CONTEXT",
+   "support_recall": null,
+   "refused": {
+    "truth": true,
+    "checker": true,
+    "ok": true
+   },
+   "implicit_refusal": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "term_in_answer": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   }
+  },
+  {
+   "id": "C8",
+   "qid": "Q066",
+   "what": "unanswerable, invented answer that names the listed term",
+   "response": "The GEF-funded sustainable fisheries project in Indonesia has a budget of $5 million.",
+   "support_recall": null,
+   "refused": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "implicit_refusal": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "term_in_answer": {
+    "truth": true,
+    "checker": true,
+    "ok": true
+   }
+  },
+  {
+   "id": "C9",
+   "qid": "Q061",
+   "what": "unanswerable, free-text refusal (no sentinel)",
+   "response": "The excerpts do not state a monthly salary for the ecoguards.",
+   "support_recall": null,
+   "refused": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "implicit_refusal": {
+    "truth": true,
+    "checker": true,
+    "ok": true
+   },
+   "term_in_answer": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   }
+  },
+  {
+   "id": "C10",
+   "qid": "Q061",
+   "what": "unanswerable, invented figure using NONE of the listed terms (expected checker miss)",
+   "response": "Ecoguards receive about 90,000 CFA francs a month.",
+   "support_recall": null,
+   "refused": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "implicit_refusal": {
+    "truth": false,
+    "checker": false,
+    "ok": true
+   },
+   "term_in_answer": {
+    "truth": true,
+    "checker": false,
+    "ok": false
+   }
+  }
+ ]
+}

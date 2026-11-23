@@ -1,0 +1,121 @@
+[
+  {
+    "id": "M59",
+    "description": "planner ON by default (flag default flipped)",
+    "file": "scripts/composition_root.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 262 passed, 1 skipped, 4 warnings, 18 subtests passed in 59.88s"
+  },
+  {
+    "id": "M60",
+    "description": "PLANNER_ENABLED accepts any value as true",
+    "file": "scripts/composition_root.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 262 passed, 1 skipped, 4 warnings, 18 subtests passed in 60.09s (0:01:00)"
+  },
+  {
+    "id": "M61",
+    "description": "direct planner never issues the query step",
+    "file": "scripts/direct_planner.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 260 passed, 1 skipped, 4 warnings, 18 subtests passed in 59.83s"
+  },
+  {
+    "id": "M62",
+    "description": "direct planner completes with the wrong step index",
+    "file": "scripts/direct_planner.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 260 passed, 1 skipped, 4 warnings, 18 subtests passed in 58.86s"
+  },
+  {
+    "id": "M63",
+    "description": "/health reports not ok",
+    "file": "scripts/backend_server.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 263 passed, 1 skipped, 4 warnings, 18 subtests passed in 59.67s"
+  },
+  {
+    "id": "M64",
+    "description": "retrieval_only ignored by execute_request",
+    "file": "scripts/runtime_orchestration.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 264 passed, 1 skipped, 4 warnings, 18 subtests passed in 59.81s"
+  },
+  {
+    "id": "M65",
+    "description": "retrieval_only reports a nonzero LLM call count",
+    "file": "scripts/runtime_orchestration.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 264 passed, 1 skipped, 4 warnings, 18 subtests passed in 59.73s"
+  },
+  {
+    "id": "M66",
+    "description": "HTTP route drops the retrieval_only flag",
+    "file": "scripts/backend_server.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 265 passed, 1 skipped, 4 warnings, 18 subtests passed in 60.34s (0:01:00)"
+  },
+  {
+    "id": "M67",
+    "description": "served default template reverted to 1.0.0",
+    "file": "scripts/stage12_prompt_construction.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 266 passed, 1 skipped, 4 warnings, 18 subtests passed in 53.16s"
+  },
+  {
+    "id": "M68",
+    "description": "abstention: bare NOT_IN_CONTEXT no longer recognised",
+    "file": "scripts/abstention.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 3 passed in 17.33s"
+  },
+  {
+    "id": "M69",
+    "description": "abstention: sentinel mixed with an answer not flagged",
+    "file": "scripts/abstention.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 11 passed in 16.34s"
+  },
+  {
+    "id": "M70",
+    "description": "daily LLM call cap not enforced",
+    "file": "scripts/quota_guard.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 346 passed, 1 skipped, 4 warnings, 18 subtests passed in 46.22s"
+  },
+  {
+    "id": "M71",
+    "description": "429 breaker not honoured",
+    "file": "scripts/quota_guard.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 349 passed, 1 skipped, 4 warnings, 18 subtests passed in 46.83s"
+  },
+  {
+    "id": "M72",
+    "description": "a 429 does not open the breaker (answer adapter)",
+    "file": "scripts/quota_guard.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 349 passed, 1 skipped, 4 warnings, 18 subtests passed in 48.87s"
+  },
+  {
+    "id": "M73",
+    "description": "invalid COMPLETE finding renamed",
+    "file": "scripts/stage21_agent_planning.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 304 passed, 1 skipped, 4 warnings, 18 subtests passed in 46.72s"
+  },
+  {
+    "id": "M74",
+    "description": "planner instruction loses the never-COMPLETE-first rule",
+    "file": "scripts/planner_provider_gemini.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 303 passed, 1 skipped, 4 warnings, 18 subtests passed in 44.90s"
+  },
+  {
+    "id": "M75",
+    "description": "retrieval_only searches no index",
+    "file": "scripts/composition_root.py",
+    "result": "SURVIVED",
+    "pytest": "1032 passed, 1 skipped, 4 warnings, 18 subtests passed in 73.74s (0:01:13)"
+  }
+]

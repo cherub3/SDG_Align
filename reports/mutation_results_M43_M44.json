@@ -1,0 +1,16 @@
+[
+  {
+    "id": "M43",
+    "description": "empty-manifest check removed",
+    "file": "scripts/startup_checks.py",
+    "result": "SETUP_ERROR",
+    "pytest": "1 error in 7.49s"
+  },
+  {
+    "id": "M44",
+    "description": "empty-chunks check removed",
+    "file": "scripts/startup_checks.py",
+    "result": "SETUP_ERROR",
+    "pytest": ""
+  }
+]

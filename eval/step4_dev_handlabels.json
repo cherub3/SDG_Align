@@ -1,0 +1,31 @@
+{
+ "note": "Hand labels written by the assistant after reading the 28 real DEV replies against the gold quotes; NOT a human judgment. correct_truth is True only when the reply fully answers the question. Q043 and Q052 in pass 2 are partial answers (one part stated, one part declared missing), so False.",
+ "dev_pass1": {
+  "Q007": true,
+  "Q008": true,
+  "Q013": true,
+  "Q017": true,
+  "Q022": true,
+  "Q023": true,
+  "Q032": false,
+  "Q043": false,
+  "Q044": true,
+  "Q048": false,
+  "Q052": false,
+  "Q059": true
+ },
+ "dev_pass2": {
+  "Q007": true,
+  "Q008": true,
+  "Q013": true,
+  "Q017": true,
+  "Q022": true,
+  "Q023": true,
+  "Q032": false,
+  "Q043": false,
+  "Q044": true,
+  "Q048": false,
+  "Q052": false,
+  "Q059": true
+ }
+}

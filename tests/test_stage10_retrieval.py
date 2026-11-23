@@ -412,3 +412,115 @@ def test_chunk_and_id_map_caches_follow_the_file(tmp_path):
                                                       "chunk_id": ["c0", "cdup", "c1"], "doc_id": ["d", "d", "d"]})), ip)
     m = s10._load_id_map(ip)
     assert m[0] == ("e0", "c0", "d") and m[1] == ("e1", "c1", "d")      # first row wins on a duplicate id
+
+
+# ---------------- fix 7: the deserialised FAISS index is cached in memory and reloaded when the file changes ----------------
+
+class _CountingAdapter:
+    """Stands in for FAISSAdapter: counts how often the index file is deserialised."""
+    loads = 0
+
+    def __init__(self, metric):
+        self.metric = metric
+
+    def deserialize(self, path):
+        type(self).loads += 1
+
+
+def _cache_reset(monkeypatch):
+    import scripts.stage10_retrieval as s10
+    monkeypatch.setattr(s10, "_INDEX_CACHE", {})
+    monkeypatch.setattr(s10, "INDEX_CACHE_ENABLED", True)
+    _CountingAdapter.loads = 0
+    return s10
+
+
+def test_index_file_is_deserialised_once_not_per_query(tmp_path, monkeypatch):
+    s10 = _cache_reset(monkeypatch)
+    f = tmp_path / "index.bin"
+    f.write_bytes(b"abc")
+    got = [s10._loaded_index(f, "cosine", _CountingAdapter) for _ in range(5)]
+    assert _CountingAdapter.loads == 1 and all(g is got[0] for g in got)
+
+
+def test_index_is_reloaded_when_the_file_changes(tmp_path, monkeypatch):
+    s10 = _cache_reset(monkeypatch)
+    f = tmp_path / "index.bin"
+    f.write_bytes(b"abc")
+    first = s10._loaded_index(f, "cosine", _CountingAdapter)
+    f.write_bytes(b"abcdef")                              # new size (and mtime) -> new key
+    second = s10._loaded_index(f, "cosine", _CountingAdapter)
+    assert _CountingAdapter.loads == 2 and second is not first
+    assert len(s10._INDEX_CACHE) == 1                     # the stale version was dropped, not kept alongside
+
+
+def test_a_changed_mtime_alone_reloads(tmp_path, monkeypatch):
+    import os
+    s10 = _cache_reset(monkeypatch)
+    f = tmp_path / "index.bin"
+    f.write_bytes(b"abc")
+    s10._loaded_index(f, "cosine", _CountingAdapter)
+    st = f.stat()
+    os.utime(f, ns=(st.st_atime_ns, st.st_mtime_ns + 5_000_000_000))
+    s10._loaded_index(f, "cosine", _CountingAdapter)
+    assert _CountingAdapter.loads == 2
+
+
+def test_different_metrics_are_cached_separately(tmp_path, monkeypatch):
+    s10 = _cache_reset(monkeypatch)
+    f = tmp_path / "index.bin"
+    f.write_bytes(b"abc")
+    a = s10._loaded_index(f, "cosine", _CountingAdapter)
+    b = s10._loaded_index(f, "l2", _CountingAdapter)
+    assert a is not b and _CountingAdapter.loads == 2
+
+
+def test_disabled_cache_and_unreadable_path_behave_like_before(tmp_path, monkeypatch):
+    s10 = _cache_reset(monkeypatch)
+    f = tmp_path / "index.bin"
+    f.write_bytes(b"abc")
+    monkeypatch.setattr(s10, "INDEX_CACHE_ENABLED", False)
+    s10._loaded_index(f, "cosine", _CountingAdapter)
+    s10._loaded_index(f, "cosine", _CountingAdapter)
+    assert _CountingAdapter.loads == 2 and not s10._INDEX_CACHE
+    monkeypatch.setattr(s10, "INDEX_CACHE_ENABLED", True)
+    s10._loaded_index(tmp_path / "absent.bin", "cosine", _CountingAdapter)       # stat fails -> uncached, still deserialised
+    assert _CountingAdapter.loads == 3 and not s10._INDEX_CACHE
+
+
+def test_cache_is_bounded(tmp_path, monkeypatch):
+    s10 = _cache_reset(monkeypatch)
+    monkeypatch.setattr(s10, "MAX_CACHED_INDEXES", 2)
+    for i in range(5):
+        f = tmp_path / f"i{i}.bin"
+        f.write_bytes(b"x")
+        s10._loaded_index(f, "cosine", _CountingAdapter)
+    assert len(s10._INDEX_CACHE) <= 2
+
+
+def test_real_faiss_results_are_identical_with_and_without_the_cache(tmp_path, monkeypatch):
+    from scripts.stage9_vector_indexing import FAISSAdapter
+    s10 = _cache_reset(monkeypatch)
+    rng = np.random.default_rng(0)
+    vecs = rng.normal(size=(40, 8)).astype("float32")
+    vecs /= np.linalg.norm(vecs, axis=1, keepdims=True)
+    ad = FAISSAdapter("cosine")
+    ad.build(8)
+    ad.add(np.arange(40, dtype="int64"), vecs)
+    f = tmp_path / "index.bin"
+    ad.serialize(f)
+    q = rng.normal(size=(1, 8)).astype("float32")
+    q /= np.linalg.norm(q)
+    uncached = FAISSAdapter("cosine")
+    uncached.deserialize(f)
+    d0, i0 = uncached.search(q, 10)
+    cached = s10._loaded_index(f, "cosine", FAISSAdapter)
+    for _ in range(3):
+        d1, i1 = s10._loaded_index(f, "cosine", FAISSAdapter).search(q, 10)
+        assert (i0 == i1).all() and np.array_equal(d0, d1)
+    assert s10._loaded_index(f, "cosine", FAISSAdapter) is cached
+
+
+def test_the_index_cache_is_on_by_default_in_the_shipped_code():
+    import scripts.stage10_retrieval as s10
+    assert s10.INDEX_CACHE_ENABLED is True and s10.MAX_CACHED_INDEXES >= 1

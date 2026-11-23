@@ -1,0 +1,492 @@
+﻿gcloud.cmd : Creating temporary archive of 506 file(s) totalling 7.8 MiB before compression.
+At line:2 char:1
++ & $g builds submit --config cloudbuild.yaml --substitutions=_IMAGE=as ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Creating tempor...re compression.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Uploading tarball of [.] to 
+[gs://sdg-align-fde_cloudbuild/source/1795439519.291361-ce05d3b520a049d1b7e85e150e2f66b2.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/sdg-align-fde/locations/asia-south1/builds/d0cabe43-f58c-45c7-b4
+fd-c8e048238fe3].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds;region=asia-south1/d0cabe43-f58c-45c7-b4fd-
+c8e048238fe3?project=44714566212 ].
+Waiting for build to complete. Polling interval: 1 second(s).
+----------------------------- REMOTE BUILD OUTPUT ------------------------------
+starting build "d0cabe43-f58c-45c7-b4fd-c8e048238fe3" using release legacy
+
+FETCHSOURCE
+Fetching storage object: gs://sdg-align-fde_cloudbuild/source/1795439519.291361-ce05d3b520a049d1b7e85e150e2f66b2.tgz#1795439526381210
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/docker
+Sending build context to Docker daemon  2.667MB
+
+
+Step 1/27 : FROM python:3.12-slim AS builder
+3.12-slim: Pulling from library/python
+37fb86c2a767: Already exists
+68bced9e0afa: Pulling fs layer
+2dc99d2d0a39: Pulling fs layer
+05e0eee5572e: Pulling fs layer
+05e0eee5572e: Verifying Checksum
+05e0eee5572e: Download complete
+68bced9e0afa: Verifying Checksum
+68bced9e0afa: Download complete
+2dc99d2d0a39: Verifying Checksum
+2dc99d2d0a39: Download complete
+68bced9e0afa: Pull complete
+2dc99d2d0a39: Pull complete
+05e0eee5572e: Pull complete
+Digest: sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+Status: Downloaded newer image for python:3.12-slim
+ ---> 78976a69c067
+Step 2/27 : ENV PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1 PYTHONDONTWRITEBYTECODE=1
+ ---> Running in 8b5d18809583
+Removing intermediate container 8b5d18809583
+ ---> a5c2dc40583a
+Step 3/27 : RUN python -m venv /opt/venv
+ ---> Running in 61a35314295e
+Removing intermediate container 61a35314295e
+ ---> 32e00c3d5890
+Step 4/27 : ENV PATH="/opt/venv/bin:$PATH" HF_HOME=/opt/hf
+ ---> Running in a932e389ab18
+Removing intermediate container a932e389ab18
+ ---> 562329f5e8bc
+Step 5/27 : WORKDIR /build
+ ---> Running in c38738546865
+Removing intermediate container c38738546865
+ ---> 48b5436e4ec5
+Step 6/27 : COPY requirements.txt requirements-local.txt ./
+ ---> cc994ad7c656
+Step 7/27 : RUN pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt -r requirements-local.txt
+ ---> Running in 6d728cb65fee
+Looking in indexes: https://pypi.org/simple, https://download.pytorch.org/whl/cpu
+Collecting pymupdf==1.28.0 (from -r requirements.txt (line 7))
+  Downloading pymupdf-1.28.0-cp310-abi3-manylinux_2_28_x86_64.whl.metadata (26 kB)
+Collecting pymupdf4llm==1.28.0 (from -r requirements.txt (line 8))
+  Downloading pymupdf4llm-1.28.0-py3-none-any.whl.metadata (20 kB)
+Collecting pyarrow==24.0.0 (from -r requirements.txt (line 9))
+  Downloading pyarrow-24.0.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (3.0 kB)
+Collecting pandas==2.3.3 (from -r requirements.txt (line 10))
+  Downloading pandas-2.3.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (91 kB)
+Collecting numpy==2.4.6 (from -r requirements.txt (line 11))
+  Downloading numpy-2.4.6-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting faiss-cpu==1.14.3 (from -r requirements.txt (line 12))
+  Downloading faiss_cpu-1.14.3-cp310-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (7.8 kB)
+Collecting google-genai==2.10.0 (from -r requirements.txt (line 15))
+  Downloading google_genai-2.10.0-py3-none-any.whl.metadata (53 kB)
+Collecting groq==1.6.0 (from -r requirements.txt (line 16))
+  Downloading groq-1.6.0-py3-none-any.whl.metadata (16 kB)
+Collecting openai==2.48.0 (from -r requirements.txt (line 17))
+  Downloading openai-2.48.0-py3-none-any.whl.metadata (36 kB)
+Collecting requests==2.34.2 (from -r requirements.txt (line 18))
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting python-dotenv==1.2.2 (from -r requirements.txt (line 19))
+  Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+Collecting fastapi==0.139.2 (from -r requirements.txt (line 22))
+  Downloading fastapi-0.139.2-py3-none-any.whl.metadata (26 kB)
+Collecting uvicorn==0.51.0 (from -r requirements.txt (line 23))
+  Downloading uvicorn-0.51.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting pydantic==2.13.4 (from -r requirements.txt (line 24))
+  Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+Collecting sentence-transformers==6.3.0 (from -r requirements-local.txt (line 3))
+  Downloading sentence_transformers-6.3.0-py3-none-any.whl.metadata (20 kB)
+Collecting torch==2.15.0 (from -r requirements-local.txt (line 4))
+  Downloading https://download-r2.pytorch.org/whl/cpu/torch-2.15.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (35 kB)
+Collecting pymupdf_layout==1.28.0 (from pymupdf4llm==1.28.0->-r requirements.txt (line 8))
+  Downloading pymupdf_layout-1.28.0-cp310-abi3-manylinux_2_28_x86_64.whl.metadata (3.4 kB)
+Collecting tabulate (from pymupdf4llm==1.28.0->-r requirements.txt (line 8))
+  Downloading tabulate-0.10.0-py3-none-any.whl.metadata (40 kB)
+Collecting python-dateutil>=2.8.2 (from pandas==2.3.3->-r requirements.txt (line 10))
+  Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting pytz>=2020.1 (from pandas==2.3.3->-r requirements.txt (line 10))
+  Downloading pytz-2026.6-py2.py3-none-any.whl.metadata (22 kB)
+Collecting tzdata>=2022.7 (from pandas==2.3.3->-r requirements.txt (line 10))
+  Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Collecting packaging (from faiss-cpu==1.14.3->-r requirements.txt (line 12))
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting anyio<5.0.0,>=4.8.0 (from google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+Collecting google-auth<3.0.0,>=2.48.1 (from google-auth[requests]<3.0.0,>=2.48.1->google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading google_auth-2.63.1-py3-none-any.whl.metadata (6.0 kB)
+Collecting httpx<1.0.0,>=0.28.1 (from google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting tenacity<9.2.0,>=8.2.3 (from google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading tenacity-9.1.4-py3-none-any.whl.metadata (1.2 kB)
+Collecting websockets<17.0,>=13.0.0 (from google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading websockets-16.1.1-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.8 kB)
+Collecting typing-extensions<5.0.0,>=4.14.0 (from google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting distro<2,>=1.7.0 (from google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading distro-1.9.0-py3-none-any.whl.metadata (6.8 kB)
+Collecting sniffio (from google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+Collecting jiter<1,>=0.10.0 (from openai==2.48.0->-r requirements.txt (line 17))
+  Downloading jiter-0.19.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+Collecting tqdm>4 (from openai==2.48.0->-r requirements.txt (line 17))
+  Downloading tqdm-4.70.1-py3-none-any.whl.metadata (57 kB)
+Collecting charset_normalizer<4,>=2 (from requests==2.34.2->-r requirements.txt (line 18))
+  Downloading charset_normalizer-3.5.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (43 kB)
+Collecting idna<4,>=2.5 (from requests==2.34.2->-r requirements.txt (line 18))
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting urllib3<3,>=1.26 (from requests==2.34.2->-r requirements.txt (line 18))
+  Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting certifi>=2023.5.7 (from requests==2.34.2->-r requirements.txt (line 18))
+  Downloading certifi-2026.11.20-py3-none-any.whl.metadata (2.5 kB)
+Collecting starlette>=0.46.0 (from fastapi==0.139.2->-r requirements.txt (line 22))
+  Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi==0.139.2->-r requirements.txt (line 22))
+  Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi==0.139.2->-r requirements.txt (line 22))
+  Downloading annotated_doc-0.0.7-py3-none-any.whl.metadata (6.4 kB)
+Collecting click>=7.0 (from uvicorn==0.51.0->-r requirements.txt (line 23))
+  Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn==0.51.0->-r requirements.txt (line 23))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting annotated-types>=0.6.0 (from pydantic==2.13.4->-r requirements.txt (line 24))
+  Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.46.4 (from pydantic==2.13.4->-r requirements.txt (line 24))
+  Downloading pydantic_core-2.46.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+Collecting transformers<6.0.0,>=5.0.0 (from sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading transformers-5.24.0-py3-none-any.whl.metadata (31 kB)
+Collecting tokenizers>=0.19 (from sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading tokenizers-0.23.3-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.8 kB)
+Collecting huggingface-hub<3.0.0,>=1.3.0 (from sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading huggingface_hub-2.4.0-py3-none-any.whl.metadata (16 kB)
+Collecting scikit-learn>=1.1.0 (from sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading scikit_learn-1.9.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.3 kB)
+Collecting scipy>=1.0.0 (from sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+Collecting filelock (from torch==2.15.0->-r requirements-local.txt (line 4))
+  Downloading filelock-4.3.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting setuptools>=77.0.3 (from torch==2.15.0->-r requirements-local.txt (line 4))
+  Downloading setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+Collecting sympy>=1.13.3 (from torch==2.15.0->-r requirements-local.txt (line 4))
+  Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+Collecting networkx>=2.5.1 (from torch==2.15.0->-r requirements-local.txt (line 4))
+  Downloading networkx-3.7-py3-none-any.whl.metadata (6.7 kB)
+Collecting jinja2 (from torch==2.15.0->-r requirements-local.txt (line 4))
+  Downloading https://download.pytorch.org/whl/jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting fsspec>=0.8.5 (from torch==2.15.0->-r requirements-local.txt (line 4))
+  Downloading fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+Collecting pyyaml (from pymupdf_layout==1.28.0->pymupdf4llm==1.28.0->-r requirements.txt (line 8))
+  Downloading pyyaml-6.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.3 kB)
+Collecting onnxruntime (from pymupdf_layout==1.28.0->pymupdf4llm==1.28.0->-r requirements.txt (line 8))
+  Downloading onnxruntime-1.32.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (5.8 kB)
+Collecting pyasn1-modules>=0.2.1 (from google-auth<3.0.0,>=2.48.1->google-auth[requests]<3.0.0,>=2.48.1->google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting cryptography>=38.0.3 (from google-auth<3.0.0,>=2.48.1->google-auth[requests]<3.0.0,>=2.48.1->google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.4 kB)
+Collecting httpcore==1.* (from httpx<1.0.0,>=0.28.1->google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting hf-xet<2.0.0,>=1.6.0 (from huggingface-hub<3.0.0,>=1.3.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading hf_xet-1.8.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (4.9 kB)
+Collecting httpx2<3,>=2.0.0 (from huggingface-hub<3.0.0,>=1.3.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading httpx2-2.16.2-py3-none-any.whl.metadata (10.0 kB)
+Collecting joblib>=1.4.0 (from scikit-learn>=1.1.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting narwhals>=2.0.1 (from scikit-learn>=1.1.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading narwhals-2.29.0-py3-none-any.whl.metadata (15 kB)
+Collecting threadpoolctl>=3.5.0 (from scikit-learn>=1.1.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading threadpoolctl-3.8.0-py3-none-any.whl.metadata (29 kB)
+Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch==2.15.0->-r requirements-local.txt (line 4))
+  Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting regex>=2025.10.22 (from transformers<6.0.0,>=5.0.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading regex-2026.11.19-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+Collecting typer (from transformers<6.0.0,>=5.0.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading typer-0.29.2-py3-none-any.whl.metadata (16 kB)
+Collecting safetensors>=0.8.0 (from transformers<6.0.0,>=5.0.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.2 kB)
+Collecting MarkupSafe>=2.0 (from jinja2->torch==2.15.0->-r requirements-local.txt (line 4))
+  Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting cffi>=2.0.0 (from cryptography>=38.0.3->google-auth<3.0.0,>=2.48.1->google-auth[requests]<3.0.0,>=2.48.1->google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+Collecting httpcore2==2.16.2 (from httpx2<3,>=2.0.0->huggingface-hub<3.0.0,>=1.3.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading httpcore2-2.16.2-py3-none-any.whl.metadata (28 kB)
+Collecting truststore>=0.10 (from httpx2<3,>=2.0.0->huggingface-hub<3.0.0,>=1.3.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading truststore-0.10.5-py3-none-any.whl.metadata (4.5 kB)
+Collecting cloudpickle>=3.0 (from joblib>=1.4.0->scikit-learn>=1.1.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading cloudpickle-3.1.3-py3-none-any.whl.metadata (7.1 kB)
+Collecting pyasn1<0.7.0,>=0.6.1 (from pyasn1-modules>=0.2.1->google-auth<3.0.0,>=2.48.1->google-auth[requests]<3.0.0,>=2.48.1->google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading pyasn1-0.6.5-py3-none-any.whl.metadata (8.4 kB)
+Collecting flatbuffers (from onnxruntime->pymupdf_layout==1.28.0->pymupdf4llm==1.28.0->-r requirements.txt (line 8))
+  Downloading flatbuffers-25.12.19-py2.py3-none-any.whl.metadata (1.0 kB)
+Collecting protobuf>=4.25.8 (from onnxruntime->pymupdf_layout==1.28.0->pymupdf4llm==1.28.0->-r requirements.txt (line 8))
+  Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Collecting shellingham>=1.3.0 (from typer->transformers<6.0.0,>=5.0.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting rich>=13.8.0 (from typer->transformers<6.0.0,>=5.0.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting pycparser (from cffi>=2.0.0->cryptography>=38.0.3->google-auth<3.0.0,>=2.48.1->google-auth[requests]<3.0.0,>=2.48.1->google-genai==2.10.0->-r requirements.txt (line 15))
+  Downloading pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+Collecting markdown-it-py>=2.2.0 (from rich>=13.8.0->typer->transformers<6.0.0,>=5.0.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading markdown_it_py-4.3.0-py3-none-any.whl.metadata (7.9 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich>=13.8.0->typer->transformers<6.0.0,>=5.0.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.8.0->typer->transformers<6.0.0,>=5.0.0->sentence-transformers==6.3.0->-r requirements-local.txt (line 3))
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Downloading pymupdf-1.28.0-cp310-abi3-manylinux_2_28_x86_64.whl (25.7 MB)
+   ???????????????????????????????????????? 25.7/25.7 MB 101.5 MB/s eta 0:00:00
+Downloading pymupdf4llm-1.28.0-py3-none-any.whl (164 kB)
+Downloading pyarrow-24.0.0-cp312-cp312-manylinux_2_28_x86_64.whl (48.9 MB)
+   ???????????????????????????????????????? 48.9/48.9 MB 116.9 MB/s eta 0:00:00
+Downloading pandas-2.3.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (12.4 MB)
+   ???????????????????????????????????????? 12.4/12.4 MB 107.8 MB/s eta 0:00:00
+Downloading numpy-2.4.6-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.6 MB)
+   ???????????????????????????????????????? 16.6/16.6 MB 124.7 MB/s eta 0:00:00
+Downloading faiss_cpu-1.14.3-cp310-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (18.5 MB)
+   ???????????????????????????????????????? 18.5/18.5 MB 126.6 MB/s eta 0:00:00
+Downloading google_genai-2.10.0-py3-none-any.whl (957 kB)
+   ??????????????????????????????????????? 958.0/958.0 kB 322.2 MB/s eta 0:00:00
+Downloading groq-1.6.0-py3-none-any.whl (143 kB)
+Downloading openai-2.48.0-py3-none-any.whl (1.6 MB)
+   ???????????????????????????????????????? 1.6/1.6 MB 176.5 MB/s eta 0:00:00
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+Downloading fastapi-0.139.2-py3-none-any.whl (130 kB)
+Downloading uvicorn-0.51.0-py3-none-any.whl (73 kB)
+Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+Downloading sentence_transformers-6.3.0-py3-none-any.whl (780 kB)
+   ??????????????????????????????????????? 780.3/780.3 kB 246.7 MB/s eta 0:00:00
+Downloading https://download-r2.pytorch.org/whl/cpu/torch-2.15.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl (209.5 MB)
+   ??????????????????????????????????????? 209.5/209.5 MB 263.7 MB/s eta 0:00:00
+Downloading pydantic_core-2.46.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ???????????????????????????????????????? 2.1/2.1 MB 157.6 MB/s eta 0:00:00
+Downloading pymupdf_layout-1.28.0-cp310-abi3-manylinux_2_28_x86_64.whl (41.6 MB)
+   ???????????????????????????????????????? 41.6/41.6 MB 123.9 MB/s eta 0:00:00
+Downloading annotated_doc-0.0.7-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+Downloading certifi-2026.11.20-py3-none-any.whl (127 kB)
+Downloading charset_normalizer-3.5.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (257 kB)
+Downloading click-8.5.1-py3-none-any.whl (126 kB)
+Downloading distro-1.9.0-py3-none-any.whl (20 kB)
+Downloading fsspec-2026.9.0-py3-none-any.whl (221 kB)
+Downloading google_auth-2.63.1-py3-none-any.whl (271 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+Downloading huggingface_hub-2.4.0-py3-none-any.whl (857 kB)
+   ??????????????????????????????????????? 857.0/857.0 kB 242.7 MB/s eta 0:00:00
+Downloading filelock-4.3.0-py3-none-any.whl (244 kB)
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+Downloading jiter-0.19.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (338 kB)
+Downloading networkx-3.7-py3-none-any.whl (2.1 MB)
+   ???????????????????????????????????????? 2.1/2.1 MB 160.2 MB/s eta 0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Downloading pytz-2026.6-py2.py3-none-any.whl (506 kB)
+Downloading scikit_learn-1.9.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (9.2 MB)
+   ???????????????????????????????????????? 9.2/9.2 MB 130.8 MB/s eta 0:00:00
+Downloading scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+   ???????????????????????????????????????? 35.3/35.3 MB 110.0 MB/s eta 0:00:00
+Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+   ??????????????????????????????????????? 876.3/876.3 kB 184.9 MB/s eta 0:00:00
+Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+   ???????????????????????????????????????? 6.3/6.3 MB 93.2 MB/s eta 0:00:00
+Downloading tenacity-9.1.4-py3-none-any.whl (28 kB)
+Downloading tokenizers-0.23.3-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.4 MB)
+   ???????????????????????????????????????? 3.4/3.4 MB 92.8 MB/s eta 0:00:00
+Downloading tqdm-4.70.1-py3-none-any.whl (80 kB)
+Downloading transformers-5.24.0-py3-none-any.whl (13.5 MB)
+   ???????????????????????????????????????? 13.5/13.5 MB 93.3 MB/s eta 0:00:00
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+Downloading websockets-16.1.1-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (187 kB)
+Downloading https://download.pytorch.org/whl/jinja2-3.1.6-py3-none-any.whl (134 kB)
+Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+Downloading tabulate-0.10.0-py3-none-any.whl (39 kB)
+Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+   ???????????????????????????????????????? 4.8/4.8 MB 90.0 MB/s eta 0:00:00
+Downloading hf_xet-1.8.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.3 MB)
+   ???????????????????????????????????????? 4.3/4.3 MB 99.4 MB/s eta 0:00:00
+Downloading httpx2-2.16.2-py3-none-any.whl (97 kB)
+Downloading httpcore2-2.16.2-py3-none-any.whl (85 kB)
+Downloading joblib-1.6.0-py3-none-any.whl (306 kB)
+Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+   ??????????????????????????????????????? 536.2/536.2 kB 149.5 MB/s eta 0:00:00
+Downloading narwhals-2.29.0-py3-none-any.whl (501 kB)
+Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+Downloading pyyaml-6.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (849 kB)
+   ??????????????????????????????????????? 849.2/849.2 kB 130.0 MB/s eta 0:00:00
+Downloading regex-2026.11.19-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (809 kB)
+   ??????????????????????????????????????? 809.2/809.2 kB 218.6 MB/s eta 0:00:00
+Downloading safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (516 kB)
+Downloading threadpoolctl-3.8.0-py3-none-any.whl (32 kB)
+Downloading onnxruntime-1.32.0-cp312-cp312-manylinux_2_28_x86_64.whl (27.8 MB)
+   ???????????????????????????????????????? 27.8/27.8 MB 94.3 MB/s eta 0:00:00
+Downloading typer-0.29.2-py3-none-any.whl (121 kB)
+Downloading cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+Downloading cloudpickle-3.1.3-py3-none-any.whl (22 kB)
+Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl (343 kB)
+Downloading pyasn1-0.6.5-py3-none-any.whl (84 kB)
+Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Downloading truststore-0.10.5-py3-none-any.whl (19 kB)
+Downloading flatbuffers-25.12.19-py2.py3-none-any.whl (26 kB)
+Downloading markdown_it_py-4.3.0-py3-none-any.whl (96 kB)
+Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+   ???????????????????????????????????????? 1.3/1.3 MB 121.6 MB/s eta 0:00:00
+Downloading pycparser-3.12-py3-none-any.whl (62 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Installing collected packages: pytz, mpmath, flatbuffers, websockets, urllib3, tzdata, typing-extensions, truststore, tqdm, threadpoolctl, tenacity, tabulate, sympy, sniffio, shellingham, setuptools, safetensors, regex, pyyaml, python-dotenv, pymupdf, pygments, pycparser, pyasn1, pyarrow, protobuf, packaging, numpy, networkx, narwhals, mdurl, MarkupSafe, jiter, idna, hf-xet, h11, fsspec, filelock, distro, cloudpickle, click, charset_normalizer, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, scipy, requests, python-dateutil, pydantic-core, pyasn1-modules, onnxruntime, markdown-it-py, joblib, jinja2, httpcore2, httpcore, faiss-cpu, cffi, anyio, torch, starlette, scikit-learn, rich, pymupdf_layout, pydantic, pandas, httpx2, httpx, cryptography, typer, pymupdf4llm, openai, huggingface-hub, groq, google-auth, fastapi, tokenizers, transformers, google-genai, sentence-transformers
+Successfully installed MarkupSafe-3.0.4 annotated-doc-0.0.7 annotated-types-0.8.0 anyio-4.16.0 certifi-2026.11.20 cffi-2.1.1 charset_normalizer-3.5.3 click-8.5.1 cloudpickle-3.1.3 cryptography-50.0.2 distro-1.9.0 faiss-cpu-1.14.3 fastapi-0.139.2 filelock-4.3.0 flatbuffers-25.12.19 fsspec-2026.9.0 google-auth-2.63.1 google-genai-2.10.0 groq-1.6.0 h11-0.16.0 hf-xet-1.8.0 httpcore-1.0.9 httpcore2-2.16.2 httpx-0.28.1 httpx2-2.16.2 huggingface-hub-2.4.0 idna-3.20 jinja2-3.1.6 jiter-0.19.0 joblib-1.6.0 markdown-it-py-4.3.0 mdurl-0.1.2 mpmath-1.3.0 narwhals-2.29.0 networkx-3.7 numpy-2.4.6 onnxruntime-1.32.0 openai-2.48.0 packaging-26.3 pandas-2.3.3 protobuf-7.36.2 pyarrow-24.0.0 pyasn1-0.6.5 pyasn1-modules-0.4.2 pycparser-3.12 pydantic-2.13.4 pydantic-core-2.46.4 pygments-2.21.0 pymupdf-1.28.0 pymupdf4llm-1.28.0 pymupdf_layout-1.28.0 python-dateutil-4.0.0 python-dotenv-1.2.2 pytz-2026.6 pyyaml-6.0.4 regex-2026.11.19 requests-2.34.2 rich-15.0.0 safetensors-0.8.0 scikit-learn-1.9.1 scipy-1.18.1 sentence-transformers-6.3.0 setuptools-84.2.1 shellingham-1.5.4 sniffio-1.3.1 starlette-1.10.0 sympy-1.14.0 tabulate-0.10.0 tenacity-9.1.4 threadpoolctl-3.8.0 tokenizers-0.23.3 torch-2.15.0+cpu tqdm-4.70.1 transformers-5.24.0 truststore-0.10.5 typer-0.29.2 typing-extensions-4.16.0 typing-inspection-0.4.5 tzdata-2026.6 urllib3-2.8.0 uvicorn-0.51.0 websockets-16.1.1
+Removing intermediate container 6d728cb65fee
+ ---> 1e598f2d9bb4
+Step 8/27 : COPY scripts/ scripts/
+ ---> 6875fc4002b9
+Step 9/27 : COPY src/ src/
+ ---> a4c7c08f073e
+Step 10/27 : RUN ALLOW_MODEL_DOWNLOAD=true PYTHONPATH=/build python -c "from scripts.embedding_provider_local import _load_sentence_transformer as load, DEFAULT_MODEL_NAME as m, DEFAULT_REVISION as r; load(m, r, 1); print('baked', m, r)"
+ ---> Running in e7762d743441
+2026-11-23 13:15:16,661 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+2026-11-23 13:15:16,880 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-11-23 13:15:16,889 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/modules.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fmodules.json=&etag=%22952a9b81c0bfd99800fabf352f69c7ccd46c5e43%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:16,899 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/modules.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fmodules.json=&etag=%22952a9b81c0bfd99800fabf352f69c7ccd46c5e43%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:17,119 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+[91mWarning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[0m2026-11-23 13:15:17,120 - huggingface_hub.utils._http - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-11-23 13:15:17,127 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/config_sentence_transformers.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fconfig_sentence_transformers.json=&etag=%22dcb0c0d97d09b930d13600b1a773ddb27e441aab%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:17,137 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/config_sentence_transformers.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fconfig_sentence_transformers.json=&etag=%22dcb0c0d97d09b930d13600b1a773ddb27e441aab%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:17,139 - sentence_transformers.base.model - INFO - Loading SentenceTransformer model from BAAI/bge-small-en-v1.5.
+2026-11-23 13:15:17,358 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-11-23 13:15:17,367 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/README.md?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2FREADME.md=&etag=%228b8567d75ffa619486d9590cb0eb76d66ad46c49%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:17,377 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/README.md?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2FREADME.md=&etag=%228b8567d75ffa619486d9590cb0eb76d66ad46c49%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:17,580 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-11-23 13:15:17,588 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/sentence_bert_config.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fsentence_bert_config.json=&etag=%22ea85692bff64b0d1917833c31ddbca8ab10f5455%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:17,597 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/sentence_bert_config.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fsentence_bert_config.json=&etag=%22ea85692bff64b0d1917833c31ddbca8ab10f5455%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:17,801 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-11-23 13:15:18,019 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-11-23 13:15:18,028 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/config.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fconfig.json=&etag=%223992bf890728a92476c700e6e657fd696eb94160%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:18,038 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/config.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fconfig.json=&etag=%223992bf890728a92476c700e6e657fd696eb94160%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:18,317 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/model.safetensors "HTTP/1.1 302 Found"
+2026-11-23 13:15:18,532 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/models/BAAI/bge-small-en-v1.5/xet-read-token/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a "HTTP/1.1 200 OK"
+[91m
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][0m[91m
+Loading weights: 100%|??????????| 199/199 [00:00<00:00, 3827.83it/s]
+[0m2026-11-23 13:15:23,741 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/processor_config.json "HTTP/1.1 404 Not Found"
+2026-11-23 13:15:23,960 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-11-23 13:15:24,163 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-11-23 13:15:24,382 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-11-23 13:15:24,391 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/tokenizer_config.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Ftokenizer_config.json=&etag=%2237fca74771bc76a8e01178ce3a6055a0995f8093%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:24,400 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/tokenizer_config.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Ftokenizer_config.json=&etag=%2237fca74771bc76a8e01178ce3a6055a0995f8093%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:24,613 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/models/BAAI/bge-small-en-v1.5/tree/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-11-23 13:15:24,839 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/models/BAAI/bge-small-en-v1.5/tree/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-11-23 13:15:25,056 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/vocab.txt "HTTP/1.1 307 Temporary Redirect"
+2026-11-23 13:15:25,067 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/vocab.txt?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fvocab.txt=&etag=%22fb140275c155a9c7c5a3b3e0e77a9e839594a938%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:25,079 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/vocab.txt?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fvocab.txt=&etag=%22fb140275c155a9c7c5a3b3e0e77a9e839594a938%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:25,285 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+2026-11-23 13:15:25,295 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/tokenizer.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Ftokenizer.json=&etag=%22688882a79f44442ddc1f60d70334a7ff5df0fb47%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:25,305 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/tokenizer.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Ftokenizer.json=&etag=%22688882a79f44442ddc1f60d70334a7ff5df0fb47%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:25,536 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/added_tokens.json "HTTP/1.1 404 Not Found"
+2026-11-23 13:15:25,740 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+2026-11-23 13:15:25,750 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/special_tokens_map.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fspecial_tokens_map.json=&etag=%22a8b3208c2884c4efb86e49300fdd3dc877220cdf%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:25,759 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/special_tokens_map.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2Fspecial_tokens_map.json=&etag=%22a8b3208c2884c4efb86e49300fdd3dc877220cdf%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:25,966 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/chat_template.jinja "HTTP/1.1 404 Not Found"
+2026-11-23 13:15:26,243 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-11-23 13:15:26,252 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/1_Pooling%2Fconfig.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2F1_Pooling%2Fconfig.json=&etag=%221da070f0993788c8851a652170ff013aa54dd519%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:26,261 - httpx2 - INFO - HTTP Request: GET https://huggingface.co/api/resolve-cache/models/BAAI/bge-small-en-v1.5/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/1_Pooling%2Fconfig.json?%2FBAAI%2Fbge-small-en-v1.5%2Fresolve%2F5c38ec7c405ec4b44b94cc5a9bb96e735b38267a%2F1_Pooling%2Fconfig.json=&etag=%221da070f0993788c8851a652170ff013aa54dd519%22 "HTTP/1.1 200 OK"
+2026-11-23 13:15:26,503 - httpx2 - INFO - HTTP Request: HEAD https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/5c38ec7c405ec4b44b94cc5a9bb96e735b38267a/2_Normalize/config.json "HTTP/1.1 404 Not Found"
+baked BAAI/bge-small-en-v1.5 5c38ec7c405ec4b44b94cc5a9bb96e735b38267a
+Removing intermediate container e7762d743441
+ ---> 486755680dae
+Step 11/27 : FROM python:3.12-slim
+ ---> 78976a69c067
+Step 12/27 : ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1     PATH="/opt/venv/bin:$PATH" HF_HOME=/opt/hf HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1     EMBEDDING_PROVIDER=local NETWORK_CALLS_PERMITTED=false PYTHONPATH=/app
+ ---> Running in 850c4514faef
+Removing intermediate container 850c4514faef
+ ---> 6ee8014e9e8f
+Step 13/27 : RUN useradd --system --uid 10001 --home /app app
+ ---> Running in 26d57dab1713
+[91museradd warning: app's uid 10001 is greater than SYS_UID_MAX 999
+[0mRemoving intermediate container 26d57dab1713
+ ---> 9a27b7bee400
+Step 14/27 : WORKDIR /app
+ ---> Running in 9362a6113768
+Removing intermediate container 9362a6113768
+ ---> 6d4970c069fd
+Step 15/27 : COPY --from=builder /opt/venv /opt/venv
+ ---> 98e9ff717b0d
+Step 16/27 : COPY --from=builder /opt/hf /opt/hf
+ ---> 0c158502c657
+Step 17/27 : COPY scripts/ scripts/
+ ---> faa11db35211
+Step 18/27 : COPY src/ src/
+ ---> 1d03e1fb401b
+Step 19/27 : COPY config/ config/
+ ---> 89a7dea8f513
+Step 20/27 : COPY data/proposals/manifest.json data/proposals/manifest.json
+ ---> 40e36c51eefe
+Step 21/27 : COPY data/proposals/chunks/ data/proposals/chunks/
+ ---> 884dd9ee58a7
+Step 22/27 : COPY data/proposals/vector_index/ data/proposals/vector_index/
+ ---> 741416385b2a
+Step 23/27 : RUN chown -R app:app /app
+ ---> Running in 95a9bfb67b31
+Removing intermediate container 95a9bfb67b31
+ ---> c6dc348dbaee
+Step 24/27 : USER app
+ ---> Running in e9ab0044af24
+Removing intermediate container e9ab0044af24
+ ---> ec229f44a7dd
+Step 25/27 : EXPOSE 8080
+ ---> Running in ab3e48afd12c
+Removing intermediate container ab3e48afd12c
+ ---> 2ea0894703bd
+Step 26/27 : ENV PORT=8080
+ ---> Running in cd5992622da1
+Removing intermediate container cd5992622da1
+ ---> 803000cb15bb
+Step 27/27 : CMD ["sh", "-c", "exec uvicorn scripts.backend_server:app --host 0.0.0.0 --port ${PORT}"]
+ ---> Running in 0a98af47caa2
+Removing intermediate container 0a98af47caa2
+ ---> dfdc5295c287
+Successfully built dfdc5295c287
+Successfully tagged asia-south1-docker.pkg.dev/sdg-align-fde/sdg-align/api:v2
+PUSH
+Pushing asia-south1-docker.pkg.dev/sdg-align-fde/sdg-align/api:v2
+The push refers to repository [asia-south1-docker.pkg.dev/sdg-align-fde/sdg-align/api]
+6e57a85cc403: Preparing
+c5bb22b64782: Preparing
+c526695f9af2: Preparing
+b109498377c9: Preparing
+3831a043b321: Preparing
+0d34cba24d3f: Preparing
+41cb7a1cf2fb: Preparing
+2dfc69d2bdf4: Preparing
+9a079b56bcc0: Preparing
+0e2efe950bba: Preparing
+0e398b6dc3fe: Preparing
+340931a1d986: Preparing
+96a69f98ae07: Preparing
+3dc3efdf0110: Preparing
+dd57f90311a2: Preparing
+0e398b6dc3fe: Waiting
+340931a1d986: Waiting
+96a69f98ae07: Waiting
+3dc3efdf0110: Waiting
+dd57f90311a2: Waiting
+3831a043b321: Pushed
+c526695f9af2: Pushed
+0d34cba24d3f: Pushed
+c5bb22b64782: Pushed
+b109498377c9: Pushed
+41cb7a1cf2fb: Pushed
+6e57a85cc403: Pushed
+0e2efe950bba: Pushed
+96a69f98ae07: Layer already exists
+3dc3efdf0110: Layer already exists
+340931a1d986: Layer already exists
+0e398b6dc3fe: Pushed
+2dfc69d2bdf4: Pushed
+dd57f90311a2: Pushed
+9a079b56bcc0: Pushed
+v2: digest: sha256:3a83885e20f90070776842ab8f70a198b213e726d9e3edc787e73944e513de91 size: 3465
+DONE
+--------------------------------------------------------------------------------
+ID                                    CREATE_TIME                DURATION  SOURCE                                                                                       IMAGES                                                     STATUS
+d0cabe43-f58c-45c7-b4fd-c8e048238fe3  2026-11-23T13:12:07+00:00  6M8S      gs://sdg-align-fde_cloudbuild/source/1795439519.291361-ce05d3b520a049d1b7e85e150e2f66b2.tgz  asia-south1-docker.pkg.dev/sdg-align-fde/sdg-align/api:v2  SUCCESS

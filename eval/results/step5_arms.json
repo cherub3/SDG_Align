@@ -1,0 +1,130 @@
+{
+ "arms": {
+  "test_noplanner_v21": {
+   "n": 52,
+   "unanswerable_refused": "8/8",
+   "false_refusal_all": "6/44",
+   "false_refusal_single_fact": "2/15",
+   "false_refusal_numbers_tables": "1/11",
+   "false_refusal_multi_passage": "1/8",
+   "false_refusal_cross_document": "2/10",
+   "empty_or_no_final": 0,
+   "partial_or_implicit_refusal_text": 3,
+   "gemini_calls_per_request": {
+    "mean": 1.0,
+    "max": 1,
+    "total": 52
+   },
+   "latency_ms_per_request": {
+    "p50": 1243,
+    "p95": 1641,
+    "max": 1995
+   },
+   "prompt_tokens_total": 247747
+  },
+  "test_planner_v21": {
+   "n": 52,
+   "unanswerable_refused": "7/8",
+   "false_refusal_all": "6/44",
+   "false_refusal_single_fact": "2/15",
+   "false_refusal_numbers_tables": "1/11",
+   "false_refusal_multi_passage": "1/8",
+   "false_refusal_cross_document": "2/10",
+   "empty_or_no_final": 1,
+   "partial_or_implicit_refusal_text": 4,
+   "gemini_calls_per_request": {
+    "mean": 2.96,
+    "max": 3,
+    "total": 154
+   },
+   "latency_ms_per_request": {
+    "p50": 15029,
+    "p95": 16953,
+    "max": 17822
+   },
+   "prompt_tokens_total": 243385
+  }
+ },
+ "paired_vs_base": {
+  "test_planner_v21 vs test_noplanner_v21": {
+   "answerable_all": {
+    "n": 44,
+    "refused_base": 6,
+    "refused_other": 6,
+    "no_longer_refused": 0,
+    "newly_refused": 0,
+    "delta_rate": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "mcnemar_exact_p": 1.0
+   },
+   "unanswerable": {
+    "n": 8,
+    "refused_base": 8,
+    "refused_other": 7,
+    "no_longer_refused": 1,
+    "newly_refused": 0,
+    "delta_rate": -0.125,
+    "ci95": [
+     -0.375,
+     0.0
+    ],
+    "mcnemar_exact_p": 1.0
+   },
+   "single_fact": {
+    "n": 15,
+    "refused_base": 2,
+    "refused_other": 2,
+    "no_longer_refused": 0,
+    "newly_refused": 0,
+    "delta_rate": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "mcnemar_exact_p": 1.0
+   },
+   "numbers_tables": {
+    "n": 11,
+    "refused_base": 1,
+    "refused_other": 1,
+    "no_longer_refused": 0,
+    "newly_refused": 0,
+    "delta_rate": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "mcnemar_exact_p": 1.0
+   },
+   "multi_passage": {
+    "n": 8,
+    "refused_base": 1,
+    "refused_other": 1,
+    "no_longer_refused": 0,
+    "newly_refused": 0,
+    "delta_rate": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "mcnemar_exact_p": 1.0
+   },
+   "cross_document": {
+    "n": 10,
+    "refused_base": 2,
+    "refused_other": 2,
+    "no_longer_refused": 0,
+    "newly_refused": 0,
+    "delta_rate": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "mcnemar_exact_p": 1.0
+   }
+  }
+ }
+}

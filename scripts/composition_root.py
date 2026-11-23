@@ -20,7 +20,10 @@ from scripts.stage19_conversation_memory import (
 from scripts.tool_registry import InMemoryToolRegistry, CallableToolAdapter
 from scripts.stage20_tool_function_calling import execute_tool as _stage20_execute_tool
 from scripts.cache_adapter import InMemoryCacheAdapter
-from scripts.pipeline_deps_factory import build_pipeline_deps
+from scripts.pipeline_deps_factory import build_pipeline_deps, resolve_retrieval_mode
+from scripts.call_budget import BudgetedLLMAdapter, BudgetedPlannerAdapter
+from scripts.model_config import default_gemini_model
+from scripts.quota_guard import daily_llm_call_cap, GuardedLLMAdapter, GuardedPlannerAdapter, QuotaGuard
 from scripts.stage18_api_response_serving import handle_request as _stage18_handle_request
 
 
@@ -51,6 +54,14 @@ def _discover_index_fingerprints(embedding_adapter: Any) -> List[str]:
     return fingerprints
 
 
+def choose_planner_adapter(values, wired_planner):
+    """PLANNER_ENABLED=true uses the wired LLM planner; anything else (default) uses the deterministic direct planner (no LLM call)."""
+    from scripts.direct_planner import DirectPlannerAdapter
+    if str(values.get("PLANNER_ENABLED", "false")).strip().lower() == "true" and wired_planner is not None:
+        return wired_planner
+    return DirectPlannerAdapter()
+
+
 def compose_application(
     registrations: Sequence[ProviderRegistration],
     env: Optional[Dict[str, str]] = None,
@@ -62,6 +73,9 @@ def compose_application(
     """
     # 1. Configuration Lifecycle [2]: load and validate
     raw = load_raw_settings(env=env, dotenv_path=dotenv_path)
+    # RETRIEVAL_MODE is validated in EVERY configuration (a typo must never be silently ignored because, say, no LLM
+    # is wired). The value comes from the same merged settings (.env + process environment) as everything else.
+    resolve_retrieval_mode(raw.get("values", {}))
     settings = validate_settings(raw)
 
     # 2. Composition Lifecycle [3]: assemble and build registry
@@ -77,11 +91,19 @@ def compose_application(
     llm_adapter = wired.get("LLM_PROVIDER")
     embedding_adapter = wired.get("EMBEDDING_PROVIDER")
     planner_adapter = wired.get("PLANNER_LLM_PROVIDER")
+    # Every paid call goes through these wrappers, which enforce MAX_LLM_CALLS_PER_REQUEST (scripts/call_budget.py).
+    # Inside the per-request cap sits one process-wide daily cap + 429 breaker shared by answer and planner calls.
+    guard = QuotaGuard(cap=daily_llm_call_cap(raw.get("values", {})))
+    if llm_adapter is not None:
+        llm_adapter = BudgetedLLMAdapter(GuardedLLMAdapter(llm_adapter, guard))
+    if planner_adapter is not None:
+        planner_adapter = BudgetedPlannerAdapter(GuardedPlannerAdapter(planner_adapter, guard))
+    planner_adapter = choose_planner_adapter(raw.get("values", {}), planner_adapter)
 
     # Extract deployment scalars from raw configuration values
     values = raw.get("values", {})
-    default_planner_model = values.get("DEFAULT_PLANNER_MODEL_NAME", "gemini-2.0-flash")
-    default_llm_model = values.get("LLM_PROVIDER_EXTRA_MODEL", "gemini-2.5-flash")
+    default_planner_model = values.get("DEFAULT_PLANNER_MODEL_NAME", default_gemini_model())
+    default_llm_model = values.get("LLM_PROVIDER_EXTRA_MODEL", default_gemini_model())
 
     # Conversation store and Stage 19 hook closures (store bound via partial)
     conversation_store = InMemoryConversationStore()
@@ -148,6 +170,13 @@ def compose_application(
             request["index_fingerprints"] = list(default_fingerprints)
         return _stage18_handle_request(request, deps)
 
+    def _retrieve_only(agent_request):
+        req = {"query": agent_request["query"], "index_fingerprints": list(default_fingerprints)}
+        top_k = (agent_request.get("pipeline_options") or {}).get("top_k")
+        if top_k is not None:
+            req["top_k"] = top_k
+        return pipeline_deps["retrieve"](req)
+
     # Construct fully-wired AgentDependencies
     agent_deps = AgentDependencies(
         handle_request=_handle_request_with_default_indexes,
@@ -160,6 +189,7 @@ def compose_application(
         planner_llm_adapter=planner_adapter,
         pipeline_deps=pipeline_deps,
         default_planner_model_name=default_planner_model,
+        retrieve_only=_retrieve_only if pipeline_deps is not None else None,
     )
 
     return {

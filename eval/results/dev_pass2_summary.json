@@ -1,0 +1,135 @@
+{
+ "label": "dev_pass2",
+ "split": "dev",
+ "template_version": "2.1.0",
+ "prompt_sha256": "34a89dc9db9c3d6f5135e29887fb29264b04d3454d579d29bcc12174e163cedd",
+ "fake_model": false,
+ "items_in_split": 14,
+ "items_done": 14,
+ "calls_this_run": 14,
+ "stopped": null,
+ "frozen_file_sha256": "e6f15779c1ac281df774e78e5ecba85c673c0c45087298b3cd5686ad974eee3c",
+ "model": "gemini-3.5-flash-lite",
+ "settings": {
+  "temperature": 0.0,
+  "max_output_tokens": 512,
+  "max_retry_attempts": 1,
+  "retrieval": "hybrid rrf_k=10 w_bm25=2.0 depth=50",
+  "top_k": 10,
+  "context_budget_tokens": 4000,
+  "guard_cap": 450,
+  "pace_rpm": 12
+ },
+ "summary": {
+  "refusal_rate_unanswerable": {
+   "k": 2,
+   "n": 2,
+   "rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  "false_refusal_rate_answerable": {
+   "k": 2,
+   "n": 12,
+   "rate": 0.167,
+   "ci95": [
+    0.0,
+    0.417
+   ]
+  },
+  "answered_correct_proxy_rate_answerable": {
+   "k": 6,
+   "n": 12,
+   "rate": 0.5,
+   "ci95": [
+    0.25,
+    0.75
+   ]
+  },
+  "mixed_or_empty_or_implicit": {
+   "mixed": 0,
+   "empty": 0,
+   "implicit_refusals": 2
+  },
+  "unanswerable_answered_with_absence_term": {
+   "k": 0,
+   "n": 0,
+   "rate": null,
+   "ci95": null
+  },
+  "refusal_rate_near_miss": {
+   "k": 1,
+   "n": 1,
+   "rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  "refusal_rate_off_corpus": {
+   "k": 1,
+   "n": 1,
+   "rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  "false_refusal_by_type:cross_document": {
+   "k": 1,
+   "n": 3,
+   "rate": 0.333,
+   "ci95": [
+    0.0,
+    1.0
+   ]
+  },
+  "false_refusal_by_type:multi_passage": {
+   "k": 0,
+   "n": 2,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "false_refusal_by_type:numbers_tables": {
+   "k": 1,
+   "n": 3,
+   "rate": 0.333,
+   "ci95": [
+    0.0,
+    1.0
+   ]
+  },
+  "false_refusal_by_type:single_fact": {
+   "k": 0,
+   "n": 4,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "false_refusals_with_gold_in_context": 1,
+  "false_refusals_gold_not_in_context": 1,
+  "answerable_with_gold_in_context": 11,
+  "mean_groundedness_of_answered": 0.2,
+  "tokens": {
+   "prompt_tokens": 66502,
+   "completion_tokens": 426,
+   "total_tokens": 66928
+  },
+  "latency_ms_per_call": {
+   "p50": 6786,
+   "max": 8324
+  }
+ },
+ "keep_rule": {
+  "refuses_majority_of_unanswerable": true,
+  "false_refusal_le_10pct": false,
+  "KEEP": false
+ }
+}

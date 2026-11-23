@@ -15,8 +15,16 @@ from scripts.stage13_llm_execution import (
     LLMTransientError,
     LLMAuthError,
     LLMInvalidRequestError,
+    LLMQuotaExhaustedError,
 )
 from scripts.phase1_1_configuration_layer import ProviderSettings, ProviderRegistration
+
+
+def _enum_name(value) -> str:
+    """'STOP' for both the SDK enum (str() gives 'FinishReason.STOP') and a plain string."""
+    if not value:
+        return ""
+    return str(getattr(value, "name", value)).upper().rsplit(".", 1)[-1]
 
 
 class GeminiLLMAdapter(LLMAdapter):
@@ -60,7 +68,10 @@ class GeminiLLMAdapter(LLMAdapter):
             )
         except errors.APIError as e:
             code = getattr(e, "code", None)
-            if code in (429, 500, 502, 503, 504):
+            if code == 429:
+                # Quota exhausted (free tier: 20 requests/day). Retrying only burns more quota, so never transient.
+                raise LLMQuotaExhaustedError(str(e)) from e
+            if code in (500, 502, 503, 504):
                 raise LLMTransientError(str(e)) from e
             elif code in (401, 403):
                 raise LLMAuthError(str(e)) from e
@@ -96,7 +107,7 @@ class GeminiLLMAdapter(LLMAdapter):
             if block_reason:
                 prompt_blocked = True
 
-        str_finish = str(native_finish_reason).upper() if native_finish_reason else ""
+        str_finish = _enum_name(native_finish_reason)
         
         if str_finish == "STOP":
             finish_reason = "complete"

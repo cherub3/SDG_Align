@@ -5,6 +5,7 @@ Given a query string and a set of Stage 9 indexes, returns ranked relevant chunk
 
 import sys
 import json
+import threading
 import unicodedata
 import logging
 from pathlib import Path
@@ -182,10 +183,43 @@ def _load_chunk_list(path: Path) -> List[Dict]:
     return _CHUNKS_CACHE[key]
 
 
+# The deserialised index is kept in memory and re-read only when index.bin changes (path, mtime, size). Before this the
+# whole file was read from disk on every query. Searching a flat FAISS index is read-only, so a shared instance is safe
+# across the server's worker threads. INDEX_CACHE_ENABLED exists so tools/index_cache_check.py can measure "before".
+INDEX_CACHE_ENABLED = True
+MAX_CACHED_INDEXES = 8
+_INDEX_CACHE: Dict[tuple, Any] = {}
+_INDEX_CACHE_LOCK = threading.Lock()
+
+
+def _loaded_index(path: Path, metric: str, index_adapter_factory: Callable[[str], IndexAdapter]) -> IndexAdapter:
+    if INDEX_CACHE_ENABLED:
+        try:
+            key = _file_key(path) + (metric,)
+        except OSError:
+            key = None                                  # unreadable or absent: behave exactly as before, uncached
+        if key is not None:
+            with _INDEX_CACHE_LOCK:
+                hit = _INDEX_CACHE.get(key)
+            if hit is not None:
+                return hit
+            adapter = index_adapter_factory(metric)
+            adapter.deserialize(path)
+            with _INDEX_CACHE_LOCK:
+                for stale in [k for k in _INDEX_CACHE if k[0] == key[0]]:    # an older version of the same file
+                    del _INDEX_CACHE[stale]
+                if len(_INDEX_CACHE) >= MAX_CACHED_INDEXES:
+                    _INDEX_CACHE.clear()
+                _INDEX_CACHE[key] = adapter
+            return adapter
+    adapter = index_adapter_factory(metric)
+    adapter.deserialize(path)
+    return adapter
+
+
 def search_index(index_handle: IndexHandle, query_vector: np.ndarray, k: int, index_adapter_factory: Callable[[str], IndexAdapter]) -> List[Dict]:
     metric = index_handle.metadata.get("metric", "cosine")
-    adapter = index_adapter_factory(metric)
-    adapter.deserialize(index_handle.path / "index.bin")
+    adapter = _loaded_index(index_handle.path / "index.bin", metric, index_adapter_factory)
     
     ntotal = index_handle.metadata.get("vector_count", adapter.ntotal)
     k_search = min(k, ntotal)

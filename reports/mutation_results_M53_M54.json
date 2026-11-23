@@ -1,0 +1,16 @@
+[
+  {
+    "id": "M53",
+    "description": "local embedder: offline mode removed (downloads allowed by default)",
+    "file": "scripts/embedding_provider_local.py",
+    "result": "SETUP_ERROR",
+    "pytest": "no tests ran in 11.89s"
+  },
+  {
+    "id": "M54",
+    "description": "local embedder: local_files_only ignored",
+    "file": "scripts/embedding_provider_local.py",
+    "result": "SETUP_ERROR",
+    "pytest": "1 error in 8.94s"
+  }
+]

@@ -72,7 +72,7 @@ export function AnimatedPipelineDemo() {
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 text-xs font-semibold">
                 {result.groundedness}
               </span>
-              <span className="text-muted-foreground text-xs">Quality: {result.qualityScore}</span>
+              <span className="text-muted-foreground text-xs" title="0.7 x verbatim overlap + 0.3 x citation presence. Strict: a correct paraphrase scores low.">Strict quality score: {result.qualityScore}</span>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 text-xs font-semibold">
                 {result.outcome}
               </span>

@@ -1,0 +1,7 @@
+Creating temporary archive of 457 file(s) totalling 7.2 MiB before compression.
+Uploading tarball of [.] to [gs://sdg-align-fde_cloudbuild/source/1795433572.672844-b6f6f0ed62a44991b811c7f5cd54a90e.tgz]
+ERROR: (gcloud.builds.submit) PERMISSION_DENIED: generic::permission_denied: Caller does not have required permission to use project sdg-align-fde. Grant the caller the roles/serviceusage.serviceUsageConsumer role, or a custom role with the serviceusage.services.use permission, by visiting https://console.developers.google.com/iam-admin/iam?project=sdg-align-fde and then retry. Propagation of the new permission may take a few minutes. This command is authenticated as priyanshi21bhadauria@gmail.com which is the active account specified by the [core/account] property.
+
+real	0m21.566s
+user	0m0.045s
+sys	0m0.168s

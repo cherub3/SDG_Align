@@ -1,0 +1,149 @@
+{
+ "label": "test_planner_v21",
+ "split": "test",
+ "template_version": "2.1.0",
+ "prompt_sha256": "34a89dc9db9c3d6f5135e29887fb29264b04d3454d579d29bcc12174e163cedd",
+ "fake_model": false,
+ "arm": "planner",
+ "items_in_split": 52,
+ "items_done": 52,
+ "calls_this_run": 52,
+ "stopped": null,
+ "guard_cap_this_run": 295,
+ "guard_used_this_run": 154,
+ "ledger_used_before_run": 155,
+ "day_pacific": "2026-11-23",
+ "frozen_file_sha256": "e6f15779c1ac281df774e78e5ecba85c673c0c45087298b3cd5686ad974eee3c",
+ "summary": {
+  "refusal_rate_unanswerable": {
+   "k": 7,
+   "n": 8,
+   "rate": 0.875,
+   "ci95": [
+    0.625,
+    1.0
+   ]
+  },
+  "false_refusal_rate_answerable": {
+   "k": 6,
+   "n": 44,
+   "rate": 0.136,
+   "ci95": [
+    0.045,
+    0.25
+   ]
+  },
+  "answered_correct_proxy_rate_answerable": {
+   "k": 16,
+   "n": 44,
+   "rate": 0.364,
+   "ci95": [
+    0.227,
+    0.5
+   ]
+  },
+  "mixed_or_empty_or_implicit": {
+   "mixed": 0,
+   "empty": 1,
+   "implicit_refusals": 5
+  },
+  "unanswerable_answered_with_absence_term": {
+   "k": 0,
+   "n": 1,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "refusal_rate_near_miss": {
+   "k": 3,
+   "n": 4,
+   "rate": 0.75,
+   "ci95": [
+    0.25,
+    1.0
+   ]
+  },
+  "refusal_rate_off_corpus": {
+   "k": 4,
+   "n": 4,
+   "rate": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ]
+  },
+  "false_refusal_by_type:cross_document": {
+   "k": 2,
+   "n": 10,
+   "rate": 0.2,
+   "ci95": [
+    0.0,
+    0.5
+   ]
+  },
+  "false_refusal_by_type:multi_passage": {
+   "k": 1,
+   "n": 8,
+   "rate": 0.125,
+   "ci95": [
+    0.0,
+    0.375
+   ]
+  },
+  "false_refusal_by_type:numbers_tables": {
+   "k": 1,
+   "n": 11,
+   "rate": 0.091,
+   "ci95": [
+    0.0,
+    0.273
+   ]
+  },
+  "false_refusal_by_type:single_fact": {
+   "k": 2,
+   "n": 15,
+   "rate": 0.133,
+   "ci95": [
+    0.0,
+    0.333
+   ]
+  },
+  "false_refusals_with_gold_in_context": 4,
+  "false_refusals_gold_not_in_context": 2,
+  "answerable_with_gold_in_context": 39,
+  "mean_groundedness_of_answered": 0.246,
+  "tokens": {
+   "prompt_tokens": 243385,
+   "completion_tokens": 2426,
+   "total_tokens": 245811
+  },
+  "latency_ms_per_call": {
+   "p50": 15029,
+   "max": 17822
+  },
+  "calls_per_request": {
+   "mean": 2.96,
+   "p50": 3,
+   "max": 3,
+   "total": 154
+  },
+  "latency_ms_per_request": {
+   "p50": 15029,
+   "p95": 16953,
+   "max": 17822
+  },
+  "planner": {
+   "no_final_response": 1,
+   "query_rewritten": 0,
+   "mean_steps": 0.98,
+   "more_than_one_query_step": 0
+  }
+ },
+ "keep_rule": {
+  "refuses_majority_of_unanswerable": true,
+  "false_refusal_le_10pct": false,
+  "KEEP": false
+ }
+}

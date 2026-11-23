@@ -1,0 +1,53 @@
+{
+ "note": "Gemini calls made by the eval runners, by Pacific day (quota resets at midnight Pacific). Entries before the ledger existed were added by hand from the runs' summaries.",
+ "entries": [
+  {
+   "day_pacific": "2026-11-23",
+   "label": "smoke (phase 3 step 2, approximate)",
+   "calls": 3,
+   "note": "exact count UNKNOWN, 3 assumed"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "dev_pass1",
+   "calls": 14,
+   "note": "1 call per item"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "dev_pass2",
+   "calls": 14,
+   "note": "1 call per item"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "test_noplanner",
+   "calls": 52,
+   "note": "1 call per item"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "test_noplanner_v21",
+   "calls": 52,
+   "note": "1 call per item (added when the run completes)"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "test_planner_v20_aborted",
+   "calls": 17,
+   "note": "17 requests x 1 planner call; run killed by me after seeing 0 steps; ledger entry added by hand (run did not finish); a 503 on call 18 may or may not have counted"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "planner_probe_dev",
+   "calls": 3,
+   "note": "3 live planner calls on DEV items Q007,Q032,Q048; raw outputs in planner_probe_dev.json"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "test_planner_v21",
+   "calls": 154,
+   "note": "planner arm, template 2.1.0, 52 requests started"
+  }
+ ]
+}

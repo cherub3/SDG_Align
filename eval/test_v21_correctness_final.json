@@ -1,0 +1,182 @@
+{
+ "note": "FINAL labels: two independent blind AI labelling runs (both Claude models: labeller A = Claude in this project, labeller B = Claude Opus 4.6 in Antigravity), kappa 0.95, the single disagreement (Q036) adjudicated by the project owner. Labeller independence, not model-family independence. Not a human-labelled set apart from that one verdict.",
+ "labels": {
+  "Q001": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q002": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q003": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q004": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q006": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q009": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q010": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q011": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q012": {
+   "label": "refused",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q014": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q015": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q016": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q018": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q019": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q020": {
+   "label": "refused",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q021": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q024": {
+   "label": "wrong",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q025": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q026": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q027": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q028": {
+   "label": "refused",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q029": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q030": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q031": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q033": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q034": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q035": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q036": {
+   "label": "partial",
+   "source": "adjudicated by the project owner (A=correct, B=partial)",
+   "note": "part 2 fully covered; part 1 omits SIM closure, job losses, forest pressure, suspended ecoguard patrols"
+  },
+  "Q038": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q039": {
+   "label": "partial",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q040": {
+   "label": "refused",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q042": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q045": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q046": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q047": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q049": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q050": {
+   "label": "refused",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q051": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q053": {
+   "label": "partial",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q055": {
+   "label": "partial",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q056": {
+   "label": "partial",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q057": {
+   "label": "partial",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q058": {
+   "label": "refused",
+   "source": "agreed (labeller A = labeller B)"
+  },
+  "Q060": {
+   "label": "correct",
+   "source": "agreed (labeller A = labeller B)"
+  }
+ }
+}

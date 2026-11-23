@@ -58,6 +58,7 @@ class AgentDependencies:
     planner_llm_adapter: PlannerLLMAdapter
     pipeline_deps: Any
     default_planner_model_name: str
+    retrieve_only: Optional[Callable] = None   # ranked chunks, no LLM (request option retrieval_only)
 
 
 # =================================================================================================
@@ -472,6 +473,12 @@ def plan_and_execute(agent_request: Dict[str, Any], agent_dependencies: AgentDep
             idx = decision.get("final_answer_step_index")
             if idx is not None and 0 <= idx < len(steps):
                 final_response = steps[idx].get("step_result")
+            else:
+                package_findings.append({
+                    "severity": "WARNING",
+                    "code": "PLANNER_COMPLETE_WITHOUT_ANSWER",
+                    "message": f"Planner returned COMPLETE with final_answer_step_index={idx!r} but {len(steps)} step(s) executed."
+                })
             state = _transition(state, PlannerState.COMPLETED)
             break
             

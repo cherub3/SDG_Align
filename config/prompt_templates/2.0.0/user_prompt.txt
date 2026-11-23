@@ -1,0 +1,8 @@
+Question:
+{{query}}
+
+<context>
+{{context_text}}
+</context>
+
+Answer using only the excerpts above, or reply exactly NOT_IN_CONTEXT if they do not contain the requested detail.

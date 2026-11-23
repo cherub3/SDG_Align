@@ -104,6 +104,10 @@ function mapStageStatus(stepStatus: string): StageTimelineItem["status"] {
   return "incomplete"
 }
 
+export function verbatimOverlapLabel(score: number): string {
+  return `Verbatim overlap: ${Math.round(score * 100)}% of sentences (strict; paraphrase scores 0)`
+}
+
 function elapsedMs(startedAt: string | null, completedAt: string | null): number {
   if (!startedAt || !completedAt) return 0
   const elapsed = new Date(completedAt).getTime() - new Date(startedAt).getTime()
@@ -121,9 +125,9 @@ function mapAgentResultToQueryResult(raw: RawAgentResult): QueryResult {
     })),
     answer: raw.final_response?.answer.response_text ?? "",
     qualityScore: raw.final_response?.quality.answer_quality_score ?? 0,
-    // Temporarily a stringified numeric score, not a real qualitative label ("HIGH"/"Grounded")
-    // — no such label exists anywhere in AgentResult. See Track B Phase 7 plan, section 4a.
-    groundedness: raw.final_response ? String(raw.final_response.groundedness.groundedness_score) : "",
+    // Stage 15's groundedness_score is the share of answer sentences that are at least 80% a verbatim copy of a
+    // retrieved chunk. A correct paraphrase scores 0, so it is labelled as what it measures, not as "groundedness".
+    groundedness: raw.final_response ? verbatimOverlapLabel(raw.final_response.groundedness.groundedness_score) : "",
     outcome: raw.status,
     // Finding 2: citation metadata is not exposed by AgentResult at all — null, not [].
     citations: null,

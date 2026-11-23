@@ -1,0 +1,183 @@
+{
+ "note": "AI-MADE LABELS, NOT HUMAN. Written by the assistant (Claude) after reading each 2.1.0 no-planner TEST reply against the gold answer quotes in eval/gold_set.jsonl. The labeller is not independent of the project and these labels have not been checked by a person. Rubric: correct = every fact the gold quotes require is stated correctly; partial = at least one required fact is right and the rest is missing or declared missing, with nothing contradicting gold; wrong = states a fact that contradicts gold; refused = reply is exactly NOT_IN_CONTEXT. Only the gold quotes were consulted, not the full source documents, so a reply that adds facts beyond the gold quote is not checked for those.",
+ "source_arm": "eval/results/test_noplanner_v21.jsonl",
+ "labeller": "AI (Claude)",
+ "labels": {
+  "Q001": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q002": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q003": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q004": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q006": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q009": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q010": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q011": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q012": {
+   "label": "refused",
+   "note": "reply is NOT_IN_CONTEXT although gold evidence exists"
+  },
+  "Q014": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q015": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q016": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q018": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q019": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q020": {
+   "label": "refused",
+   "note": "reply is NOT_IN_CONTEXT although gold evidence exists"
+  },
+  "Q021": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q024": {
+   "label": "wrong",
+   "note": "states total GEF financing 4,371,000; gold is 4,010,092 (co-financing 33,212,874 is right)"
+  },
+  "Q025": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q026": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q027": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q028": {
+   "label": "refused",
+   "note": "reply is NOT_IN_CONTEXT although gold evidence exists"
+  },
+  "Q029": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q030": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q031": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q033": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q034": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q035": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q036": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q038": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q039": {
+   "label": "partial",
+   "note": "four units right; says the per-unit number of initiatives is not stated (gold: four per unit)"
+  },
+  "Q040": {
+   "label": "refused",
+   "note": "reply is NOT_IN_CONTEXT although gold evidence exists"
+  },
+  "Q042": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q045": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q046": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q047": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q049": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q050": {
+   "label": "refused",
+   "note": "reply is NOT_IN_CONTEXT although gold evidence exists"
+  },
+  "Q051": {
+   "label": "correct",
+   "note": ""
+  },
+  "Q053": {
+   "label": "partial",
+   "note": "lists hazards for both projects, no explicit contrast, omits Cuba floods"
+  },
+  "Q055": {
+   "label": "partial",
+   "note": "jaguar 72,000 ha right (plus an extra 6,000 ha); says coastal and dry forest areas not stated (gold 60,312 and 30,000)"
+  },
+  "Q056": {
+   "label": "partial",
+   "note": "Cameroon targets right; says Ecuador and Mozambique targets not stated (gold lists them)"
+  },
+  "Q057": {
+   "label": "partial",
+   "note": "Mozambique role right; says Cameroon logging role not stated"
+  },
+  "Q058": {
+   "label": "refused",
+   "note": "reply is NOT_IN_CONTEXT although gold evidence exists"
+  },
+  "Q060": {
+   "label": "correct",
+   "note": ""
+  }
+ }
+}

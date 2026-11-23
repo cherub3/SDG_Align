@@ -22,6 +22,7 @@ class TestCompositionRoot(unittest.TestCase):
             "LLM_PROVIDER": "gemini",
             "EMBEDDING_PROVIDER": "gemini",
             "PLANNER_LLM_PROVIDER": "gemini",
+            "PLANNER_ENABLED": "true",
             "LLM_PROVIDER_CREDENTIAL_REF": "env:LLM_KEY",
             "EMBEDDING_PROVIDER_CREDENTIAL_REF": "env:EMB_KEY",
             "PLANNER_LLM_PROVIDER_CREDENTIAL_REF": "env:PLAN_KEY",
@@ -82,7 +83,8 @@ class TestCompositionRoot(unittest.TestCase):
         registrations = [self.mock_llm_reg, self.mock_emb_reg, planner_reg]
         
         app_graph = compose_application(registrations, env=self.valid_env)
-        self.assertIs(app_graph["agent_dependencies"].planner_llm_adapter, mock_planner_adapter)
+        # the planner is wrapped by the per-request LLM call cap (scripts/call_budget.py); and by the daily cap + 429 guard (scripts/quota_guard.py); the innermost adapter is the same object
+        self.assertIs(app_graph["agent_dependencies"].planner_llm_adapter._inner._inner, mock_planner_adapter)
 
     def test_startup_failure_propagation(self):
         # Provide invalid seam to trigger UNKNOWN_SEAM

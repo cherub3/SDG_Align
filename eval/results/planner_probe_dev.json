@@ -1,0 +1,20 @@
+[
+ {
+  "qid": "Q007",
+  "prompt": "{\"available_tools\":[],\"conversation_memory\":null,\"executed_steps\":[],\"planner_state\":\"PLANNING\",\"query\":\"Where does the jaguar rank among the world's largest cats, according to the Ecuador jaguar connectivity project?\",\"step_count\":0}",
+  "raw_text": "{\n  \"decision\": \"COMPLETE\",\n  \"final_answer_step_index\": 0\n}",
+  "finish_reason": "FinishReason.STOP"
+ },
+ {
+  "qid": "Q032",
+  "prompt": "{\"available_tools\":[],\"conversation_memory\":null,\"executed_steps\":[],\"planner_state\":\"PLANNING\",\"query\":\"How many people will benefit directly from the Cuba project, split by sex?\",\"step_count\":0}",
+  "raw_text": "{\n  \"decision\": \"COMPLETE\",\n  \"final_answer_step_index\": 0\n}",
+  "finish_reason": "FinishReason.STOP"
+ },
+ {
+  "qid": "Q048",
+  "prompt": "{\"available_tools\":[],\"conversation_memory\":null,\"executed_steps\":[],\"planner_state\":\"PLANNING\",\"query\":\"Rank Ecuador's dry forest, jaguar and coastal management projects by total GEF financing.\",\"step_count\":0}",
+  "raw_text": "{\n  \"decision\": \"FAIL\",\n  \"next_step\": {\n    \"step_type\": \"CONVERSATION_MEMORY\",\n    \"step_input\": {},\n    \"step_rationale\": \"No tools are available to query the required data for Ecuador's conservation projects.\"\n  }\n}",
+  "finish_reason": "FinishReason.STOP"
+ }
+]

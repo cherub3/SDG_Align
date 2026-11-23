@@ -1,0 +1,9 @@
+[
+  {
+    "id": "M55",
+    "description": "index cache key ignores file changes (stale index served)",
+    "file": "scripts/stage10_retrieval.py",
+    "result": "SETUP_ERROR",
+    "pytest": "1 error in 24.05s"
+  }
+]

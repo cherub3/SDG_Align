@@ -1,0 +1,662 @@
+[
+  {
+    "qid": "Q001",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "lost over 75% of elephants",
+      "between 2011 and 2015",
+      "causes: poaching, unsustainable hunting, deforestation, weak protected area management"
+    ],
+    "fact_status": {
+      "lost over 75% of elephants": "present-correct",
+      "between 2011 and 2015": "present-correct",
+      "causes: poaching, unsustainable hunting, deforestation, weak protected area management": "present-correct"
+    },
+    "reason": "Reply states \"lost over 75% of its elephants\" and all four causes, matching gold exactly."
+  },
+  {
+    "qid": "Q002",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "controlled access to NTFPs: wild mangoes, mushrooms, honey",
+      "access to spiritual or sacred sites in BBNP and its periphery"
+    ],
+    "fact_status": {
+      "controlled access to NTFPs: wild mangoes, mushrooms, honey": "present-correct",
+      "access to spiritual or sacred sites in BBNP and its periphery": "present-correct"
+    },
+    "reason": "Reply lists \"wild mangoes, mushrooms, and honey\" and \"spiritual or sacred sites in BBNP and its periphery\"."
+  },
+  {
+    "qid": "Q003",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "towns: Yokadouma and Salapombe"
+    ],
+    "fact_status": {
+      "towns: Yokadouma and Salapombe": "present-correct"
+    },
+    "reason": "Reply correctly names \"Yokadouma\" and \"Salapombe\" as the two towns."
+  },
+  {
+    "qid": "Q004",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "GEF implementing agency: WWF-US",
+      "main executing body: MINFOF"
+    ],
+    "fact_status": {
+      "GEF implementing agency: WWF-US": "present-correct",
+      "main executing body: MINFOF": "present-correct"
+    },
+    "reason": "Reply states \"WWF-US will serve as the GEF Agency\" and \"MINFOF will act as the principal executing entity\"."
+  },
+  {
+    "qid": "Q006",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "biodiversity financing gap approximately USD 1.47 billion by 2030"
+    ],
+    "fact_status": {
+      "biodiversity financing gap approximately USD 1.47 billion by 2030": "present-correct"
+    },
+    "reason": "Reply states \"approximately USD 1.47 billion by 2030\", matching gold exactly."
+  },
+  {
+    "qid": "Q009",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "only 32% of actions completed in the previous planning cycle"
+    ],
+    "fact_status": {
+      "only 32% of actions completed in the previous planning cycle": "present-correct"
+    },
+    "reason": "Reply states \"Only 32% of actions were completed in the previous planning cycle\"."
+  },
+  {
+    "qid": "Q010",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "funded in perpetuity by the Legacy Landscapes Fund"
+    ],
+    "fact_status": {
+      "funded in perpetuity by the Legacy Landscapes Fund": "present-correct"
+    },
+    "reason": "Reply states \"funded in perpetuity by the Legacy Landscapes Fund\"."
+  },
+  {
+    "qid": "Q011",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "five coastal provinces: Esmeraldas, Manabí, Santa Elena, Guayas, El Oro"
+    ],
+    "fact_status": {
+      "five coastal provinces: Esmeraldas, Manabí, Santa Elena, Guayas, El Oro": "present-correct"
+    },
+    "reason": "Reply lists all five provinces correctly: \"Esmeraldas, Manabí, Santa Elena, Guayas and El Oro\"."
+  },
+  {
+    "qid": "Q012",
+    "type": "single_fact",
+    "label": "refused",
+    "confidence": "high",
+    "required_facts": [
+      "400 technical staff from GADs trained"
+    ],
+    "fact_status": {
+      "400 technical staff from GADs trained": "absent"
+    },
+    "reason": "Reply is \"NOT_IN_CONTEXT\" (decision=NOT_IN_CONTEXT); question is answerable so this is a refused."
+  },
+  {
+    "qid": "Q014",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "risen by 10 cm over last three decades",
+      "expected to increase by 29 cm by 2050"
+    ],
+    "fact_status": {
+      "risen by 10 cm over last three decades": "present-correct",
+      "expected to increase by 29 cm by 2050": "present-correct"
+    },
+    "reason": "Reply states \"risen by 10 cm over the last three decades\" and \"increase by 29 cm by the year 2050\"."
+  },
+  {
+    "qid": "Q015",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "CUBAENERGIA expected to play central role in partial project execution"
+    ],
+    "fact_status": {
+      "CUBAENERGIA expected to play central role in partial project execution": "present-correct"
+    },
+    "reason": "Reply states \"CUBAENERGIA\", matching gold institution name."
+  },
+  {
+    "qid": "Q016",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "approved by Council of Ministers on 25 April 2017",
+      "implemented and overseen by CITMA"
+    ],
+    "fact_status": {
+      "approved by Council of Ministers on 25 April 2017": "present-correct",
+      "implemented and overseen by CITMA": "present-correct"
+    },
+    "reason": "Reply states \"approved by the Council of Ministers on 25 April 2017\" and \"implemented and overseen by CITMA\"."
+  },
+  {
+    "qid": "Q018",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "The Impact Facility will execute the PPG phase"
+    ],
+    "fact_status": {
+      "The Impact Facility will execute the PPG phase": "present-correct"
+    },
+    "reason": "Reply states \"The Impact Facility will execute the PPG phase of the project.\""
+  },
+  {
+    "qid": "Q019",
+    "type": "single_fact",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "PSC chaired by Ministry of Agriculture, Environment and Fisheries (MAAP)"
+    ],
+    "fact_status": {
+      "PSC chaired by Ministry of Agriculture, Environment and Fisheries (MAAP)": "present-correct"
+    },
+    "reason": "Reply states \"chaired by the Ministry of Agriculture, Environment and Fisheries\"."
+  },
+  {
+    "qid": "Q020",
+    "type": "single_fact",
+    "label": "refused",
+    "confidence": "high",
+    "required_facts": [
+      "worst practices: whole-ore amalgamation, open burning of amalgam, unsafe tailings handling"
+    ],
+    "fact_status": {
+      "worst practices: whole-ore amalgamation, open burning of amalgam, unsafe tailings handling": "absent"
+    },
+    "reason": "Reply is \"NOT_IN_CONTEXT\" (decision=NOT_IN_CONTEXT); question is answerable so this is a refused."
+  },
+  {
+    "qid": "Q021",
+    "type": "numbers_tables",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "GEF Project Financing: 1,755,385.00",
+      "Co-financing: 14,888,391.00"
+    ],
+    "fact_status": {
+      "GEF Project Financing: 1,755,385.00": "present-correct",
+      "Co-financing: 14,888,391.00": "present-correct"
+    },
+    "reason": "Reply states both figures exactly: \"1,755,385.00\" and \"14,888,391.00\"."
+  },
+  {
+    "qid": "Q024",
+    "type": "numbers_tables",
+    "label": "wrong",
+    "confidence": "high",
+    "required_facts": [
+      "GEF Project Financing: 4,010,092.00",
+      "Co-financing: 33,212,874.00"
+    ],
+    "fact_status": {
+      "GEF Project Financing: 4,010,092.00": "present-contradicting",
+      "Co-financing: 33,212,874.00": "present-correct"
+    },
+    "reason": "Reply states 'Total GEF Financing: 4,371,000.00' but gold says GEF Project Financing is 4,010,092.00 — wrong number."
+  },
+  {
+    "qid": "Q025",
+    "type": "numbers_tables",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "at least 30,000 hectares under sustainable management aligned with REDD+ Action Plan"
+    ],
+    "fact_status": {
+      "at least 30,000 hectares under sustainable management aligned with REDD+ Action Plan": "present-correct"
+    },
+    "reason": "Reply states \"At least 30,000 hectares\" under sustainable management \"aligned with the REDD+ Action Plan\"."
+  },
+  {
+    "qid": "Q026",
+    "type": "numbers_tables",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "GEF Project Grant: 1,666,419.00",
+      "Agency Fee: 149,978.00",
+      "Total GEF Financing: 1,816,397.00"
+    ],
+    "fact_status": {
+      "GEF Project Grant: 1,666,419.00": "present-correct",
+      "Agency Fee: 149,978.00": "present-correct",
+      "Total GEF Financing: 1,816,397.00": "present-correct"
+    },
+    "reason": "Reply states all three figures exactly matching gold: 1,666,419.00, 149,978.00, 1,816,397.00."
+  },
+  {
+    "qid": "Q027",
+    "type": "numbers_tables",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "2,284,740 hectares of terrestrial protected areas (CI 1.2)",
+      "5,737 hectares of OECMs (CI 4.5)"
+    ],
+    "fact_status": {
+      "2,284,740 hectares of terrestrial protected areas (CI 1.2)": "present-correct",
+      "5,737 hectares of OECMs (CI 4.5)": "present-correct"
+    },
+    "reason": "Reply states \"2,284,740 hectares\" and \"5,737 hectares\" matching gold. Extra OECM detail is non-contradicting."
+  },
+  {
+    "qid": "Q028",
+    "type": "numbers_tables",
+    "label": "refused",
+    "confidence": "high",
+    "required_facts": [
+      "MAE pledges 23,358,098 USD as in-kind recurrent expenditures"
+    ],
+    "fact_status": {
+      "MAE pledges 23,358,098 USD as in-kind recurrent expenditures": "absent"
+    },
+    "reason": "Reply is \"NOT_IN_CONTEXT\" (decision=NOT_IN_CONTEXT); question is answerable so this is a refused."
+  },
+  {
+    "qid": "Q029",
+    "type": "numbers_tables",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "GEF Project Financing: 2,242,419.00",
+      "Co-financing: 62,810,324.00"
+    ],
+    "fact_status": {
+      "GEF Project Financing: 2,242,419.00": "present-correct",
+      "Co-financing: 62,810,324.00": "present-correct"
+    },
+    "reason": "Reply states both figures exactly: \"2,242,419.00\" and \"62,810,324.00\"."
+  },
+  {
+    "qid": "Q030",
+    "type": "numbers_tables",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "MAE contributes 23,654,602 USD in-kind co-financing"
+    ],
+    "fact_status": {
+      "MAE contributes 23,654,602 USD in-kind co-financing": "present-correct"
+    },
+    "reason": "Reply states \"$23,654,602 in in-kind co-financing\" matching gold exactly."
+  },
+  {
+    "qid": "Q031",
+    "type": "numbers_tables",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "GEF Project Financing: 1,574,299.00",
+      "Co-financing: 11,020,093.00"
+    ],
+    "fact_status": {
+      "GEF Project Financing: 1,574,299.00": "present-correct",
+      "Co-financing: 11,020,093.00": "present-correct"
+    },
+    "reason": "Reply states \"$1,574,299.00\" and \"$11,020,093.00\" matching gold exactly."
+  },
+  {
+    "qid": "Q033",
+    "type": "numbers_tables",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "GEF Project Grant: 4,500,000.00",
+      "Agency Fee: 427,500.00",
+      "Total GEF Financing: 4,927,500.00"
+    ],
+    "fact_status": {
+      "GEF Project Grant: 4,500,000.00": "present-correct",
+      "Agency Fee: 427,500.00": "present-correct",
+      "Total GEF Financing: 4,927,500.00": "present-correct"
+    },
+    "reason": "Reply states all three figures exactly: 4,500,000.00, 427,500.00, 4,927,500.00."
+  },
+  {
+    "qid": "Q034",
+    "type": "numbers_tables",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "Kimberley Process Management Unit pledges 5,239,400 USD in-kind"
+    ],
+    "fact_status": {
+      "Kimberley Process Management Unit pledges 5,239,400 USD in-kind": "present-correct"
+    },
+    "reason": "Reply states \"Amount($): 5239400\" and \"In-kind\" matching gold exactly."
+  },
+  {
+    "qid": "Q035",
+    "type": "multi_passage",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "BBNP budget approx USD 0.45/ha/year",
+      "international benchmark around USD 6/ha/year",
+      "30 ecoguards",
+      "one old 4WD",
+      "four old motorcycles"
+    ],
+    "fact_status": {
+      "BBNP budget approx USD 0.45/ha/year": "present-correct",
+      "international benchmark around USD 6/ha/year": "present-correct",
+      "30 ecoguards": "present-correct",
+      "one old 4WD": "present-correct",
+      "four old motorcycles": "present-correct"
+    },
+    "reason": "Reply states \"USD 0.45/ha/year\", \"USD 6/ha/year\", \"30 ecoguards\", \"one old…4WD\" and \"four old motorcycles\"."
+  },
+  {
+    "qid": "Q036",
+    "type": "multi_passage",
+    "label": "partial",
+    "confidence": "high",
+    "required_facts": [
+      "scaling down due to high taxation (SIM has closed)",
+      "job losses, increased forest pressure, suspension of company-financed ecoguard patrols",
+      "pledged to combat ivory poaching and illegal activities in concessions",
+      "livelihood projects in collaboration with IP&LCs",
+      "committed to sustainable forest management practices"
+    ],
+    "fact_status": {
+      "scaling down due to high taxation (SIM has closed)": "partial",
+      "job losses, increased forest pressure, suspension of company-financed ecoguard patrols": "absent",
+      "pledged to combat ivory poaching and illegal activities in concessions": "present-correct",
+      "livelihood projects in collaboration with IP&LCs": "present-correct",
+      "committed to sustainable forest management practices": "present-correct"
+    },
+    "reason": "Reply mentions high taxation and scaling down but omits 'SIM has closed', job losses, forest pressure, and suspended ecoguard patrols. No contradictions."
+  },
+  {
+    "qid": "Q038",
+    "type": "multi_passage",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "at least 8 producer organizations strengthened",
+      "at least 600 institutional and local actors trained",
+      "at least 40 percent women"
+    ],
+    "fact_status": {
+      "at least 8 producer organizations strengthened": "present-correct",
+      "at least 600 institutional and local actors trained": "present-correct",
+      "at least 40 percent women": "present-correct"
+    },
+    "reason": "Reply states \"eight producer organizations\", \"600 institutional and local actors\", and \"40 percent women\"."
+  },
+  {
+    "qid": "Q039",
+    "type": "multi_passage",
+    "label": "partial",
+    "confidence": "high",
+    "required_facts": [
+      "four JCUs: Chocó-Manabí, Napo-Aguarico-Putumayo, Pastaza-Morona, Condor-Kutukú",
+      "four conflict-reduction initiatives per JCU"
+    ],
+    "fact_status": {
+      "four JCUs: Chocó-Manabí, Napo-Aguarico-Putumayo, Pastaza-Morona, Condor-Kutukú": "present-correct",
+      "four conflict-reduction initiatives per JCU": "declared-missing"
+    },
+    "reason": "Reply names all four JCUs correctly but says \"the excerpts do not state how many\" initiatives per JCU."
+  },
+  {
+    "qid": "Q040",
+    "type": "multi_passage",
+    "label": "refused",
+    "confidence": "high",
+    "required_facts": [
+      "8,000 hectares is 10% of area under restoration",
+      "72,000 hectares is net area after subtracting restoration to avoid double counting"
+    ],
+    "fact_status": {
+      "8,000 hectares is 10% of area under restoration": "absent",
+      "72,000 hectares is net area after subtracting restoration to avoid double counting": "absent"
+    },
+    "reason": "Reply is \"NOT_IN_CONTEXT\" (decision=NOT_IN_CONTEXT); question is answerable so this is a refused."
+  },
+  {
+    "qid": "Q042",
+    "type": "multi_passage",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "CIM supports intersectoral coordination and integration of institutions and policies for marine-coastal management",
+      "Two (2) CIM technical sub-committees will be created"
+    ],
+    "fact_status": {
+      "CIM supports intersectoral coordination and integration of institutions and policies for marine-coastal management": "present-correct",
+      "Two (2) CIM technical sub-committees will be created": "present-correct"
+    },
+    "reason": "Reply states CIM \"supports intersectoral coordination\" and \"Two (2) CIM technical sub-committees\" will be created."
+  },
+  {
+    "qid": "Q045",
+    "type": "multi_passage",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "national baseline of 1.64 metric tons/year from extrapolating across 483 active sites identified by CEMAM",
+      "project targets approx 80% reduction = about 1.3 tons mercury avoided annually"
+    ],
+    "fact_status": {
+      "national baseline of 1.64 metric tons/year from extrapolating across 483 active sites identified by CEMAM": "present-correct",
+      "project targets approx 80% reduction = about 1.3 tons mercury avoided annually": "present-correct"
+    },
+    "reason": "Reply states \"1.64 metric tons/year\" from \"483 active…sites\" by CEMAM, and \"80% reduction…1.3 tons\"."
+  },
+  {
+    "qid": "Q046",
+    "type": "multi_passage",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "women: 11.7% of extraction, 41.6% of trading",
+      "35% of project beneficiaries expected to be women"
+    ],
+    "fact_status": {
+      "women: 11.7% of extraction, 41.6% of trading": "present-correct",
+      "35% of project beneficiaries expected to be women": "present-correct"
+    },
+    "reason": "Reply states \"11.7% of…extraction and 41.6% of trading\" and \"35%…expected to be women\"."
+  },
+  {
+    "qid": "Q047",
+    "type": "cross_document",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "WCS demonstrated low fiduciary risk (jaguar project)",
+      "CI demonstrated low fiduciary risk (coastal project)"
+    ],
+    "fact_status": {
+      "WCS demonstrated low fiduciary risk (jaguar project)": "present-correct",
+      "CI demonstrated low fiduciary risk (coastal project)": "present-correct"
+    },
+    "reason": "Reply correctly identifies \"WCS\" for jaguar and \"CI\" for coastal as low fiduciary risk partners."
+  },
+  {
+    "qid": "Q049",
+    "type": "cross_document",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "Mozambique co-financing: 30,913,732.00 (most)",
+      "Cameroon co-financing: 29,922,367.00",
+      "Cuba co-financing: 18,478,082.00"
+    ],
+    "fact_status": {
+      "Mozambique co-financing: 30,913,732.00 (most)": "present-correct",
+      "Cameroon co-financing: 29,922,367.00": "present-correct",
+      "Cuba co-financing: 18,478,082.00": "present-correct"
+    },
+    "reason": "Reply correctly identifies Mozambique as highest and states all three co-financing figures exactly."
+  },
+  {
+    "qid": "Q050",
+    "type": "cross_document",
+    "label": "refused",
+    "confidence": "high",
+    "required_facts": [
+      "Cuba: 24,000 direct beneficiaries (largest)",
+      "Mozambique: 10,000",
+      "Cameroon: 3,000"
+    ],
+    "fact_status": {
+      "Cuba: 24,000 direct beneficiaries (largest)": "absent",
+      "Mozambique: 10,000": "absent",
+      "Cameroon: 3,000": "absent"
+    },
+    "reason": "Reply is \"NOT_IN_CONTEXT\" (decision=NOT_IN_CONTEXT); question is answerable so this is a refused."
+  },
+  {
+    "qid": "Q051",
+    "type": "cross_document",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "Ecuador dry forest: at least 40 percent women",
+      "planetGOLD Mozambique: 35% women"
+    ],
+    "fact_status": {
+      "Ecuador dry forest: at least 40 percent women": "present-correct",
+      "planetGOLD Mozambique: 35% women": "present-correct"
+    },
+    "reason": "Reply states \"At least 40 percent women\" for Ecuador and \"35% women\" for Mozambique."
+  },
+  {
+    "qid": "Q053",
+    "type": "cross_document",
+    "label": "partial",
+    "confidence": "high",
+    "required_facts": [
+      "Cuba: hurricanes, floods, droughts",
+      "Ecuador: drought, heat stress, irregular rainfall, extreme precipitation, forest fire risks, landslides, soil erosion, ecosystem degradation"
+    ],
+    "fact_status": {
+      "Cuba: hurricanes, floods, droughts": "partial",
+      "Ecuador: drought, heat stress, irregular rainfall, extreme precipitation, forest fire risks, landslides, soil erosion, ecosystem degradation": "present-correct"
+    },
+    "reason": "Reply covers Ecuador hazards well but omits Cuba's 'floods' from gold; mentions hurricanes and droughts but not floods. No contradictions."
+  },
+  {
+    "qid": "Q055",
+    "type": "cross_document",
+    "label": "partial",
+    "confidence": "high",
+    "required_facts": [
+      "Ecuador jaguar: 72,000 hectares (CI 4.1)",
+      "Ecuador coastal: 60,312 hectares (CI 4.1)",
+      "Ecuador dry forest: 30,000 hectares (CI 4)"
+    ],
+    "fact_status": {
+      "Ecuador jaguar: 72,000 hectares (CI 4.1)": "present-correct",
+      "Ecuador coastal: 60,312 hectares (CI 4.1)": "declared-missing",
+      "Ecuador dry forest: 30,000 hectares (CI 4)": "declared-missing"
+    },
+    "reason": "Reply gives jaguar's 72,000 ha correctly but says coastal and dry forest figures are \"not\" in excerpts."
+  },
+  {
+    "qid": "Q056",
+    "type": "cross_document",
+    "label": "partial",
+    "confidence": "high",
+    "required_facts": [
+      "Cameroon: Targets 1, 2, 4, 5, 8, 9, 10, 11, 13, 21, 22, 23",
+      "Ecuador dry forest: Targets 5, 9, 14, 19",
+      "Mozambique: Targets 7, 10, 11, 22, 23"
+    ],
+    "fact_status": {
+      "Cameroon: Targets 1, 2, 4, 5, 8, 9, 10, 11, 13, 21, 22, 23": "present-correct",
+      "Ecuador dry forest: Targets 5, 9, 14, 19": "declared-missing",
+      "Mozambique: Targets 7, 10, 11, 22, 23": "declared-missing"
+    },
+    "reason": "Reply lists Cameroon targets correctly but says Ecuador and Mozambique specific target numbers are not stated."
+  },
+  {
+    "qid": "Q057",
+    "type": "cross_document",
+    "label": "partial",
+    "confidence": "high",
+    "required_facts": [
+      "Cameroon: logging companies collaborate with IP&LCs to combat ivory poaching and illegal activities in concessions",
+      "Mozambique: ASGM organizations improve access to finance/responsible markets; private-sector actors strengthen due diligence and traceability for mercury-free gold"
+    ],
+    "fact_status": {
+      "Cameroon: logging companies collaborate with IP&LCs to combat ivory poaching and illegal activities in concessions": "declared-missing",
+      "Mozambique: ASGM organizations improve access to finance/responsible markets; private-sector actors strengthen due diligence and traceability for mercury-free gold": "present-correct"
+    },
+    "reason": "Reply describes Mozambique gold-market actors correctly but says Cameroon logging role is \"not\" in excerpts."
+  },
+  {
+    "qid": "Q058",
+    "type": "cross_document",
+    "label": "refused",
+    "confidence": "high",
+    "required_facts": [
+      "Ecuador coastal PPG total: 54,750.00 (smaller)",
+      "Cuba PPG total: 109,500.00"
+    ],
+    "fact_status": {
+      "Ecuador coastal PPG total: 54,750.00 (smaller)": "absent",
+      "Cuba PPG total: 109,500.00": "absent"
+    },
+    "reason": "Reply is \"NOT_IN_CONTEXT\" (decision=NOT_IN_CONTEXT); question is answerable so this is a refused."
+  },
+  {
+    "qid": "Q060",
+    "type": "cross_document",
+    "label": "correct",
+    "confidence": "high",
+    "required_facts": [
+      "Jaguar: harmonized digital information system managed by MAE consolidating biological monitoring, conflict reporting, restoration progress",
+      "Coastal: dashboard/monitoring tool for monitoring ICM and marine spatial planning within MAE"
+    ],
+    "fact_status": {
+      "Jaguar: harmonized digital information system managed by MAE consolidating biological monitoring, conflict reporting, restoration progress": "present-correct",
+      "Coastal: dashboard/monitoring tool for monitoring ICM and marine spatial planning within MAE": "present-correct"
+    },
+    "reason": "Reply describes both systems correctly: jaguar's \"harmonized digital information system\" and coastal's \"dashboard/monitoring tool\"."
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "M51",
+    "description": "invalid cap value means unlimited-ish (no fallback to default)",
+    "file": "scripts/call_budget.py",
+    "result": "SETUP_ERROR",
+    "pytest": "1 error in 23.36s"
+  },
+  {
+    "id": "M52",
+    "description": "request budget not activated per request",
+    "file": "scripts/runtime_orchestration.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 57 passed, 6 subtests passed in 16.30s"
+  }
+]

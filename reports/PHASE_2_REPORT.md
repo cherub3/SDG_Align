@@ -5,7 +5,7 @@ Branch `phase-2-eval` (no remote yet; nothing pushed). Every number below comes 
 ## 1. Status
 - Steps 1, 2, 3a, 3b, 3c, 3d and the Step 5 close-out are done. **Step 4 (query planner) is deliberately skipped** (section 7).
 - Kept: dense retrieval over cleaned embed text (3a) plus BM25 hybrid fusion (3b) as the recommended configuration. Not kept: the reranker (3c, off by default) and the abstention gate (3d, an advisory field only, never refuses).
-- Library default config (VERIFIED, README and tests): `retrieve()` is **dense-only** unless the request carries `hybrid`. The measured config is `{"rrf_k":10,"w_bm25":2.0,"depth":50}`. `rerank` and `confidence_advisory` are off by default.
+- Default config: the library function `retrieve()` is **dense-only** unless the request carries `hybrid`. The **served backend defaults to hybrid** (`RETRIEVAL_MODE=hybrid|dense`, default `hybrid`; see section 8). The measured config is `{"rrf_k":10,"w_bm25":2.0,"depth":50}`. `rerank` and `confidence_advisory` are off by default.
 
 ## 2. "Done means" check
 | Item | Result |
@@ -69,13 +69,14 @@ Latency caveat: the numbers come from separate runs under different machine load
 - README: stale "no gold set / unmeasured" lines replaced, default-config statement added, test count 813 to 871 (also in `OPERATIONAL_READINESS.md`). `docs/architecture/stage10_retrieval.md` documents `hybrid`, `rerank` and `confidence_advisory`.
 - Gold set: planned 70, delivered 66 (Q005, Q037, Q041, Q054 dropped).
 - 3b selection used a rule fixed beforehand (max dev MRR@10, tie R@10, tie closest to defaults), not a "default unless at least 2 questions better" guard.
+- Serving fix (after the step-5 close-out): the served backend now applies the measured hybrid setting by default. Implemented in `scripts/pipeline_deps_factory.py` (`resolve_retrieval_mode`, `SERVED_HYBRID_PARAMS`), selected by `RETRIEVAL_MODE=hybrid|dense` (default `hybrid`, invalid value raises at startup, a request's own `hybrid` key is never overridden). Tests: `tests/test_pipeline_deps_factory.py` (mode resolution, injected params, and an end-to-end check that the served path returns the same results as the evaluated hybrid call). Mutants M36-M40 added to `tools/mutation_probe.py`. This changes no measured number: the Phase 2 results were produced by calling the same hybrid code with the same parameters, and no served-path (HTTP) retrieval measurement has been run.
 - 3d is an advisory field (`low_confidence`, `dense_score`), off by default, by decision. Step 4 was skipped by decision.
 
 ## 9. Resume-safe facts
 - Built a gold-set evaluation harness (66 items frozen by hash, seeded dev/test split, test scored once per config) over a RAG pipeline of GEF/UNDP documents.
 - Hybrid BM25 plus dense retrieval with reciprocal rank fusion raised test Recall@5 from 0.57 to 0.77 (paired gain 95% CI [+0.09,+0.32], exact McNemar p=0.004, n=44).
 - Evaluated a cross-encoder reranker and a similarity-threshold abstention gate with paired tests, and rejected both when they missed pre-stated keep rules (reranker: +0.16 R@1 but -0.09 R@5, not significant, about 70x latency).
-- Ran a mutation probe (35 mutants) alongside 871 tests at 86% coverage. The Phase 2 additions went from 12/14 killed to 14/14 after one added test.
+- Ran a mutation probe (35 mutants at the Phase 2 close-out; 40 after the serving fix; 58 after Phase 2.5, see `PHASE_2_5_REPORT.md`) alongside 871 tests at 86% coverage (the test count at that time; later counts are in `PHASE_2_5_REPORT.md`). The Phase 2 additions went from 12/14 killed to 14/14 after one added test.
 - Do NOT claim: a significant gain from tuning, a working abstention, a measured planner, or human-labelled ground truth.
 
 ## 10. Kept out of repository

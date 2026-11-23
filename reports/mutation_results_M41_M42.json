@@ -1,0 +1,16 @@
+[
+  {
+    "id": "M41",
+    "description": "missing-index check removed (server starts with no index)",
+    "file": "scripts/startup_checks.py",
+    "result": "SETUP_ERROR",
+    "pytest": "1 error in 24.06s"
+  },
+  {
+    "id": "M42",
+    "description": "embedding-model mismatch check removed",
+    "file": "scripts/startup_checks.py",
+    "result": "KILLED",
+    "pytest": "1 failed, 914 passed, 1 skipped, 4 warnings, 18 subtests passed in 47.64s"
+  }
+]

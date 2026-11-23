@@ -219,7 +219,7 @@ All three are in-memory Python structures — none persisted, no file format to 
     "doc_type": "RRP",                      // optional, exact match
     "doc_ids": null                         // optional explicit allow-list, exact match
   },
-  // Phase 2 options. ALL ABSENT = dense-only retrieval (the library default). Measured in reports/PHASE_2_REPORT.md.
+  // Phase 2 options. ALL ABSENT = dense-only retrieval (the library default; the served backend adds `hybrid` itself unless RETRIEVAL_MODE=dense). Measured in reports/PHASE_2_REPORT.md.
   "hybrid": {"rrf_k": 10, "w_bm25": 2.0, "depth": 50},   // optional: BM25 + dense, reciprocal rank fusion (best measured; must be requested)
   "rerank": {"n": 20},                                    // optional, OFF by default: cross-encoder over the first N; needs rerank_adapter_factory
   "confidence_advisory": true                             // optional, OFF by default: adds `confidence` {dense_score, threshold, low_confidence}; never refuses
