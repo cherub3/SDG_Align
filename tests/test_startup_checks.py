@@ -145,7 +145,8 @@ def test_compose_accepts_hybrid_dense_and_unset_with_nothing_wired():
 def test_server_process_exits_nonzero_when_the_corpus_is_missing(tmp_path):
     # Strip pytest-cov's child-process hooks: the child measures no branches and would make coverage combine fail in CI.
     env = {k: v for k, v in os.environ.items()
-           if not k.startswith(("LLM_", "PLANNER_", "EMBEDDING_", "COV_CORE", "COVERAGE"))}
+           if not k.startswith(("LLM_", "PLANNER_", "EMBEDDING_", "COV_CORE", "COVERAGE", "HCA_"))
+           and not k.endswith(("_PROVIDER", "_BACKEND", "_STORE", "_REGISTRY", "_ADAPTER"))}
     env.update(PYTHONPATH=str(ROOT), PYTHONDONTWRITEBYTECODE="1", EMBEDDING_PROVIDER="local",
                HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1")
     proc = subprocess.run([sys.executable, "-m", "uvicorn", "scripts.backend_server:app", "--port", "8791"],
