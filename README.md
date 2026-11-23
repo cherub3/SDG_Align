@@ -38,7 +38,7 @@ Correctness labels are AI-produced, not human-verified. Two blind labelling runs
 - The LLM is Gemini on a free-tier key. The service has a daily call cap of 10 and a breaker for 429 errors. No load test was run.
 - The corpus is 6 documents. Their text is not licensed for redistribution, so the repo does not include the PDFs or anything derived from them. `scripts/download_corpus.py` checks files by SHA-256 but has no download URLs; get the PDFs from their publisher.
 - State (observations, cache, conversations) is in memory, per process.
-- The project has no licence yet; `LICENSE` is a placeholder.
+- The code is MIT-licensed (see `LICENSE`). The licence does not cover the corpus documents, which are not in this repo.
 
 ## Architecture
 
