@@ -17,11 +17,13 @@ milestone's own implementation decisions, not architectural requirements frozen 
 Version 1.3 named no endpoint, no payload schema, and no wire format.
 """
 import asyncio
+import uuid
 import logging
 import os
 from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional
 
+from fastapi.exceptions import RequestValidationError
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -37,6 +39,7 @@ from scripts.embedding_provider_huggingface import get_provider_registration as 
 from scripts.embedding_provider_local import get_provider_registration as get_local_embedding_registration
 from scripts.llm_provider_openrouter import get_provider_registration as get_openrouter_llm_registration
 from scripts.planner_provider_openrouter import get_provider_registration as get_openrouter_planner_registration
+from scripts.runtime_orchestration import AgentsNotEnabledError
 from scripts.request_observability import get_observation_records, observe_request
 from scripts.startup_checks import verify_serving_data
 from scripts.stage21_agent_planning import AgentPlanningInputError
@@ -130,6 +133,7 @@ class RunQueryRequest(BaseModel):
     query: str
     conversation_id: Optional[str] = None
     retrieval_only: Optional[bool] = None   # true: return ranked chunks, no LLM call
+    use_agents: Optional[bool] = None       # true: answer with the optional ADK multi-agent path (needs AGENTS_ENABLED=true on the server)
 
     @field_validator("query")
     @classmethod
@@ -150,6 +154,20 @@ class RunQueryRequest(BaseModel):
         return value
 
 
+@app.exception_handler(RequestValidationError)
+async def _validation_error_handler(request, exc: RequestValidationError) -> JSONResponse:
+    """422 responses carry the field and a short message only. FastAPI's default body also echoes the submitted
+    input, which for this endpoint is the whole user query."""
+    detail = [
+        {
+            "field": ".".join(str(part) for part in err.get("loc", ()) if part != "body"),
+            "message": str(err.get("msg", "invalid value")).replace("Value error, ", "", 1),
+        }
+        for err in exc.errors()
+    ]
+    return JSONResponse(status_code=422, content={"category": "invalid_request", "detail": detail})
+
+
 def _timeout_response() -> JSONResponse:
     return JSONResponse(status_code=504, content={"category": "timeout"})
 
@@ -168,11 +186,15 @@ async def run_query(payload: RunQueryRequest, request: Request) -> JSONResponse:
     if payload.retrieval_only:
         agent_request["retrieval_only"] = True
 
+    correlation_id = str(uuid.uuid4())
+    if payload.use_agents:
+        agent_request["use_agents"] = True
+        agent_request["correlation_id"] = correlation_id     # the agent trace carries the same id as the observation record
     try:
         # observe_request is synchronous/blocking — run it in a worker thread so the event loop
         # isn't blocked, and bound how long this HTTP request waits for it.
         result = await asyncio.wait_for(
-            asyncio.to_thread(observe_request, application_instance, agent_request),
+            asyncio.to_thread(observe_request, application_instance, agent_request, correlation_id=correlation_id),
             timeout=timeout_seconds,
         )
     except asyncio.TimeoutError:
@@ -182,6 +204,8 @@ async def run_query(payload: RunQueryRequest, request: Request) -> JSONResponse:
         # appended later), consistent with Decision 7 (no cancellation exists at this layer).
         logger.warning("run-query exceeded %.1fs timeout; underlying thread not cancelled.", timeout_seconds)
         return _timeout_response()
+    except AgentsNotEnabledError as exc:
+        return JSONResponse(status_code=422, content={"category": "invalid_request", "message": str(exc)})
     except AgentPlanningInputError as exc:
         # Invalid input detected downstream (e.g. unknown or closed conversation) is a client
         # error, not a server failure.
@@ -193,8 +217,8 @@ async def run_query(payload: RunQueryRequest, request: Request) -> JSONResponse:
         logger.exception("run-query failed with an unhandled exception: %s", exc)
         return _execution_failure_response("The request could not be completed.")
 
-    # Native AgentResult, returned unchanged — no frontend-shaped mapping happens here.
-    return JSONResponse(content=result)
+    # Native result plus the correlation id of this request's observation record (also in /observation-records).
+    return JSONResponse(content={**result, "correlation_id": correlation_id})
 
 
 @app.get("/health")
@@ -203,10 +227,22 @@ async def health() -> JSONResponse:
     return JSONResponse(content={"status": "ok"})
 
 
+@app.get("/capabilities")
+async def capabilities(request: Request) -> JSONResponse:
+    """What this process can do, so the UI can say so instead of showing a failed query. No LLM, retrieval or embedding call."""
+    instance = request.app.state.application_instance
+    return JSONResponse(content={
+        "llm_configured": instance.get("llm_adapter") is not None,
+        "retrieval_available": getattr(instance["agent_dependencies"], "retrieve_only", None) is not None,
+        "max_query_chars": _max_query_chars(),
+        "agents_available": instance.get("agent_pipeline") is not None,
+    })
+
+
 @app.get("/observation-records")
 async def observation_records() -> JSONResponse:
     records = get_observation_records()
     return JSONResponse(content=[
-        {"correlation_id": r.correlation_id, "outcome": r.outcome, "duration": r.duration}
+        {"correlation_id": r.correlation_id, "outcome": r.outcome, "duration": r.duration, "timestamp": r.timestamp}
         for r in records
     ])

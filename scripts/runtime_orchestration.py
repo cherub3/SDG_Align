@@ -3,6 +3,10 @@ from scripts.application_bootstrap import ApplicationInstance
 from scripts.call_budget import request_budget
 from scripts.stage21_agent_planning import plan_and_execute
 
+class AgentsNotEnabledError(Exception):
+    """use_agents was requested but AGENTS_ENABLED is not 'true'. A client error, not a server failure."""
+
+
 def execute_request(application_instance: ApplicationInstance, agent_request: Dict[str, Any]) -> Dict[str, Any]:
     """
     Executes exactly one request against an already-bootstrapped application instance.
@@ -25,6 +29,13 @@ def execute_request(application_instance: ApplicationInstance, agent_request: Di
         return {"retrieval_only": True, "query": agent_request["query"], "llm_calls": 0,
                 "status": found.get("status"), "chunks": found.get("results", []), "findings": found.get("findings", [])}
     
+    if agent_request.get("use_agents") is True:
+        pipeline = application_instance.get("agent_pipeline")
+        if pipeline is None:
+            raise AgentsNotEnabledError("multi-agent mode is not enabled on this server (set AGENTS_ENABLED=true)")
+        from scripts.agents.service import run_agents_request
+        return run_agents_request(pipeline, agent_request)
+
     # One LLM-call budget per request (MAX_LLM_CALLS_PER_REQUEST); enforced inside the wrapped adapters.
     with request_budget():
         result = plan_and_execute(

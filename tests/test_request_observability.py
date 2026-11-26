@@ -125,3 +125,22 @@ class TestObservationStoreIsBounded(unittest.TestCase):
         snapshot = get_observation_records()
         snapshot.clear()
         self.assertEqual(len(get_observation_records()), 1)
+
+
+class TestObservationTimestampAndCorrelation(unittest.TestCase):
+    @patch('scripts.request_observability.execute_request')
+    def test_record_carries_an_iso_utc_timestamp(self, mock_execute):
+        from datetime import datetime
+        mock_execute.return_value = {}
+        before = len(get_observation_records())
+        observe_request({}, {"query": "q"})
+        rec = get_observation_records()[-1]
+        self.assertGreaterEqual(len(get_observation_records()), min(before + 1, MAX_OBSERVATION_RECORDS))
+        parsed = datetime.fromisoformat(rec.timestamp)
+        self.assertIsNotNone(parsed.tzinfo)                      # timezone-aware (UTC)
+
+    @patch('scripts.request_observability.execute_request')
+    def test_caller_supplied_correlation_id_is_the_one_recorded(self, mock_execute):
+        mock_execute.return_value = {}
+        observe_request({}, {"query": "q"}, correlation_id="fixed-id-123")
+        self.assertEqual(get_observation_records()[-1].correlation_id, "fixed-id-123")

@@ -1,0 +1,3 @@
+# Optional multi-agent path (AGENTS_ENABLED=true). Not needed for the default pipeline.
+google-adk==2.15.0
+# ADK 2.15.0 resolves google-genai 2.34.0; requirements.txt still pins google-genai 2.10.0 for the default pipeline.

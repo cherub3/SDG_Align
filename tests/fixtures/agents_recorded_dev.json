@@ -1,0 +1,155 @@
+{
+ "source": "eval/results/dev_agents_v1_record.jsonl (live gemini-3.5-flash-lite responses, DEV items, 2026-11-23). Chunk texts are NOT stored; the test substitutes synthetic text under the real chunk ids.",
+ "items": [
+  {
+   "qid": "Q007",
+   "question": "Where does the jaguar rank among the world's largest cats, according to the Ecuador jaguar connectivity project?",
+   "model_outputs": [
+    [
+     {
+      "function_call": "search_proposals",
+      "args": {
+       "query": "jaguar rank world largest cats Ecuador jaguar connectivity project"
+      }
+     }
+    ],
+    [
+     {
+      "text": "SUFFICIENT"
+     }
+    ],
+    [
+     {
+      "text": "The jaguar is the third largest feline in the world [doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fba_0]."
+     }
+    ],
+    [
+     {
+      "text": "```json\n{\"verdict\": \"PASS\", \"unsupported\": []}\n```"
+     }
+    ]
+   ],
+   "expected": {
+    "calls": 4,
+    "tool_calls": 1,
+    "queries": [
+     "jaguar rank world largest cats Ecuador jaguar connectivity project"
+    ],
+    "verdict": "PASS",
+    "decision": "ANSWERED",
+    "cited_chunk_ids": [
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fba_0"
+    ],
+    "context_chunk_ids": [
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_s1da_0",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_s2_1",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fba_0",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_31_4",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fd_0",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_s1c_0",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_31_8",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fbb_11",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_s2_2"
+    ],
+    "final_text": "The jaguar is the third largest feline in the world [doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fba_0]."
+   },
+   "tokens": [
+    [
+     253,
+     26
+    ],
+    [
+     1863,
+     3
+    ],
+    [
+     4736,
+     74
+    ],
+    [
+     689,
+     18
+    ]
+   ]
+  },
+  {
+   "qid": "Q008",
+   "question": "How few jaguars survive in Ecuador's coastal forests, and by how much has their historical range shrunk?",
+   "model_outputs": [
+    [
+     {
+      "function_call": "search_proposals",
+      "args": {
+       "query": "jaguars Ecuador coastal forests survive historical range shrunk"
+      }
+     }
+    ],
+    [
+     {
+      "function_call": "search_proposals",
+      "args": {
+       "query": "jaguars coastal forests Ecuador range number population remaining percent"
+      }
+     }
+    ],
+    [
+     {
+      "text": "Fewer than 250 individual jaguars survive in three isolated lowland remnants within Ecuador's coastal forests, and their historical range has been reduced by approximately 90% [doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fba_1]."
+     }
+    ],
+    [
+     {
+      "text": "```json\n{\"verdict\": \"PASS\", \"unsupported\": []}\n```"
+     }
+    ]
+   ],
+   "expected": {
+    "calls": 4,
+    "tool_calls": 2,
+    "queries": [
+     "jaguars Ecuador coastal forests survive historical range shrunk",
+     "jaguars coastal forests Ecuador range number population remaining percent"
+    ],
+    "verdict": "PASS",
+    "decision": "ANSWERED",
+    "cited_chunk_ids": [
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fba_1"
+    ],
+    "context_chunk_ids": [
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fba_1",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fbb_10",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fbb_14",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fbb_4",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fbb_2",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_C_2",
+     "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_25cj_0",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fbb_8",
+     "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_3.1fba_0",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fbb_7",
+     "doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_31a_22",
+     "doc_e75ba796c7d58cc1c27571b733bbe09cfc2afbfbce2271dd66ffbe2ca179500f_s6_0",
+     "doc_d01bd4278178e388128443134b04a77fdd79fed307e5bf799d3ebebfec8cb2a4_s5_3"
+    ],
+    "final_text": "Fewer than 250 individual jaguars survive in three isolated lowland remnants within Ecuador's coastal forests, and their historical range has been reduced by approximately 90% [doc_6f1ac2315be2a47c98cd10289b475811e5fff8eb79b3be6219ebe718f3ee953a_3fba_1]."
+   },
+   "tokens": [
+    [
+     255,
+     25
+    ],
+    [
+     1808,
+     27
+    ],
+    [
+     7314,
+     101
+    ],
+    [
+     789,
+     18
+    ]
+   ]
+  }
+ ]
+}

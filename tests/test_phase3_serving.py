@@ -149,3 +149,85 @@ def test_retrieve_only_searches_the_default_indexes_and_honours_top_k():
     ro({"query": "Q2?"})
     assert calls[0] == {"query": "Q?", "index_fingerprints": ["fp1"], "top_k": 3}
     assert calls[1] == {"query": "Q2?", "index_fingerprints": ["fp1"]}
+
+
+# ---- 5. retrieval-only without an LLM, and /capabilities (frontend truthfulness pass) -------------------------------
+def test_retrieve_only_is_wired_when_only_an_embedding_provider_is_configured():
+    from scripts import composition_root as cr
+    calls = []
+
+    class _E:
+        pass
+    emb_reg = {"seam": "EMBEDDING_PROVIDER", "provider_name": "x", "network_dependent": False, "factory": lambda s, c: _E()}
+    fake_deps = {"retrieve": lambda req: (calls.append(req) or {"results": [], "status": "PASS"})}
+    with patch.object(cr, "_discover_index_fingerprints", return_value=["fp1"]), patch.object(cr, "build_pipeline_deps", return_value=fake_deps):
+        out = cr.compose_application([emb_reg], env={"EMBEDDING_PROVIDER": "x"})
+    assert out["llm_adapter"] is None
+    assert out["agent_dependencies"].pipeline_deps is None          # full question answering stays unwired without an LLM
+    out["agent_dependencies"].retrieve_only({"query": "Q?"})
+    assert calls == [{"query": "Q?", "index_fingerprints": ["fp1"]}]
+
+
+def test_capabilities_reports_llm_and_retrieval_availability():
+    for llm, ro, expect in ((None, object(), (False, True)), (object(), object(), (True, True)), (None, None, (False, False))):
+        client, patcher = _client()
+        try:
+            with client:
+                client.app.state.application_instance = {"llm_adapter": llm, "agent_dependencies": _deps(retrieve_only=ro)}
+                r = client.get("/capabilities")
+            assert r.status_code == 200
+            assert (r.json()["llm_configured"], r.json()["retrieval_available"]) == expect
+        finally:
+            patcher.stop()
+
+
+# ---- 6. correlation id, timestamp, query limit exposed to the UI -------------------------------------------------------
+def test_run_query_response_carries_the_correlation_id_given_to_the_observer():
+    client, patcher = _client()
+    try:
+        with patch.object(backend_server, "observe_request", return_value={"status": "PASS"}) as obs, client:
+            r = client.post("/run-query", json={"query": "Q?"})
+        cid = obs.call_args.kwargs["correlation_id"]
+        assert r.status_code == 200 and r.json()["correlation_id"] == cid and r.json()["status"] == "PASS"
+    finally:
+        patcher.stop()
+
+
+def test_observation_records_include_a_timestamp():
+    from scripts.request_observability import ObservationRecord
+    client, patcher = _client()
+    try:
+        rec = ObservationRecord(correlation_id="c1", outcome="completed", duration=0.1)
+        with patch.object(backend_server, "get_observation_records", return_value=[rec]), client:
+            body = client.get("/observation-records").json()
+        assert body[0]["correlation_id"] == "c1" and body[0]["timestamp"] == rec.timestamp
+    finally:
+        patcher.stop()
+
+
+def test_capabilities_reports_the_query_length_limit(monkeypatch):
+    monkeypatch.setenv("MAX_QUERY_CHARS", "123")
+    client, patcher = _client()
+    try:
+        with client:
+            client.app.state.application_instance = {"llm_adapter": None, "agent_dependencies": _deps()}
+            assert client.get("/capabilities").json()["max_query_chars"] == 123
+    finally:
+        patcher.stop()
+
+
+def test_422_response_does_not_echo_the_user_input():
+    client, patcher = _client()
+    try:
+        with client:
+            client.app.state.application_instance = {"llm_adapter": None, "agent_dependencies": _deps()}
+            secret = "SENSITIVE-" + "x" * 5000
+            resp = client.post("/run-query", json={"query": secret})
+            assert resp.status_code == 422
+            assert "SENSITIVE" not in resp.text
+            detail = resp.json()["detail"]
+            assert detail and all(set(item) == {"field", "message"} for item in detail)
+            assert "too long" in detail[0]["message"]
+            assert detail[0]["field"] == "query"
+    finally:
+        patcher.stop()

@@ -62,6 +62,21 @@ def choose_planner_adapter(values, wired_planner):
     return DirectPlannerAdapter()
 
 
+def build_agent_pipeline(values, raw_llm_adapter, guard, retrieval_deps, fingerprints, model_name):
+    """The optional ADK multi-agent pipeline, or None when AGENTS_ENABLED is not 'true' (the default). The ADK package is imported
+    only when the flag is on. Misconfiguration with the flag on is a startup error, never a silent fallback."""
+    from scripts.agents.config import agents_enabled
+    if not agents_enabled(values):
+        return None
+    client = getattr(raw_llm_adapter, "_client", None)
+    if client is None or retrieval_deps is None:
+        raise ValueError("AGENTS_ENABLED=true needs the Gemini LLM provider and a wired embedding provider")
+    from scripts.agents.llm import GuardedGeminiLlm
+    from scripts.agents.pipeline import AgentPipeline
+    return AgentPipeline(model=GuardedGeminiLlm(model=model_name, client=client, guard=guard), retrieve=retrieval_deps["retrieve"],
+                         fingerprints=fingerprints)
+
+
 def compose_application(
     registrations: Sequence[ProviderRegistration],
     env: Optional[Dict[str, str]] = None,
@@ -94,6 +109,7 @@ def compose_application(
     # Every paid call goes through these wrappers, which enforce MAX_LLM_CALLS_PER_REQUEST (scripts/call_budget.py).
     # Inside the per-request cap sits one process-wide daily cap + 429 breaker shared by answer and planner calls.
     guard = QuotaGuard(cap=daily_llm_call_cap(raw.get("values", {})))
+    raw_llm_adapter = llm_adapter                # the unwrapped provider adapter; the optional ADK path builds its own guarded model from it
     if llm_adapter is not None:
         llm_adapter = BudgetedLLMAdapter(GuardedLLMAdapter(llm_adapter, guard))
     if planner_adapter is not None:
@@ -159,6 +175,17 @@ def compose_application(
             default_model_name=default_llm_model,
         )
 
+    # Retrieval needs only the embedding provider. Without an LLM the full question-answering chain stays unwired
+    # (pipeline_deps is None), but the retrieval_only path still works and is what the UI shows in that case.
+    retrieval_deps = pipeline_deps
+    if retrieval_deps is None and embedding_adapter:
+        retrieval_deps = build_pipeline_deps(
+            llm_adapter=None,
+            embedding_adapter=embedding_adapter,
+            cache_adapter=cache_adapter,
+            default_model_name=default_llm_model,
+        )
+
     # The planner LLM cannot know which index fingerprints are deployed on disk — that is
     # deployment state, so the composition root defaults an empty index_fingerprints to the
     # indexes that match the wired embedding provider (never a stale other-provider index).
@@ -175,7 +202,7 @@ def compose_application(
         top_k = (agent_request.get("pipeline_options") or {}).get("top_k")
         if top_k is not None:
             req["top_k"] = top_k
-        return pipeline_deps["retrieve"](req)
+        return retrieval_deps["retrieve"](req)
 
     # Construct fully-wired AgentDependencies
     agent_deps = AgentDependencies(
@@ -189,7 +216,7 @@ def compose_application(
         planner_llm_adapter=planner_adapter,
         pipeline_deps=pipeline_deps,
         default_planner_model_name=default_planner_model,
-        retrieve_only=_retrieve_only if pipeline_deps is not None else None,
+        retrieve_only=_retrieve_only if retrieval_deps is not None else None,
     )
 
     return {
@@ -197,4 +224,6 @@ def compose_application(
         "llm_adapter": llm_adapter,
         "embedding_adapter": embedding_adapter,
         "agent_dependencies": agent_deps,
+        # None unless AGENTS_ENABLED=true. The default pipeline never touches it (scripts/agents, PHASE_4_REPORT.md).
+        "agent_pipeline": build_agent_pipeline(values, raw_llm_adapter, guard, retrieval_deps, default_fingerprints, default_llm_model),
     }
