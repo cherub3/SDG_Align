@@ -13,20 +13,20 @@ export function FeatureHighlights() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <FeatureCard
-            title="22 Stages. Zero Guesswork."
-            description="Every ingestion rule is plain, testable code. The LLM is isolated to exactly the steps where judgment is genuinely required — retrieval, grounding, and quality evaluation. Nothing probabilistic touches the audit trail."
+            title="22 explicit stages"
+            description="Ingestion, chunking, retrieval bookkeeping, caching and orchestration are plain, tested code. The LLM is called in one step: answering from the retrieved context."
             icon={FlaskConical}
             href="/architecture/principles"
           />
           <FeatureCard
-            title="No citation, no answer."
-            description="Stage 15 (Groundedness Validation) and Stage 14 (Citation Extraction) run on every response. If the answer can't be traced to a retrieved chunk, the pipeline doesn't surface it as a confirmed finding. Transparency is structural, not decorative."
+            title="Citations and an abstention rule."
+            description="Stage 14 matches answer sentences to retrieved chunks and stage 15 scores verbatim overlap (strict: a correct paraphrase scores 0). When the context lacks the answer the model replies NOT_IN_CONTEXT. It still refuses 6 of 44 answerable test questions, which missed the target."
             icon={ShieldCheck}
             href="/pipeline-explorer"
           />
           <FeatureCard
             title="Every request is observable."
-            description="Phase 2.3 (Request Observability) wraps every execution with a correlation identity, outcome, and timing record — before delivery, export, or logging of that record is even defined. The observation contract is frozen; how records are used is a future decision."
+            description="Each request through the backend gets a correlation ID, an outcome and a duration, kept in memory for the life of the process and listed on the Observability page."
             icon={Eye}
             href="/observability"
           />

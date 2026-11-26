@@ -11,7 +11,7 @@
 import { BACKEND_URL } from "./backend-adapter"
 
 // A scale-to-zero backend (Cloud Run, min-instances 0) took 41 s to start in Phase 3, so the check must outlive
-// that. The page never waits for it: sample data is shown at once, with a banner while the check runs.
+// that. The page never blocks on it: a banner shows while the check runs and the live pages say the backend is offline.
 export const DETECTION_TIMEOUT_MS = 60000
 // After this long without an answer the UI says the backend is waking up rather than saying nothing.
 export const WAKING_NOTICE_AFTER_MS = 1500

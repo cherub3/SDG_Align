@@ -6,8 +6,8 @@ export function BackendStatusBanner() {
   if (backendStatus === "live" || backendStatus === "checking") return null
   const waking = backendStatus === "waking"
   const text = waking
-    ? "Waking up the backend (it can take about a minute after being idle). Showing sample data until it responds."
-    : "Backend unavailable, showing sample data. Results on this page are not live."
+    ? "Waking up the backend (it can take about a minute after being idle). Live pages are unavailable until it responds."
+    : "Backend offline: start it to run queries."
   return (
     <div
       role="status"

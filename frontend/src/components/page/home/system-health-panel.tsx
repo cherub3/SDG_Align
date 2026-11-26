@@ -1,74 +1,70 @@
-type HealthStatus = "OPERATIONAL" | "DEGRADED" | "FAILED" | "PENDING"
+import { useEffect, useState } from "react"
+import { probeBackend } from "../../../lib/backend-adapter"
+import { INDEXED_DOCUMENT_COUNT } from "../../../content/corpus-documents"
 
-const dotColor: Record<HealthStatus, string> = {
-  OPERATIONAL: "bg-emerald-500",
-  DEGRADED: "bg-amber-500",
-  FAILED: "bg-destructive",
-  PENDING: "bg-muted-foreground",
+type Row = { name: string; state: "ok" | "warn" | "down" | "static"; detail: string }
+
+const dot: Record<Row["state"], string> = {
+  ok: "bg-emerald-500",
+  warn: "bg-amber-500",
+  down: "bg-destructive",
+  static: "bg-muted-foreground",
 }
 
-interface HealthRow {
-  name: string
-  status: HealthStatus
-  detail: string
-}
-
-// Static snapshot, not a live health check. Verified 2026-11-23 against data/proposals/manifest.json and
-// the vector index metadata: 13 PDFs registered, 6 indexed, 7 quarantined (scanned), fingerprint 50987825.
-const rows: HealthRow[] = [
-  { name: "Retrieval", status: "OPERATIONAL", detail: "faiss index loaded · 6 docs" },
-  { name: "Embedding", status: "OPERATIONAL", detail: "local bge-small-en-v1.5 (index built with it)" },
-  { name: "LLM", status: "OPERATIONAL", detail: "Gemini LLM adapter wired" },
-  { name: "Planner", status: "OPERATIONAL", detail: "PlannerLLMAdapter wired" },
-  { name: "Vector Index", status: "OPERATIONAL", detail: "50987825… · 6 documents · 497 chunks" },
-  { name: "Observability", status: "OPERATIONAL", detail: "Phase 2.3 · observe_request()" },
-  { name: "Pipeline", status: "OPERATIONAL", detail: "795 tests passing (local run)" },
-  { name: "Gold Set Eval", status: "PENDING", detail: "evaluation.md not yet authored" },
+// Rows marked "static" are facts about the build (README.md, data/proposals), not read from the running backend.
+const STATIC_ROWS: Row[] = [
+  { name: "Planner", state: "static", detail: "Direct (no LLM planner) unless PLANNER_ENABLED=true · static, from README" },
+  { name: "Index", state: "static", detail: `${INDEXED_DOCUMENT_COUNT} documents · 497 chunks · static` },
 ]
 
-function summaryBadge(): { text: string; tone: "success" | "warning" | "error" } {
-  const failed = rows.filter((r) => r.status === "FAILED").length
-  const degraded = rows.filter((r) => r.status === "DEGRADED").length
-  const pending = rows.filter((r) => r.status === "PENDING").length
-
-  if (failed > 0) return { text: `✗ ${failed} Failed`, tone: "error" }
-  if (degraded > 0) return { text: `⚠ ${degraded} Component${degraded > 1 ? "s" : ""} Degraded`, tone: "warning" }
-  if (pending > 0) return { text: `⚠ ${pending} Component${pending > 1 ? "s" : ""} Pending`, tone: "warning" }
-  return { text: "● All Operational", tone: "success" }
-}
-
-const toneClass: Record<string, string> = {
-  success: "text-emerald-700 dark:text-emerald-400",
-  warning: "text-amber-700 dark:text-amber-400",
-  error: "text-destructive",
-}
-
 export function SystemHealthPanel() {
-  const badge = summaryBadge()
+  const [rows, setRows] = useState<Row[] | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    probeBackend().then((p) => {
+      if (cancelled) return
+      if (p === null) {
+        setRows([{ name: "Backend", state: "down", detail: "not reachable from this page" }, ...STATIC_ROWS])
+        return
+      }
+      const c = p.capabilities
+      setRows([
+        { name: "Backend", state: "ok", detail: "/health ok" },
+        c === null
+          ? { name: "Capabilities", state: "warn", detail: "this backend does not report /capabilities" }
+          : { name: "Retrieval", state: c.retrievalAvailable ? "ok" : "down", detail: c.retrievalAvailable ? "available" : "not available" },
+        ...(c === null
+          ? []
+          : [{ name: "LLM", state: c.llmConfigured ? "ok" : "warn", detail: c.llmConfigured ? "configured" : "not configured: retrieval only" } as Row]),
+        ...STATIC_ROWS,
+      ])
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <section aria-labelledby="system-health-heading" className="py-12 px-4 bg-muted/20 border-t border-border">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h2 id="system-health-heading" className="text-2xl font-bold tracking-tight">
-            System Health
-          </h2>
-          <span className={`text-sm font-semibold ${toneClass[badge.tone]}`}>{badge.text}</span>
-        </div>
+        <h2 id="system-health-heading" className="text-2xl font-bold tracking-tight mb-6">
+          Backend Status
+        </h2>
         <div className="border rounded-lg bg-card shadow-sm overflow-hidden">
-          {rows.map((row, i) => (
-            <div
-              key={row.name}
-              className={`flex items-center justify-between px-4 py-3 ${i !== rows.length - 1 ? "border-b border-border" : ""}`}
-            >
-              <span className="font-medium">{row.name}</span>
-              <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-                <span className={`w-2 h-2 rounded-full ${dotColor[row.status]}`} aria-hidden="true" />
-                <span className="font-medium text-foreground">{row.status}</span>
-                <span className="hidden md:inline">{row.detail}</span>
-              </span>
-            </div>
-          ))}
+          {rows === null ? (
+            <p className="px-4 py-3 text-sm text-muted-foreground">Checking the backend…</p>
+          ) : (
+            rows.map((row, i) => (
+              <div key={row.name} className={`flex items-center justify-between px-4 py-3 ${i !== rows.length - 1 ? "border-b border-border" : ""}`}>
+                <span className="font-medium">{row.name}</span>
+                <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+                  <span className={`w-2 h-2 rounded-full ${dot[row.state]}`} aria-hidden="true" />
+                  <span>{row.detail}</span>
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>

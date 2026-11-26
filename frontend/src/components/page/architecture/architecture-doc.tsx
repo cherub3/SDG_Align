@@ -121,7 +121,10 @@ export function ArchitectureDoc({ content }: { content: PhaseDetailContent }) {
         </h2>
         <p className="text-sm text-muted-foreground">
           Full documentation: <code className="font-mono text-xs">docs/architecture/{content.sourceDoc}</code>
-          <span className="italic"> (no repository URL is named in any frozen document — the "View on GitHub →" link target is an implementation decision left for a future pass, once a repository URL exists to link to.)</span>
+          {" "}
+          <a href="https://github.com/cherub3/SDG_Align" className="text-primary font-medium hover:underline">
+            View on GitHub →
+          </a>
         </p>
       </section>
     </div>

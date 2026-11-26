@@ -14,26 +14,9 @@ function scrollToStage(stageNumber: number) {
   document.getElementById(stageAnchorId(stageNumber))?.scrollIntoView({ behavior: "smooth", block: "center" })
 }
 
-function downloadSwimlaneSvg() {
-  const svg = document.getElementById("pipeline-swimlane-svg")
-  if (!svg) return
-  const serialized = new XMLSerializer().serializeToString(svg)
-  const blob = new Blob([serialized], { type: "image/svg+xml" })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement("a")
-  a.href = url
-  a.download = "sdg-align-pipeline-swimlane.svg"
-  a.click()
-  URL.revokeObjectURL(url)
-}
-
 export function PipelineSwimlane() {
   return (
     <div className="space-y-4">
-      <svg id="pipeline-swimlane-svg" role="img" aria-label="22-stage pipeline swimlane diagram" className="w-full" viewBox="0 0 100 30" preserveAspectRatio="none" style={{ height: 0, width: 0 }}>
-        <title>22-stage pipeline swimlane diagram</title>
-      </svg>
-
       {lanes.map((lane, laneIndex) => (
         <div key={lane}>
           <p className="text-xs font-medium text-muted-foreground mb-2">{laneLabel[lane]}</p>
@@ -58,15 +41,6 @@ export function PipelineSwimlane() {
         </div>
       ))}
 
-      <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={downloadSwimlaneSvg}
-          className="text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
-        >
-          Download SVG ↓
-        </button>
-      </div>
     </div>
   )
 }

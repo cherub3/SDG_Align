@@ -78,7 +78,7 @@ export function RequestLogTable({ records, onSelect }: RequestLogTableProps) {
                   {record.outcome}
                 </span>
               </td>
-              <td className="px-4 py-2">{record.duration}s</td>
+              <td className="px-4 py-2">{(record.duration * 1000).toFixed(1)} ms</td>
               <td className="px-4 py-2 text-muted-foreground" title={record.timestamp ?? "unavailable"}>
                 {relativeTime(record.timestamp)}
               </td>

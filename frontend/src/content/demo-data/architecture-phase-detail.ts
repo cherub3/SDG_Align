@@ -86,7 +86,7 @@ export const phaseDetailContent: Record<string, PhaseDetailContent> = {
     phaseId: "1-3",
     phaseName: "Embedding Provider",
     summary:
-      "Stage 8 declares the ProviderAdapter contract and explicitly declines to select or implement a default. Phase 1.1 closes the wiring half of that gap; Phase 1.3 closes the rest — the architecture any concrete embedding-provider implementation must follow internally to be a correct, production-grade adapter.",
+      "Stage 8 declares the ProviderAdapter contract and explicitly declines to select or implement a default. Phase 1.1 closes the wiring half of that gap; Phase 1.3 closes the rest — the architecture any concrete embedding-provider implementation must follow internally to be a correct adapter.",
     responsibilities: [
       "Define the architecture of a concrete ProviderAdapter subclass implementing Stage 8's frozen contract",
       "Define the ownership and lifecycle of the one SDK client a concrete adapter holds",
@@ -156,7 +156,7 @@ export const phaseDetailContent: Record<string, PhaseDetailContent> = {
       "Invoke load_raw_settings → validate_settings → build_provider_registry → wire_dependencies in order",
       "Map WiringResult's wired adapters onto the constructor arguments each stage expects",
       "Construct retrieval closures from the wired embedding and index adapters",
-      "Return the fully wired application object graph",
+      "Return the wired application object graph",
     ],
     nonResponsibilities: [
       "Embedding generation, LLM execution, planner execution, or any stage's own frozen job",
@@ -218,7 +218,7 @@ export const phaseDetailContent: Record<string, PhaseDetailContent> = {
       "Invoke the frozen public request-processing contract exactly once per request",
       "Return the contract's own result unmodified on success",
       "Propagate any raised exception through the entrypoint completely unmodified on failure",
-      "Guarantee binary completion — every request ends in exactly one of two outcomes",
+      "Every request ends in exactly one of two outcomes",
     ],
     nonResponsibilities: [
       "Any redesign of Stage 8/13/21's own orchestration",

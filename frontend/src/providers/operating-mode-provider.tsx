@@ -9,7 +9,7 @@ type OperatingModeProviderProps = {
 }
 
 // checking: started, answered within the notice delay so far. waking: no answer yet, backend may be starting.
-// live: reachable (Mode A). unavailable: check failed or timed out, so the page is showing sample data.
+// live: reachable (Mode A). unavailable: check failed or timed out, so live pages show an offline message.
 export type BackendStatus = "checking" | "waking" | "live" | "unavailable"
 
 type OperatingModeState = {

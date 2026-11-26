@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { StatusBadge } from "../shared/status-badge"
 import { architecturePhases } from "../../content/demo-data/architecture-phases"
 
@@ -19,8 +20,8 @@ export function PhaseTimeline({ orientation = "horizontal", activePhaseId }: Pha
           const isActive = phase.phaseId === activePhaseId
           return (
             <li key={phase.phaseId} className={isVertical ? "" : "flex items-center gap-2"}>
-              <a
-                href={`/architecture/${phase.phaseId}`}
+              <Link
+                to={`/architecture/${phase.phaseId}`}
                 aria-current={isActive ? "page" : undefined}
                 className={
                   isVertical
@@ -30,7 +31,7 @@ export function PhaseTimeline({ orientation = "horizontal", activePhaseId }: Pha
               >
                 {phase.label}
                 {!isVertical && <StatusBadge status="FROZEN" label={phase.status} />}
-              </a>
+              </Link>
               {!isVertical && i !== architecturePhases.length - 1 && (
                 <span aria-hidden="true" className="text-muted-foreground">
                   →

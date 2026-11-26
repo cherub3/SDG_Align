@@ -1,11 +1,11 @@
 import { useState } from "react"
 
 interface ObservationRecordProps {
-  // null means this data is not available for this call (Mode A — Track B Phase 7 plan,
-  // Finding 3). Rendered as an explicit "unavailable" state, never a fabricated value.
+  // null means the backend did not supply it for this call. Rendered as "unavailable", never a made-up value.
   correlationId: string | null
   outcome: "completed" | "failed" | "unavailable"
   duration: number | null
+  timestamp: string | null
 }
 
 function CorrelationBadge({ correlationId }: { correlationId: string | null }) {
@@ -25,7 +25,7 @@ function CorrelationBadge({ correlationId }: { correlationId: string | null }) {
       className="font-mono hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
       title="Copy correlation ID"
     >
-      {correlationId}… {copied && <span className="text-primary">(copied)</span>}
+      {correlationId} {copied && <span className="text-primary">(copied)</span>}
     </button>
   )
 }
@@ -40,11 +40,11 @@ function OutcomePill({ outcome }: { outcome: ObservationRecordProps["outcome"] }
   return <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${tone}`}>{outcome}</span>
 }
 
-export function ObservationRecord({ correlationId, outcome, duration }: ObservationRecordProps) {
+export function ObservationRecord({ correlationId, outcome, duration, timestamp }: ObservationRecordProps) {
   return (
-    <span className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-      Obs: <CorrelationBadge correlationId={correlationId} /> · {duration === null ? "unavailable" : `${duration}s`} ·{" "}
-      <OutcomePill outcome={outcome} />
+    <span className="inline-flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+      Request: <CorrelationBadge correlationId={correlationId} /> · {timestamp ?? "time unavailable"} ·{" "}
+      {duration === null ? "duration unavailable" : `${Math.round(duration * 1000)} ms`} · <OutcomePill outcome={outcome} />
     </span>
   )
 }

@@ -1,4 +1,18 @@
-const stack = ["Python 3.14", "faiss-cpu", "Gemini API", "PyMuPDF", "pytest", "GitHub Actions"]
+// From requirements.txt, requirements-local.txt, frontend/package.json and .github/workflows/test.yml.
+const stack = [
+  "Python 3.11+",
+  "PyMuPDF",
+  "faiss-cpu",
+  "NumPy / pandas / PyArrow",
+  "sentence-transformers (local embeddings)",
+  "Gemini (google-genai)",
+  "FastAPI + Pydantic",
+  "React 19 + TypeScript",
+  "Vite",
+  "Tailwind CSS",
+  "pytest",
+  "GitHub Actions",
+]
 
 export function TechStackStrip() {
   return (

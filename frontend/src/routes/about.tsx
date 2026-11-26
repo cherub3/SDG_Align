@@ -3,130 +3,123 @@ import { AccordionGrid } from "../components/shared/accordion-grid"
 import { DecisionTimeline, type Decision } from "../components/visualization/decision-timeline"
 import { StatusBadge } from "../components/shared/status-badge"
 
+// Everything on this page restates README.md or reports/PHASE_*_REPORT.md. Nothing here is a live measurement.
+const REPO = "https://github.com/cherub3/SDG_Align"
+
+const results: [string, string][] = [
+  ["Retrieval Recall@5, dense vs hybrid (44 answerable TEST items)", "0.57 vs 0.77 (paired gain 95% CI +0.09 to +0.32, exact McNemar p = 0.004)"],
+  ["Cloud Run retrieval vs offline retrieval", "Same retrieved chunks on all 66 gold queries; Recall@5 identical on the 56 answerable ones (TEST 0.7727, DEV 0.8333)"],
+  ["Answer correctness, 44 answerable TEST items", "31 correct (70.5%, 95% CI 55.8-81.8%), 37 correct or partial, 6 refused, 1 wrong out of 38 answered. Labels are AI-produced, not human-verified. Template 2.1.0 was chosen after 2.0.0 failed on TEST, so these numbers are optimistic"],
+  ["Abstention on unanswerable items", "8/8 refused (n = 8, so the interval is wide)"],
+  ["False refusals on answerable items", "6/44 (13.6%). The pre-registered target of 4/44 or fewer was not met"],
+  ["Planner vs no planner", "No change in refusals (6/44 both); 2.96 vs 1 LLM calls per request. The planner is off by default"],
+  ["Tests", "1045 tests, about 87% coverage of scripts/. The mutation probe runs a no-op control first"],
+]
+
 const principles = [
   {
-    headline: "Human before AI",
-    visibleSummary: "The evidence package can only read approved rows.",
-    detailContent: "The evidence package can only read approved rows.",
-  },
-  {
     headline: "Plain code before probabilistic models",
-    visibleSummary: "Everything that enforces trust is plain, testable code.",
-    detailContent:
-      "Plain code before probabilistic models — everything that enforces trust is plain, testable code. The LLM is confined to the narrow steps where judgment is genuinely required.",
+    visibleSummary: "Ingestion, retrieval bookkeeping, caching and orchestration are tested code.",
+    detailContent: "The LLM is called in one step: answering from the retrieved context. Everything around it is deterministic code covered by pytest.",
   },
   {
-    headline: "Simple before scalable",
-    visibleSummary: "NumPy over vector DBs until measured need exists.",
-    detailContent: "NumPy over vector DBs until measured need exists.",
+    headline: "Measure before claiming",
+    visibleSummary: "A frozen gold set, DEV/TEST split, TEST scored once per configuration.",
+    detailContent: "66 gold items over 6 documents; 52 in TEST (44 answerable, 8 unanswerable). Tuning used DEV only.",
   },
   {
-    headline: "Evidence before confidence",
-    visibleSummary: "No citation, no suggestion.",
-    detailContent: "No citation, no suggestion.",
-  },
-  {
-    headline: "Ship before optimize",
-    visibleSummary: "One flawless path beats ten half-features.",
-    detailContent: "One flawless path beats ten half-features.",
+    headline: "Say what failed",
+    visibleSummary: "The abstention target was missed and the reports say so.",
+    detailContent: "The 2.0.0 prompt template had 13/44 false refusals. The 2.1.0 template, chosen afterwards, has 6/44 (13.6%); the pre-registered limit was 4/44.",
   },
 ]
 
 const decisions: Decision[] = [
   {
-    date: "2025-Q4",
-    headline: "faiss over NumPy-only for vector indexing",
-    why: "Measured need exceeded NumPy threshold.",
-    alternativesRejected: "faiss over NumPy-only for vector indexing (Phase 1 delivery)",
+    date: "Phase 2",
+    headline: "Hybrid retrieval (BM25 + dense, reciprocal rank fusion) is the served default",
+    why: "Recall@5 rose from 0.57 to 0.77 on the TEST split. The reranker is off by default.",
+    alternativesRejected: "Dense-only retrieval",
   },
   {
-    date: "2025-Q4",
-    headline: "Gemini adapter behind a frozen LLMAdapter contract",
-    why: "Provider neutrality — adapters, not hard-wires.",
-    alternativesRejected: "Gemini adapter behind a frozen LLMAdapter contract (provider neutrality)",
+    date: "Phase 3",
+    headline: "Prompt template 2.1.0 is served, and it did not meet the keep rule",
+    why: "It cut false refusals from 13/44 to 6/44, but the pre-registered target was 4/44 or fewer. It was chosen after 2.0.0 failed, so it is a post-hoc choice.",
+    alternativesRejected: "Template 2.0.0 (13/44 false refusals)",
   },
   {
-    date: "2026-Q1",
-    headline: "No retry inside the Runtime Orchestration layer (Phase 2.2)",
-    why: "Retry ownership belongs to the adapter, not runtime.",
-    alternativesRejected: "No retry inside the Runtime Orchestration layer (Phase 2.2)",
+    date: "Phase 3",
+    headline: "The LLM planner is off by default",
+    why: "Refusals were identical (6/44) and the planner tripled the LLM calls per request.",
+    alternativesRejected: "Planner on by default (PLANNER_ENABLED=true opts in)",
   },
   {
-    date: "2026-Q1",
-    headline: "Observation as non-authoritative / non-participatory (Phase 2.3)",
-    why: "Observer never participates in completion decision.",
-    alternativesRejected: "Observation as non-authoritative / non-participatory (Phase 2.3)",
-  },
-  {
-    date: "2026-Q2",
-    headline: "try/finally defect documented and frozen rather than silently patched",
-    why: "Audit honesty.",
-    alternativesRejected: "try/finally defect documented and frozen rather than silently patched (audit honesty)",
-  },
-  {
-    date: "2026-Q2",
-    headline: "No hot-reload / re-bootstrap",
-    why: "Process-lifetime model.",
-    alternativesRejected: "No hot-reload / re-bootstrap (process-lifetime model)",
-  },
-  {
-    date: "2026-Q2",
-    headline: "Binary-completion guarantee in execute_request()",
-    why: "Phase 2.2 contract.",
-    alternativesRejected: "Binary-completion guarantee in execute_request() (Phase 2.2 contract)",
-  },
-  {
-    date: "2026-Q2",
-    headline: "Phase 2.4 ruled out — architecture at natural stopping point",
-    why: "Roadmap honesty.",
-    alternativesRejected: "Phase 2.4 ruled out — architecture at natural stopping point (roadmap honesty)",
+    date: "Phase 3",
+    headline: "Cloud Run service with IAM-only access, scale to zero, daily LLM call cap",
+    why: "Keeps the free-tier quota and the service private. Cold start measured at 41.3 s.",
+    alternativesRejected: "Public access; always-on instance",
   },
 ]
 
 const limitations = [
   {
-    headline: "7 of 13 corpus documents quarantined as scanned",
-    visibleSummary: "Stage 3 guard working as designed",
-    detailContent: "7 of 13 corpus documents quarantined as scanned (Stage 3 guard working as designed)",
+    headline: "Small gold set",
+    visibleSummary: "66 items, 52 in TEST",
+    detailContent: "Confidence intervals are wide. The 8 unanswerable items give a very wide interval for the abstention result.",
   },
   {
-    headline: "Query stages tested against in-memory adapters, not live LLM",
-    visibleSummary: "Test isolation, not a live-integration claim",
-    detailContent: "Query stages tested against in-memory adapters, not live LLM",
+    headline: "Correctness is AI-labelled",
+    visibleSummary: "Two blind runs, same model family, kappa 0.95",
+    detailContent: "Two blind labelling runs by the same model family agreed on 43 of 44 items; one disagreement was adjudicated by the project owner. Not human-verified. Only the gold quotes were used, not the full source PDFs.",
   },
   {
-    headline: "Phase 2.3 has two known unresolved code-level defects",
-    visibleSummary: "try/finally, discarded record",
-    detailContent: "Phase 2.3 has two known unresolved code-level defects (try/finally, discarded record)",
+    headline: "Abstention is not solved",
+    visibleSummary: "6/44 false refusals; target missed",
+    detailContent: "The model refuses 13.6% of answerable test questions. Four of the six partial answers and two of the six refusals are cross-document questions.",
   },
   {
-    headline: "No hot-reload, no re-bootstrap between requests",
-    visibleSummary: "Process-lifetime model",
-    detailContent: "No hot-reload, no re-bootstrap between requests",
+    headline: "Groundedness score is strict by design",
+    visibleSummary: "Paraphrase scores 0",
+    detailContent: "A sentence counts as grounded only if at least 80% of it is one verbatim run from a chunk. Of the 31 answers labelled correct, 21 have groundedness 0. The UI labels it verbatim overlap.",
   },
   {
-    headline: "Product goal (SDG alignment UI) not yet implemented",
-    visibleSummary: "This is the pipeline foundation",
-    detailContent: "Product goal (SDG alignment UI) not yet implemented — this is the pipeline foundation",
+    headline: "Cold start and free-tier quota",
+    visibleSummary: "41.3 s instance start; daily cap of 10 LLM calls",
+    detailContent: "Cloud Run scales to zero. A request-level cold start was not measured. The LLM is Gemini on a free-tier key. No load test was run.",
   },
   {
-    headline: "Test count: the latest recorded run is the source",
-    visibleSummary: "795 passing in a local run, 2026-11-23",
-    detailContent:
-      "Test count: 795 passing in a local run on 2026-11-23. The GitHub Actions workflow is defined but has not been run yet, so this figure is not CI-confirmed.",
+    headline: "SDG-target alignment is not built",
+    visibleSummary: "This is the question-answering pipeline",
+    detailContent: "Mapping a proposal to specific SDG targets (target extraction, evidence validator, gap analysis) is the product goal. It is not implemented.",
+  },
+  {
+    headline: "Six-document corpus",
+    visibleSummary: "Text not licensed for redistribution",
+    detailContent: "The repository does not include the PDFs or anything derived from them. State (observations, cache, conversations) is in memory per process.",
   },
 ]
 
-const comparisonRows: [string, string][] = [
-  ["Simple chatbot or Q&A demo", "22-stage observable pipeline"],
-  ["No documented architecture", "8 frozen architecture phases (1.1–2.3)"],
-  ["Black-box inference", "Full execution trace, stage by stage"],
-  ["Minimal or no tests", "Automated test suite with an 80% coverage gate · CI workflow defined"],
-  ["No observability", "Phase 2.3 request observability (correlation ID · outcome · duration)"],
-  ["Single provider, hardwired", "6 adapter seams · provider-neutral contracts"],
-  ["No known limitations documented", "Limitations published transparently (including known defects)"],
-  ['"Production-ready" claim, no evidence', "Content-deterministic ingestion · per-stage validation reports"],
+const stack = [
+  "Python 3.11+",
+  "PyMuPDF",
+  "faiss-cpu",
+  "NumPy / pandas / PyArrow",
+  "sentence-transformers",
+  "google-genai (Gemini)",
+  "FastAPI + Pydantic",
+  "React 19",
+  "TypeScript",
+  "Vite",
+  "Tailwind CSS",
+  "React Router",
+  "Recharts",
+  "Framer Motion",
+  "pytest",
+  "GitHub Actions",
 ]
+
+const linkClass =
+  "text-primary font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
 
 export function AboutPage() {
   return (
@@ -134,27 +127,19 @@ export function AboutPage() {
       <h1 className="sr-only">About</h1>
 
       <NarrativeBlock
-        headline="SDG Align was built to answer a real gap in development-sector work: organizations spend significant time manually mapping proposals to SDG targets, with no consistent method and no audit trail."
-        body="This is the engineering case study of how one evidence-backed pipeline was designed to change that."
+        headline="SDG Align answers questions about 6 GEF/UNDP project proposals with citations, and abstains when the documents do not contain the answer."
+        body="This page restates the README and the phase reports: what was measured, and where it falls short."
       />
 
-      <section aria-labelledby="comparison-heading" className="space-y-4">
-        <h2 id="comparison-heading" className="text-2xl font-bold">
-          What Makes SDG Align Different?
-        </h2>
+      <section aria-labelledby="results-heading" className="space-y-4">
+        <h2 id="results-heading" className="text-2xl font-bold">Results</h2>
         <div className="border rounded-lg overflow-x-auto">
           <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b bg-muted/30 text-left text-muted-foreground">
-                <th scope="col" className="px-4 py-2 font-medium">Typical AI Portfolio Project</th>
-                <th scope="col" className="px-4 py-2 font-medium">SDG Align</th>
-              </tr>
-            </thead>
             <tbody>
-              {comparisonRows.map(([typical, sdgAlign]) => (
-                <tr key={typical} className="border-b last:border-0">
-                  <td className="px-4 py-2 text-muted-foreground">{typical}</td>
-                  <td className="px-4 py-2 font-medium">{sdgAlign}</td>
+              {results.map(([what, value]) => (
+                <tr key={what} className="border-b last:border-0">
+                  <td className="px-4 py-2 text-muted-foreground w-1/3">{what}</td>
+                  <td className="px-4 py-2 font-medium">{value}</td>
                 </tr>
               ))}
             </tbody>
@@ -162,56 +147,38 @@ export function AboutPage() {
         </div>
       </section>
 
-      <section aria-labelledby="thesis-heading">
-        <h2 id="thesis-heading" className="sr-only">Engineering Thesis</h2>
-        <blockquote className="border-l-4 border-primary bg-muted/30 rounded-lg p-6 text-lg">
-          <p>
-            &ldquo;Plain code before probabilistic models — everything that enforces trust is plain, testable
-            code. The LLM is confined to the narrow steps where judgment is genuinely required.&rdquo;
-          </p>
-          <footer className="mt-3 text-sm text-muted-foreground">
-            — Architecture Principle #2, ARCHITECTURE_BLUEPRINT.md
-          </footer>
-        </blockquote>
-      </section>
-
       <section aria-labelledby="principles-heading" className="space-y-4">
-        <h2 id="principles-heading" className="text-2xl font-bold">Architecture Principles</h2>
+        <h2 id="principles-heading" className="text-2xl font-bold">Working Principles</h2>
         <AccordionGrid items={principles} />
       </section>
 
       <section aria-labelledby="decisions-heading" className="space-y-4">
-        <h2 id="decisions-heading" className="text-2xl font-bold">Decision Timeline</h2>
+        <h2 id="decisions-heading" className="text-2xl font-bold">Key Decisions</h2>
         <DecisionTimeline decisions={decisions} />
       </section>
 
       <section aria-labelledby="limitations-heading" className="space-y-4">
-        <h2 id="limitations-heading" className="text-2xl font-bold">
-          What this project doesn&rsquo;t do — and why that&rsquo;s intentional.
-        </h2>
+        <h2 id="limitations-heading" className="text-2xl font-bold">Limitations</h2>
         <AccordionGrid items={limitations} columns={2} />
       </section>
 
       <section aria-labelledby="tech-heading" className="space-y-4">
         <h2 id="tech-heading" className="text-2xl font-bold">Tech Stack</h2>
         <div className="flex flex-wrap gap-2">
-          {["Python 3.14", "faiss-cpu", "Gemini API", "PyMuPDF", "pytest", "GitHub Actions"].map((tech) => (
+          {stack.map((tech) => (
             <StatusBadge key={tech} status="FROZEN" label={tech} />
           ))}
         </div>
       </section>
 
       <section aria-labelledby="contact-heading" className="space-y-4">
-        <h2 id="contact-heading" className="sr-only">Contact / Source</h2>
+        <h2 id="contact-heading" className="sr-only">Source</h2>
         <div className="flex flex-wrap gap-4">
-          <a href="https://github.com" className="text-primary font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
+          <a href={REPO} className={linkClass}>
             GitHub Repository →
           </a>
-          <a href="https://github.com" className="text-primary font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
-            View Architecture Docs →
-          </a>
-          <a href="#" className="text-primary font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
-            Download PDF Poster →
+          <a href={`${REPO}#architecture`} className={linkClass}>
+            Architecture (README) →
           </a>
         </div>
       </section>

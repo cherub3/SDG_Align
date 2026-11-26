@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { useParams, Navigate } from "react-router-dom"
 import { Breadcrumb } from "../components/layout/breadcrumb"
 import { PhaseTimeline } from "../components/layout/phase-timeline"
@@ -45,22 +46,22 @@ export function PhaseDetailPage() {
 
           <nav aria-label="Phase navigation" className="flex items-center justify-between pt-6 border-t border-border">
             {previous ? (
-              <a
-                href={`/architecture/${previous.phaseId}`}
+              <Link
+                to={`/architecture/${previous.phaseId}`}
                 className="text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
               >
                 ← Previous: {previous.label}
-              </a>
+              </Link>
             ) : (
               <span />
             )}
             {next ? (
-              <a
-                href={`/architecture/${next.phaseId}`}
+              <Link
+                to={`/architecture/${next.phaseId}`}
                 className="text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
               >
                 Next: {next.label} →
-              </a>
+              </Link>
             ) : (
               <span />
             )}

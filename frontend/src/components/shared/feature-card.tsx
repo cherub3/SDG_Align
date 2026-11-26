@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import type { LucideIcon } from "lucide-react"
 
 interface FeatureCardProps {
@@ -16,9 +17,9 @@ export function FeatureCard({ title, description, icon: Icon, href }: FeatureCar
       <h3 className="text-xl font-bold tracking-tight mb-2">{title}</h3>
       <p className="text-muted-foreground">{description}</p>
       {href && (
-        <a href={href} className="mt-4 text-sm font-medium text-primary hover:underline">
+        <Link to={href} className="mt-4 text-sm font-medium text-primary hover:underline">
           Learn more →
-        </a>
+        </Link>
       )}
     </div>
   )

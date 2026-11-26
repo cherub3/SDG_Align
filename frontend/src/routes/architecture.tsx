@@ -37,11 +37,8 @@ export function ArchitecturePage() {
           {stageMetadata.map((stage) => (
             <div key={stage.stage_number} id={stageAnchorId(stage.stage_number)}>
               <ExpandoPanel summary={<span className="font-medium text-foreground">Stage {stage.stage_number} — {stage.name}</span>}>
-                <p>Lane: {stage.lane}</p>
-                <p className="mt-1 text-xs italic">
-                  Role and artifact detail are not specified anywhere in the frozen documents for
-                  this stage — no canonical text exists to display here.
-                </p>
+                <p>{stage.role}</p>
+                <p className="mt-1 text-xs">Lane: {stage.lane}</p>
               </ExpandoPanel>
             </div>
           ))}

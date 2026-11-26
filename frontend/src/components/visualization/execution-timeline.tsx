@@ -22,7 +22,7 @@ export function ExecutionTimeline({ stages, runId = 0, onStageClick }: Execution
   const { reduceMotion } = useReducedMotion()
   const totalMs = stages.reduce((sum, s) => sum + s.elapsed_ms, 0)
   // No stage ran at all (e.g. the planner itself failed before executing any step) -- a real
-  // possibility in Mode A that never occurs in Mode B/C's always-non-empty canned traces.
+  // possibility for a live run.
   const dominant =
     stages.length > 0 ? stages.reduce((max, s) => (s.elapsed_ms > max.elapsed_ms ? s : max), stages[0]) : null
   const dominantPercent = dominant ? Math.round((dominant.elapsed_ms / totalMs) * 100) : 0

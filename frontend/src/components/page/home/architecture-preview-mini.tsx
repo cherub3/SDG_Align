@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { TooltipOverlay } from "../../shared/tooltip-overlay"
 import { stageMetadata, type StageMetadataItem } from "../../../content/demo-data/pipeline-trace"
 
@@ -24,7 +25,7 @@ export function ArchitecturePreviewMini() {
             Architecture Preview
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Three layers: ingestion, RAG, and agent — every stage frozen, tested, and documented.
+            Three layers: ingestion, RAG, and agent. Backend stages are covered by pytest (about 87% of scripts/); the frontend has no automated tests.
           </p>
         </div>
 
@@ -78,12 +79,12 @@ export function ArchitecturePreviewMini() {
         </div>
 
         <div className="text-center">
-          <a
-            href="/architecture"
+          <Link
+            to="/architecture"
             className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-primary bg-primary/10 rounded-md hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             View full architecture →
-          </a>
+          </Link>
         </div>
       </div>
     </section>
