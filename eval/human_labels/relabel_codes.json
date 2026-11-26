@@ -1,0 +1,17 @@
+{
+ "seed": 20261126,
+ "n": 10,
+ "codes": [
+  "L005",
+  "L011",
+  "L029",
+  "L038",
+  "L042",
+  "L057",
+  "L061",
+  "L080",
+  "L082",
+  "L086"
+ ],
+ "note": "Re-label these rows later, in relabel_sheet.csv, without looking at your first labels."
+}

@@ -1,0 +1,13 @@
+Label scale (frozen; copied from reports/PHASE_3_5_REPORT.md):
+
+correct = all gold-required facts stated correctly; partial = some right, rest missing or declared missing, nothing contradicting gold; wrong = contradicts gold; refused = exactly NOT_IN_CONTEXT.
+
+Fill the `label` column of labelling_sheet.csv with exactly one of: correct, partial, wrong, refused. The `note` column is optional and may stay empty.
+Judge each answer against the gold_quote only (several quotes are separated by ' || '). The same question appears twice with different codes; judge each answer on its own.
+Do not open arm_key.json until you are finished.
+
+Amendment 1 (dated 2026-11-25, written before any label was entered):
+An answer that refuses in free text instead of replying with the exact NOT_IN_CONTEXT is labelled `refused`, with the word `implicit` in the `note` column.
+Scoring counts it as refused and reports implicit refusals separately. The original definitions above are unchanged.
+
+Re-labelling: relabel_sheet.csv holds 10 randomly chosen rows (fixed seed, see relabel_codes.json). Label them again later, without looking at your first labels; the scorer reports your self-agreement.
