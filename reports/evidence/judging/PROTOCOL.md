@@ -4,10 +4,12 @@ Replaces the human-label step of `metrics_definitions.md` section 5 (the frozen 
 recorded deviation, see PHASE_1_REPORT section 8). No human labelled anything.
 
 ## Judges
-* **Judge 1** (the main LLM session): labels already committed (`blind_labels_claude.json`, commit 4d48441) in the
+* **Judge 1** (the main LLM session): labels already committed (`blind_labels_ai_judge1.json`, commit 4d48441) in the
   as-is form, which includes one rule that is NOT in the frozen rubric (a chunk with a large template-instruction block counts one
   level lower). A frozen-rubric-only version is derived in step 3 and is the version used in all headline numbers.
-* **Judge 2**, **Judge 2b** (self-consistency), **Judge 3** (adjudication): fresh LLM sub-agents. No paid API.
+  File renamed on 2026-11-25; content unchanged.
+* **Judge 2**, **Judge 2b** (self-consistency), **Judge 3** (adjudication): fresh LLM sub-agents from the same model family. No paid API.
+  (Wording edited on 2026-11-26: tool names removed from the two lines above; no other change.)
 * Each judge gets ONLY the rubric (`rubric.md`), the instruction "You are rating search results for relevance. Use only the rubric.",
   and its items (question + passage text). It never gets the key, other judges' labels, cleaning rules, code, commit history, metrics,
   versions, or the project goal. The prompt files are saved verbatim in `prompts/`; the raw output of each judge is saved in `raw/`

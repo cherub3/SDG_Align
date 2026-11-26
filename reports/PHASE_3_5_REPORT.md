@@ -39,8 +39,8 @@ Changes (`frontend/src/lib/mode-detection.ts`, `providers/operating-mode-provide
 
 ## 3. Hand-labelled correctness, 2.1.0 no-planner, TEST, 44 answerable
 
-Method: two independent blind AI labelling runs (Claude models), kappa 0.95, the single disagreement adjudicated by the project owner.
-- Labeller A: Claude (this project's assistant). Labeller B: Claude Opus 4.6 in Antigravity, run blind, without seeing A's labels. Both are Claude models, so this is labeller independence, not model-family independence. A Gemini run was attempted but read the existing labels first, so it was discarded and is not reported as a labeller.
+Method: two blind LLM-as-judge runs from the same model family as the one used to draft the gold set, kappa 0.95, the single disagreement adjudicated by the project owner.
+- Labeller A and labeller B were both LLM runs from that same model family; B ran blind, without seeing A's labels. This is labeller independence, not model-family independence, so they may share blind spots. A run with a different model (Gemini) was attempted but read the existing labels first, so it was discarded and is not reported as a labeller.
 - Agreement (VERIFIED, `tools/compare_labelers.py` re-run, `eval/results/labeler_agreement.json` unchanged on recompute): 43/44 agree, 97.73% raw, Cohen's kappa 0.9498. The only disagreement was Q036 (A: correct, B: partial).
 - Q036 adjudicated by the project owner as partial (`eval/review/label_review_sheet.md`): part 2 (workshop commitments) fully covered; part 1 omits SIM closure, job losses, forest pressure and suspended ecoguard patrols.
 - Nobody else has checked the labels; apart from that one verdict no human labelled anything. Only the gold answer quotes were consulted, not the source PDFs.
@@ -60,12 +60,12 @@ By type (correct / partial / wrong / refused): single_fact 13/0/0/2; numbers_tab
 The one wrong reply: Q024 gave total GEF financing 4,371,000 against gold 4,010,092 (co-financing was right). The six partials (Q036, Q039, Q053, Q055, Q056, Q057) each answer part of the question; four are cross_document.
 
 Caveats:
-- n = 44, one run, one temperature; Gemini output is not bit-exact between runs. The CI covers sampling only, not labeller error. Both labellers are Claude models and may share blind spots; Q053 (partial vs correct) is a judgment call both labellers agreed on.
+- n = 44, one run, one temperature; Gemini output is not bit-exact between runs. The CI covers sampling only, not labeller error. Both labellers are LLM runs from the same model family and may share blind spots; Q053 (partial vs correct) is a judgment call both labellers agreed on.
 - Correct here means matches the gold quote; it does not prove the reply cites the right place in the document.
 - Correct replies can still score groundedness 0 (section 1): 21 of the 31 correct replies have groundedness 0, 9 have 1.0. Do not combine the two.
 
-Resume-safe: "On 44 answerable TEST questions, two independent blind AI labelling runs (Claude models, kappa 0.95, one disagreement adjudicated by the project owner) found 31 fully correct (70.5%, 95% CI 56 to 82%), 6 partial, 1 wrong, 6 refused."
-Not safe: "human-verified accuracy"; "independent of Claude" (both labellers are Claude); any accuracy figure without the refusals and the partials; reading groundedness 0 as ungrounded.
+Resume-safe: "On 44 answerable TEST questions, two blind LLM-as-judge runs from the same model family as the one used to draft the gold set, kappa 0.95, one disagreement adjudicated by the project owner found 31 fully correct (70.5%, 95% CI 56 to 82%), 6 partial, 1 wrong, 6 refused."
+Not safe: "human-verified accuracy"; "independent of the drafting model" (both labellers are from the same model family); any accuracy figure without the refusals and the partials; reading groundedness 0 as ungrounded.
 
 ## Files changed or added
 - `frontend/src/lib/mode-detection.ts`, `frontend/src/lib/backend-adapter.ts`, `frontend/src/providers/operating-mode-provider.tsx`, `frontend/src/components/layout/root-layout.tsx`, `frontend/src/components/layout/backend-status-banner.tsx` (new), `frontend/src/components/page/home/animated-pipeline-demo.tsx`, `frontend/src/routes/pipeline-explorer.tsx`
@@ -73,4 +73,4 @@ Not safe: "human-verified accuracy"; "independent of Claude" (both labellers are
 - `tools/diagnose_groundedness.py` (new), `tools/score_handlabels.py` (new)
 - `eval/test_v21_correctness_labels.json`, `eval/test_v21_correctness_labels_independent.json`, `eval/test_v21_correctness_final.json`, `eval/results/labeler_agreement.json`, `eval/review/label_review_sheet.md`, `tools/compare_labelers.py` (labelling inputs; new), `eval/results/groundedness_diagnosis.json` (new), `eval/results/test_v21_correctness_summary.json` (new)
 - `reports/PHASE_3_5_REPORT.md` (new)
-Full suite after these changes: 1037 passed, scripts coverage 87% (VERIFIED, one run).
+Full suite after these changes (Phase 3.5, 2026-11-23): 1037 passed, scripts coverage 87% (VERIFIED, one run). Later changes raised the count; the current count is in the README.

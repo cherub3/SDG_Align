@@ -8,7 +8,7 @@ never modified.
 Usage (from the repo root):
     python tools/mutation_probe.py              # all mutations
     python tools/mutation_probe.py M1 M5        # selected ones
-Results are written to reports/mutation_results.json (full run) or reports/mutation_results_<ids>.json.
+Results are written to reports/mutation/mutation_results.json (full run) or reports/mutation/mutation_results_<ids>.json.
 """
 import json
 import pathlib
@@ -229,8 +229,8 @@ def main(argv):
             continue
         results.append(run_one(*m))
         print(results[-1], flush=True)
-    reports = ROOT / "reports"
-    reports.mkdir(exist_ok=True)
+    reports = ROOT / "reports" / "mutation"
+    reports.mkdir(parents=True, exist_ok=True)
     name = "mutation_results.json" if not wanted else "mutation_results_" + "_".join(sorted(wanted)) + ".json"
     (reports / name).write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
     killed = sum(r["result"] == "KILLED" for r in results)

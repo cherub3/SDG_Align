@@ -24,7 +24,7 @@ Secondary (descriptive, no criterion): effect on the other question types, on un
 
 ## 3. What I expect, and why (INFERRED, to be checked against the results)
 
-- The planner prompt is the JSON context (query, empty tool list, executed steps) plus a short system instruction; it is not told how retrieval works. I expect it to pass the user's question through unchanged in one QUERY_PIPELINE step and then COMPLETE. If so, retrieval and the answer call are identical to the no-planner arm and answers at temperature 0 should match, so the effect on refusals would be about zero while calls and latency about triple.
+- The planner prompt is the JSON context (query, empty tool list, executed steps) plus a short system instruction; it is not told how retrieval works. The expectation is that it passes the question through unchanged in one QUERY_PIPELINE step and then COMPLETE. If so, retrieval and the answer call are identical to the no-planner arm and answers at temperature 0 should match, so the effect on refusals would be about zero while calls and latency about triple.
 - Even if the planner splits a cross-document question into several QUERY_PIPELINE steps, the final answer is ONE step's response (`final_answer_step_index`); nothing in the code merges answers across steps. A split would therefore not combine evidence from several documents. The only route to fewer false refusals is a rewritten query whose single retrieval happens to cover more of the needed evidence.
 - The run records whether the planner rewrote the query, how many query steps it issued and its step statuses, so this expectation can be confirmed or refuted from the rows.
 

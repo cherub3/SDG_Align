@@ -66,8 +66,8 @@ venvss*.ps1
 
 ## Files to commit (all currently uncommitted)
 Modified: `.env.example`, `README.md`, `DEPLOYMENT.md`, `OPERATIONAL_READINESS.md`, `requirements-dev.txt`, `scripts/backend_server.py`, `scripts/composition_root.py`, `scripts/phase1_1_configuration_layer.py`, `scripts/runtime_orchestration.py`, `scripts/embedding_provider_local.py`, `scripts/stage10_retrieval.py`, `tools/mutation_probe.py`, `tests/test_composition_root.py`, `tests/test_embedding_provider_local.py`, `tests/test_stage10_retrieval.py`, `reports/PHASE_2_REPORT.md`.
-New: `scripts/call_budget.py`, `scripts/startup_checks.py`, `tests/test_call_budget.py`, `tests/test_startup_checks.py`, `tests/test_requirements_declared.py`, `tools/index_cache_check.py`, `reports/evidence/index_cache_check.json`, `reports/mutation_results_M41_*.json` files, `reports/PHASE_2_5_REPORT.md`.
-Plus whatever from the earlier serving fix is still uncommitted (`scripts/pipeline_deps_factory.py`, `tests/test_pipeline_deps_factory.py`, `reports/mutation_results_M36_M37_M38_M39_M40.json`, README/report edits).
+New: `scripts/call_budget.py`, `scripts/startup_checks.py`, `tests/test_call_budget.py`, `tests/test_startup_checks.py`, `tests/test_requirements_declared.py`, `tools/index_cache_check.py`, `reports/evidence/index_cache_check.json`, `reports/mutation/mutation_results_M41_*.json` files, `reports/PHASE_2_5_REPORT.md`.
+Plus whatever from the earlier serving fix is still uncommitted (`scripts/pipeline_deps_factory.py`, `tests/test_pipeline_deps_factory.py`, `reports/mutation/mutation_results_M36_M37_M38_M39_M40.json`, README/report edits).
 Do not commit: `reports/ONBOARDING_UNDERSTANDING.md`, `.coverage`, `coverage.xml`.
 
 Commit message: `Phase 2.5 hardening: fail-fast startup, LLM call cap, network opt-in, offline embedder, index cache, scipy pin`

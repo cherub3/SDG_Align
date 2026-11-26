@@ -1,8 +1,8 @@
 # Phase 1 report: chunk and data quality
 
-Branch `phase-1-chunk-quality` (cut from `phase-0-foundation`), repo `D:\Projects\sdg-align`. Nothing pushed; no GitHub remote.
+Branch `phase-1-chunk-quality` (cut from `phase-0-foundation`), repo `sdg-align`. Nothing pushed; no GitHub remote.
 Labels: VERIFIED = produced by a command whose output is in a file named here; INFERRED = my reading of verified facts; UNKNOWN = not measured.
-Python venv for everything in this phase: `D:\Projects\venvs\sdg-align` (CPython 3.12, outside the repo, 1.6 GB).
+Python venv for everything in this phase: `<venv outside the repo>` (CPython 3.12, outside the repo, 1.6 GB).
 
 ## 1. Status
 
@@ -20,7 +20,7 @@ There is no human label anywhere in this phase; usefulness is AI-judged (section
 | 2 | Fresh clone, exactly the CI install steps | clean 3.12 venv, `pip install -r requirements.txt`, `-r requirements-dev.txt`, `pip check`, `pytest --cov --cov-fail-under=80` (`fresh_clone_phase1_final.log`) | install 179 s, 60 packages, `No broken requirements found.`; `812 passed, 1 skipped` (the skip is the real-model test: optional deps absent, skipped with a stated reason); `Required test coverage of 80% reached. Total coverage: 85.29%`; pytest exit 0 | **PASS** (local simulation of the CI steps, not run on GitHub) |
 | 3 | 6 documents indexed | `index_metadata.json` of the rebuilt index | `document_count 6`, `chunk_count 497`, provider `local`, `BAAI/bge-small-en-v1.5` v1.5, 384 dims | **PASS** |
 | 4 | Before/after table | `tools/chunk_metrics.py`, `tools/retrieval_eval.py`, `tools/compute_*.py` | tables in section 5 | **PASS** (shows a small, non-significant retrieval gain) |
-| 5 | Mutation probe | `tools/mutation_probe.py` (`reports/mutation_results.json`) | 21 of 21 killed, each by a failing assertion | **PASS** |
+| 5 | Mutation probe | `tools/mutation_probe.py` (`reports/mutation/mutation_results.json`) | 21 of 21 killed, each by a failing assertion | **PASS** |
 | 6 | No secrets, PDFs, `LEARN_*.md` or `PHASE_1_PROGRESS.md` tracked | `git ls-files` filtered; `git check-ignore` | only `.env.example` matched; the others are ignored | **PASS** |
 
 ## 3. What changed (every commit on the branch since `phase-0-foundation`)
@@ -45,7 +45,7 @@ There is no human label anywhere in this phase; usefulness is AI-judged (section
 | `ac9c259` | `scripts/embedding_provider_local.py`, `scripts/backend_server.py`, `requirements-local.txt`, tests | Local sentence-transformers provider behind the adapter seam | Free, deterministic embeddings for stage 8 and query time |
 | `3bfa1a7` | `tools/hash_build.py`, evidence files | Rebuild stages 4 to 9, determinism hashes, parity vs old HF vectors, `retrieval_after.json` | The "after" measurement |
 | `15fc483` | `tools/make_blind_files.py`, blind files | Anonymised shuffled before/after file and sealed key | Blind protocol |
-| `4d48441` | `blind_labels_claude.json` | Judge 1 labels, saved before the key was opened | Blind protocol |
+| `4d48441` | `blind_labels_ai_judge1.json` | Judge 1 labels, saved before the key was opened | Blind protocol. File renamed on 2026-11-25; content unchanged. |
 | `fdb2a1c` | `frontend/src/**` | Stale index fingerprint and embedding row corrected | Checked against real data |
 | `63a42ac` | `judging/PROTOCOL.md`, packet, rubric, checker, prompt builder | AI-judge protocol and kappa thresholds committed before any judge ran | Pre-registration |
 | `8e8ce10` | `judging/labels_judge1_*.json` | Judge 1 re-derived by the frozen rubric alone (4 ids changed) | Remove my non-frozen rule |
@@ -60,7 +60,7 @@ There is no human label anywhere in this phase; usefulness is AI-judged (section
 | `b9080a2` | `retrieval_after_5doc.json`, `tools/cleaning_only_new_items.py`, `tools/build_judge_prompt.py` | 5-document index from the after pipeline; 4 new passages | Remove the jaguar confound |
 | `0cb72cd` | `judging/labels_judge4_cleaning_only_new.json` | Judge 4 labels for the 4 new passages, before computing | Label new passages in isolation |
 | `1789167` | `tools/compute_cleaning_only.py`, `results_cleaning_only.*` | Cleaning-only comparison | Headline comparison |
-| `4ef8c65` | `reports/mutation_results.json`, probe log | 21 of 21 mutations killed | Test strength |
+| `4ef8c65` | `reports/mutation/mutation_results.json`, probe log | 21 of 21 mutations killed | Test strength |
 | `c4bf5f0` | `reports/evidence/suite_3_runs.txt` | Suite run three times | Stability |
 | (this report) | `reports/PHASE_1_REPORT.md` | The report | Close-out |
 
@@ -70,7 +70,7 @@ There is no human label anywhere in this phase; usefulness is AI-judged (section
 |---|---|---|---|
 | Tests | 744 | **813** (x3 runs, same result); fresh clone 812 passed + 1 skipped | `fresh_clone_pytest.log` (Phase 0), `suite_3_runs.txt` |
 | Coverage | 84.6% | 85% total (lines 87.8%, branches 79.2%) | `coverage_before_after.txt`, `suite_3_runs.txt` |
-| Mutations killed | 13 of 13 | **21 of 21** (8 added for Phase 1 rules) | `reports/mutation_results.json`, `mutation_probe_run.log` |
+| Mutations killed | 13 of 13 | **21 of 21** (8 added for Phase 1 rules) | `reports/mutation/mutation_results.json`, `mutation_probe_run.log` |
 
 New mutations: M14 duplicate drop off, M15 heading-only drop off, M16 sentence-end preference off, M17 section-id disambiguation off,
 M18 inline HTML not stripped, M19 table-of-contents removal off, M20 stage 6 failure code reverts, M21 local embedder not normalising.
@@ -170,14 +170,14 @@ Proposed Phase 2 fix, not applied: keep a merged heading as chunk metadata and l
 
 ## 6. Cost and resources
 
-* **Money: $0.** No paid or quota-limited API was called. Embeddings: local bge-small on CPU. Judges: LLM sub-agents inside the session, no separate API.
+* **Money: $0.** No paid or quota-limited API was called. Embeddings: local bge-small on CPU. Judges: LLM sub-agents run inside the working session, no separate API.
 * **Network:** `pip install` of `requirements.txt`, `requirements-dev.txt`, `requirements-local.txt` (sentence-transformers 6.3.0, torch 2.15.0); `npm ci` for the frontend;
   the fresh-clone installs. The `BAAI/bge-small-en-v1.5` weights were already in the Hugging Face cache; runs used `HF_HUB_OFFLINE=1`.
-* **Disk outside the repo:** the venv `D:\Projects\venvs\sdg-align` is 1.6 GB; temporary clones with their own venvs and snapshots sit in the Windows temp folder (two fresh-clone folders of about 570 MB each, now deleted, plus small snapshots); the old-repo files were only read.
+* **Disk outside the repo:** the venv `<venv outside the repo>` is 1.6 GB; temporary clones with their own venvs and snapshots sit in the Windows temp folder (two fresh-clone folders of about 570 MB each, now deleted, plus small snapshots); the old-repo files were only read.
 
 ## 7. What did not work, or is still open (blunt)
 
-* **No human labels.** The human check was replaced by AI judges. All three judges and the author are the same model family; agreement does not rule out shared blind spots. Judges are isolated by instruction, not by a sandbox.
+* **No human labels.** The human check was replaced by AI judges. All three judges and the drafting model are from the same model family; agreement does not rule out shared blind spots. Judges are isolated by instruction, not by a sandbox.
 * **The result is not significant.** n = 13; the cleaning-only p = 0.32. Useful-at-5 did not move. Do not read this as proof that cleaning does nothing; read it as "not shown".
 * **Circularity.** The cleaning rules and the automatic boilerplate rule were written by reading the same 5 GEF documents they are measured on. A drop of the automatic metric to 0 is partly by construction. No unseen-document test exists.
 * **Judge 4 labelled only 4 new passages,** with no second opinion (one label affects Q12 by 0.2).
@@ -214,7 +214,7 @@ Only these. Nothing else from this phase is claimed.
 * "Built a local, network-free embedding adapter behind an existing adapter interface; its vectors matched the hosted-API vectors on a 10-chunk sample (cosine 1.000000); two real rebuilds gave identical chunk text, identical vectors and a byte-identical FAISS `index.bin`." Proof: `embedder_parity_vs_hf.txt`, `build_determinism_compare.txt`.
 * "Measured retrieval usefulness before and after on 15 fixed questions with a frozen rubric and a blinded, anonymised protocol. AI-judged (3 independent judges, kappa = 0.84), the cleaning-only change moved mean usefulness 0.94 to 1.05 on a 0 to 2 scale; not statistically significant (exact Wilcoxon p = 0.32, n = 13)." Proof: `judging/results_cleaning_only.md`, `judging/agreement_answerable13.json`.
 * "Found and removed my own bias: a labelling rule I had added made the result look significant (p = 0.04); the frozen-rubric result is not." Proof: `judging/results.md` (judge1_asis vs final), `labels_judge1_frozen.json` (changed ids).
-* "813 automated tests, 85% coverage; 21 of 21 injected faults caught; fresh-clone install in a clean Python 3.12 venv." Proof: `suite_3_runs.txt`, `reports/mutation_results.json`, `fresh_clone_phase1_final.log`.
+* "813 automated tests, 85% coverage; 21 of 21 injected faults caught; fresh-clone install in a clean Python 3.12 venv." Proof: `suite_3_runs.txt`, `reports/mutation/mutation_results.json`, `fresh_clone_phase1_final.log`.
 * "Added deterministic, tested fixes: duplicate section ids disambiguated without changing ids of documents that had none; a distinct `FAILED_VALIDATION` status." Proof: `section_ids_unchanged_check.txt`, tests named in section 4.
 
 **Why useful-at-5 did not move.** Cleaning removes noise (boilerplate, markup, fragments, duplicates), so the "partial or better" share rose (0.60 to 0.72) and not-useful results fell (26 to 18 of 65). It cannot add a passage that states an answer the top-5 never contained: for several questions (for example Q3, Q7, Q8, Q13) no passage in the index names what was asked. The number of fully useful passages therefore stayed about 22 of 65. Phase 2 targets exactly this with hybrid (keyword plus vector) search and a reranker, measured on a span-labelled gold set.

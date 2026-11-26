@@ -142,17 +142,43 @@ def test_compose_accepts_hybrid_dense_and_unset_with_nothing_wired():
 
 # ---- the real process: the server must exit non-zero with a clear message, not start "healthy" ----
 
+EXPECTED_STARTUP_MESSAGE = "no servable documents"
+# Output of a child that was killed by the machine running out of memory while importing numpy / BLAS, before the server code ran.
+ALLOCATION_FAILURE_MARKERS = ("Memory allocation still failed", "paging file is too small", "os error 1455", "MemoryError")
+
+
+def child_died_from_allocation_failure(output):
+    """True only when the child's output shows a memory-allocation failure AND does not contain the message the test is about.
+    Any other failure (wrong message, crash, timeout) must still fail the test."""
+    return EXPECTED_STARTUP_MESSAGE not in output and any(m in output for m in ALLOCATION_FAILURE_MARKERS)
+
+
+def test_allocation_failure_detector_skips_only_real_allocation_failures():
+    openblas = "OpenBLAS error: Memory allocation still failed after 10 retries, giving up.\n"
+    assert child_died_from_allocation_failure(openblas)
+    assert child_died_from_allocation_failure("OSError: The paging file is too small for this operation to complete. (os error 1455)")
+    assert not child_died_from_allocation_failure("")                                   # silent death is a failure, not a skip
+    assert not child_died_from_allocation_failure("Traceback ... ImportError: no module named x")
+    assert not child_died_from_allocation_failure(openblas + "StartupCheckError: no servable documents")   # the real message wins
+
+
 def test_server_process_exits_nonzero_when_the_corpus_is_missing(tmp_path):
     # Strip pytest-cov's child-process hooks: the child measures no branches and would make coverage combine fail in CI.
     env = {k: v for k, v in os.environ.items()
            if not k.startswith(("LLM_", "PLANNER_", "EMBEDDING_", "COV_CORE", "COVERAGE", "HCA_"))
            and not k.endswith(("_PROVIDER", "_BACKEND", "_STORE", "_REGISTRY", "_ADAPTER"))}
     env.update(PYTHONPATH=str(ROOT), PYTHONDONTWRITEBYTECODE="1", EMBEDDING_PROVIDER="local",
-               HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1")
+               HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1",
+               # One BLAS thread: OpenBLAS reserves memory per thread, and in a full suite run the machine can be short of memory.
+               OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
     proc = subprocess.run([sys.executable, "-m", "uvicorn", "scripts.backend_server:app", "--port", "8791"],
                           cwd=tmp_path, env=env, capture_output=True, text=True, timeout=90)
+    output = proc.stdout + proc.stderr
+    if proc.returncode != 0 and child_died_from_allocation_failure(output):
+        pytest.skip("the server child process could not allocate memory (machine out of memory, not a startup-check result): "
+                    + output.strip().splitlines()[-1][:200])
     assert proc.returncode != 0
-    assert "no servable documents" in (proc.stdout + proc.stderr)
+    assert EXPECTED_STARTUP_MESSAGE in output
 
 
 # ---- the server's own startup function runs the checks and the model warm-up, and never swallows their failure ----

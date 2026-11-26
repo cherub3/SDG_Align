@@ -4,7 +4,7 @@
     "description": "empty-chunks check removed",
     "file": "scripts/startup_checks.py",
     "result": "SETUP_ERROR",
-    "pytest": "in\n  File \"D:\\Projects\\venvs\\sdg-align\\Lib\\site-packages\\pytest\\__main__.py\", line 9 in <module>\n  File \"<frozen runpy>\", line 88 in _run_code\n  File \"<frozen runpy>\", line 198 in _run_module_as_main\n"
+    "pytest": "in\n  File \"<venv outside the repo>\\Lib\\site-packages\\pytest\\__main__.py\", line 9 in <module>\n  File \"<frozen runpy>\", line 88 in _run_code\n  File \"<frozen runpy>\", line 198 in _run_module_as_main\n"
   },
   {
     "id": "M45",

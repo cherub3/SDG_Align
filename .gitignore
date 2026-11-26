@@ -38,8 +38,30 @@ npm-debug.log*
 
 # Editors / local tool config
 .claude/
+.gemini/
+.cursor/
+.aider*
+.continue/
+CLAUDE.md
+GEMINI.md
+AGENTS.md
+.cursorrules
+.github/copilot-instructions.md
+HANDOFF*.md
+PROMPT*.md
 .vscode/
 .idea/
+
+# Vite, notebooks, OS files
+.vite/
+*.tsbuildinfo
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+
+# Derived index and embedding caches
+data/**/vector_index/
+data/**/*.faiss
 
 # Private study notes (kept local)
 LEARN_*.md

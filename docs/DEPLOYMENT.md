@@ -2,7 +2,7 @@
 
 This document covers running SDG Align's Track B backend (FastAPI) and frontend (React/Vite)
 together, in Mode A (Live). For the pipeline-only (Stages 0–21, no backend/frontend) setup, see
-[`README.md`](README.md).
+[`README.md`](../README.md).
 
 ---
 
@@ -46,7 +46,7 @@ EMBEDDING_PROVIDER_EXTRA_MODEL_VERSION=v1.5
 At startup the server refuses to start (non-zero exit) if the manifest, chunks or index are missing or empty, if the index
 was built with a different embedding model than configured, or if the local model is not in the Hugging Face cache.
 
-See [`.env.example`](.env.example) for the full annotated list, including why `INDEX_BACKEND` is
+See [`.env.example`](../.env.example) for the full annotated list, including why `INDEX_BACKEND` is
 commented out (no provider registration exists for that seam — `FAISSAdapter` is constructed
 directly by `scripts/pipeline_deps_factory.py`).
 

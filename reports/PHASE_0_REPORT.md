@@ -1,8 +1,8 @@
 # Phase 0 Report: Foundation
 
-Repository: `D:\Projects\sdg-align` (new standalone repo, branch `phase-0-foundation`, 21 commits on top of the initial commit).
+Repository: `<repo root>` (new standalone repo, branch `phase-0-foundation`, 21 commits on top of the initial commit).
 Final code commit: `d4b2224`; evidence-only commits after it (`d8d89b2`, `37d6085`).
-Baseline for every "before" number: the review of the parent repo (`D:\Projects\UNDP project\sdg-align\REVIEW.md` and its `review_artifacts/`). That folder is outside this repo.
+Baseline for every "before" number: the review of the parent repo (`REVIEW.md` and its `review_artifacts/` in the parent repo). That folder is outside this repo.
 
 ---
 
@@ -20,9 +20,9 @@ Also not done on purpose: nothing was pushed, no remote was created, the parent 
 
 | # | Done means | Command | Output | Result |
 |---|---|---|---|---|
-| 1 | Fresh-clone CI passes | `git clone --branch phase-0-foundation D:/Projects/sdg-align <tmp>`; new venv (3.12.10); `pip install -r requirements.txt`; `pip check`; `python -m pytest --cov --cov-report=xml --cov-fail-under=80` | install exit 0 (240 s, 60 distributions); `No broken requirements found.`; `744 passed, 1 warning`; `Required test coverage of 80% reached. Total coverage: 84.60%`; `pytest exit=0`; `coverage.xml` produced | **PASS** (simulated). Files: `reports/evidence/fresh_clone_install.txt`, `fresh_clone_pytest.log` |
+| 1 | Fresh-clone CI passes | `git clone --branch phase-0-foundation <repo path> <tmp>`; new venv (3.12.10); `pip install -r requirements.txt`; `pip check`; `python -m pytest --cov --cov-report=xml --cov-fail-under=80` | install exit 0 (240 s, 60 distributions); `No broken requirements found.`; `744 passed, 1 warning`; `Required test coverage of 80% reached. Total coverage: 84.60%`; `pytest exit=0`; `coverage.xml` produced | **PASS** (simulated). Files: `reports/evidence/fresh_clone_install.txt`, `fresh_clone_pytest.log` |
 | 2 | All tests pass | same, plus 3 plain runs in the fresh clone | `744 passed` x3 (17.85 s, 17.71 s, 18.06 s), 18 subtests passed each | **PASS**. File: `reports/evidence/stability_runs.txt` |
-| 3 | Mutation probe shows M1, M2, M5, M13 killed | `python tools/mutation_probe.py` | `killed 13 / 13; survived: []` (M1 KILLED, M2 KILLED, M5 KILLED, M13 KILLED, plus the 9 that were already killed) | **PASS**. File: `reports/mutation_results.json` |
+| 3 | Mutation probe shows M1, M2, M5, M13 killed | `python tools/mutation_probe.py` | `killed 13 / 13; survived: []` (M1 KILLED, M2 KILLED, M5 KILLED, M13 KILLED, plus the 9 that were already killed) | **PASS**. File: `reports/mutation/mutation_results.json` |
 | 4 | Claims audit has no FALSE rows Phase 0 could fix | Section 8 below | every FALSE row from REVIEW 4.3 that is a wording or code-comment problem is corrected; remaining FALSE rows are behaviour, not wording | **PASS** (see 8 for the rows left open and why) |
 
 ---
@@ -33,7 +33,7 @@ Also not done on purpose: nothing was pushed, no remote was created, the parent 
 
 | File(s) | Change | Why |
 |---|---|---|
-| *(new repo)* | Standalone repo created: 212 tracked files, 3.7 MB working tree. Excludes `data/`, all PDFs, `.env`, review material, `node_modules`. `.gitignore` covers raw PDFs and derived data, `.env*`, `review_artifacts/`, `node_modules/`, venvs. `.gitattributes` forces LF. | You asked for a clean history with no PDFs or secrets |
+| *(new repo)* | Standalone repo created: 212 tracked files, 3.7 MB working tree. Excludes `data/`, all PDFs, `.env`, review material, `node_modules`, local tool folders. `.gitignore` covers raw PDFs and derived data, `.env*`, `review_artifacts/`, `node_modules/`, venvs. `.gitattributes` forces LF. | You asked for a clean history with no PDFs or secrets |
 | `scripts/download_corpus.py` (+ README section) | Stub that lists the 13 expected PDFs with SHA-256, verifies placed files (`--check`), prints the manifest. **No download URLs**: none are invented | Source licence unconfirmed; lets the corpus be reproduced exactly |
 | `requirements.txt`, `pyproject.toml` | One exactly-pinned file with every direct dependency (adds fastapi, uvicorn, pydantic, httpx, requests, numpy, pandas, python-dotenv, pytest-cov). `pyproject.toml` no longer holds a second list; gains pytest and coverage config | The old CI install could not run the backend tests; two lists had drifted |
 | `.github/workflows/test.yml` | At the repo root; Python 3.12; clean install; `pip check`; `pytest --cov --cov-fail-under=80`; uploads `coverage.xml` | CI must be where GitHub looks, and gate on coverage |
@@ -60,11 +60,11 @@ Also not done on purpose: nothing was pushed, no remote was created, the parent 
 
 | | Before (parent repo, REVIEW) | After (fresh clone, final commit) | Source |
 |---|---|---|---|
-| Tests passed | 667 (+12 subtests) | **744** (+18 subtests) | `reports/evidence/fresh_clone_pytest.log`; before: `D:\Projects\UNDP project\sdg-align\review_artifacts\pytest_run1.log` |
+| Tests passed | 667 (+12 subtests) | **744** (+18 subtests) | `reports/evidence/fresh_clone_pytest.log`; before: `<parent repo>/review_artifacts\pytest_run1.log` |
 | Failures / flaky | 0 in 3 runs | 0 in 3 runs + 1 coverage run | `reports/evidence/stability_runs.txt` |
 | Warnings per run | 59 | 1 (Starlette `httpx` deprecation, not ours) | same logs |
 | Coverage (line + branch) | 83% | **84.60%** | `coverage_before_after.txt`, log |
-| Mutations killed | 9 of 13 | **13 of 13** | `reports/mutation_results.json`; before: `review_artifacts/mutation_results.json` |
+| Mutations killed | 9 of 13 | **13 of 13** | `reports/mutation/mutation_results.json`; before: `review_artifacts/mutation_results.json` |
 | Net new tests | | **+77** | suite totals per commit: 667, 670, 673, 680, 681, 683, 682, 684, 697, 717, 733, 736, 738, 744 |
 
 New tests by area: stage 9 retry (+3), HF timeout (+3), API validation (+7 net), `_now()` (+1), observation cap (+2), removed dead-code test (-1), rewritten tests (+2), mutation-killing (+13), retrieval normalisation and model guard (+20), stage CLI (+16, later +2), stage 0 move (+3), download stub (+6).
@@ -93,7 +93,7 @@ The stage 1/2/4 dips are the new summary wiring: it runs in `__main__` and in su
 | Tests passed in a fresh clone | 744 | `reports/evidence/fresh_clone_pytest.log` |
 | Coverage | 84.60% (gate 80%) | same |
 | Plain-run stability | 744 x 3, 17.7-18.1 s each | `reports/evidence/stability_runs.txt` |
-| Mutations killed | 13 / 13 | `reports/mutation_results.json` |
+| Mutations killed | 13 / 13 | `reports/mutation/mutation_results.json` |
 | Rewritten tests caught the break | 5 / 5 deliberate breaks caught | `reports/evidence/break_it_demo.txt` |
 | Ecuador move on a real-data sandbox copy | manifest category `climate` -> `biodiversity`; all 91 chunk records `climate` -> `biodiversity`; chunk text and chunk ids identical; both `index.bin` SHA-256 unchanged; **0** embedding API calls; stage 0/6/7/8/9 all exit 0 | `reports/evidence/ecuador_move_check.json` |
 | CLI exit codes (live) | corrupt PDF: stage 1 exit **1**; scanned PDF: stage 3 exit **0**; same manifest with `--strict`: exit **1**, lists both quarantined docs | `reports/evidence/cli_exit_code_demo.txt` |
@@ -119,7 +119,7 @@ The ~3 failures in 8 runs of the Windows rename flake were observed during this 
 **Things that went wrong during Phase 0 and how they were caught**
 1. **An intermittent Windows failure existed** (`PermissionError` on renaming a just-written directory in stage 9): it hit 3 of the first 8 runs in the new repo, none in the review's 3 runs. Fixed with a bounded retry. The cause (antivirus or indexer locking a fresh directory) is inferred, not confirmed.
 2. **The F821 test passed for the wrong reason.** Fixing the import was not enough: the test fed a FAIL prompt package, so the LLM was never called and the exception path never ran. Rewritten.
-3. **The first M1 test attempt did not kill M1.** The mutation is nearly equivalent: the splitter has a second redundant length check. The only visible difference was that the mutant resets the `degenerate` flag on spans that were not split, so I added a test for that. If you consider the redundant guard a smell, it can be removed later.
+3. **The first M1 test attempt did not kill M1.** The mutation is nearly equivalent: the splitter has a second redundant length check. The only visible difference was that the mutant resets the `degenerate` flag on spans that were not split, so a test for that was added. The redundant guard could be removed later.
 4. **My new subprocess tests broke coverage collection** (pytest-cov could not combine non-branch child data). The 744 tests passed, but the CI coverage step would have crashed. Found only because I ran the CI steps in a fresh clone.
 5. **`--strict` was wrong on re-runs** (it skipped already-quarantined documents and exited 0). Found by a live demo, fixed to look at the whole manifest.
 6. A commit message says "18 new tests" for the retrieval change; the real count is 20 (parametrised cases). Cosmetic.
@@ -165,7 +165,7 @@ The ~3 failures in 8 runs of the Windows rename flake were observed during this 
 
 Safe, because each has a saved file:
 1. "Grew the test suite from 667 to 744 tests; line+branch coverage 83% -> 84.6%, with an 80% CI gate." Proof: `reports/evidence/fresh_clone_pytest.log`; baseline `review_artifacts/pytest_run1.log` (parent repo).
-2. "Built a mutation probe over 13 critical functions; 4 initially survived, all 13 are now killed." Proof: `reports/mutation_results.json`, `tools/mutation_probe.py`; baseline `review_artifacts/mutation_results.json` (parent repo).
+2. "Built a mutation probe over 13 critical functions; 4 initially survived, all 13 are now killed." Proof: `reports/mutation/mutation_results.json`, `tools/mutation_probe.py`; baseline `review_artifacts/mutation_results.json` (parent repo).
 3. "Ingestion CLIs exit non-zero on failed documents (with an expected-quarantine policy and `--strict`)." Proof: `reports/evidence/cli_exit_code_demo.txt`.
 4. "Verified a fresh clone builds in a clean Python 3.12 venv (60 packages, `pip check` clean) and passes the suite." Proof: `reports/evidence/fresh_clone_install.txt`, `fresh_clone_pytest.log`. Say "simulated locally", not "on GitHub Actions".
 5. "A document move re-categorised the corpus without changing the vector index (byte-identical `index.bin`, zero embedding calls)." Proof: `reports/evidence/ecuador_move_check.json`. It ran on a sandbox copy.
@@ -185,11 +185,11 @@ Kept out of the repository by decision (private study notes, local only).
 **Proposed Phase 1 (adjusted from REVIEW 5.1): make quality measurable.** Gold set of 50-100 questions on the 5 indexed documents, an eval harness (recall@k, MRR, answer correctness with human labels), then run the planner against a no-planner baseline. In parallel the cheap security fixes: delimit untrusted chunk text, server-generated conversation ids, single-flight on the cache.
 
 **Things I need from you**
-1. **Create the GitHub remote** and tell me the URL. I will not push until you say so. That unlocks a real Actions run.
+1. **Create the GitHub remote.** Nothing is pushed until the project owner decides. That unlocks a real Actions run.
 2. **Where are the 13 PDFs locally** (to rebuild the corpus and the index in the new repo), and may I re-run stage 8 with the local `bge-small` model instead of the HF API so it costs nothing?
-3. **Is the old GitHub repo (`aqe17za/sdg-align-ai-platform`) public?** If so, do you want a history rewrite plan to remove the PDFs and derived files?
+3. **Is the old GitHub repo (`aqe17za/sdg-align-ai-platform`) public?** If so, a history rewrite plan to remove the PDFs and derived files is needed.
 4. **Should `reports/PHASE_0_REPORT.md` and `LEARN_0.md` be committed?** I left both untracked because they contain interview Q&A and you asked to keep interview material out of the new repo.
 5. **Keep or remove the "explainable in an interview" line** in `docs/ARCHITECTURE_BLUEPRINT.md`.
 6. **Exit-code policy OK?** (`FATAL_NO_TEXT` exits 0; `--strict` fails on any quarantine.)
 7. **Who labels the gold set**, and do you want an LLM judge as a second opinion?
-8. **License choice** (the `LICENSE` file is still a placeholder) and the author/contact placeholders in the README.
+8. **License choice** (since resolved: the code is MIT-licensed, see `LICENSE`) and the author/contact details in the README.

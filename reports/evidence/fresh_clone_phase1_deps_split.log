@@ -1,10 +1,10 @@
-+ cd 'C:/Users/user\AppData\Local\Temp/fresh_p1'
-+ C:/Users/user/AppData/Local/Python/pythoncore-3.12-64/python.exe -m venv venv_fresh
++ cd '<local dir>/fresh_p1'
++ <local dir>/pythoncore-3.12-64/python.exe -m venv venv_fresh
 + PY=venv_fresh/Scripts/python.exe
 ++ date +%s
 + S=1795381927
 + venv_fresh/Scripts/python.exe -m pip install --upgrade pip
-Requirement already satisfied: pip in C:/Users/user\appdata\local\temp\fresh_p1\venv_fresh\lib\site-packages (25.0.1)
+Requirement already satisfied: pip in <local dir> (25.0.1)
 Collecting pip
   Using cached pip-26.3-py3-none-any.whl.metadata (4.6 kB)
 Using cached pip-26.3-py3-none-any.whl (2.0 MB)

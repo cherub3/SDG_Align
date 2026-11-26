@@ -5,7 +5,7 @@ Outputs (reports/evidence/):
                            No version, document name, rank or score. Globally shuffled with a fixed seed.
   blind_key.json           id -> where each item came from (versions, ranks, documents, scores). NOT opened
                            until labels are saved.
-  blind_for_priyanshi.md   5 of the 13 answerable questions (seeded), each with its shuffled passages.
+  blind_for_owner.md       5 of the 13 answerable questions (seeded), each with its shuffled passages.
 An identical text (whitespace-normalised) that both versions returned for the same question appears once.
 """
 import json
@@ -63,7 +63,7 @@ def main():
         lines += [f"## Question {n}: {qi[0]['question']}", ""]
         for i in qi:
             lines += [f"### {i['id']}", "", "```text", i["text"].strip(), "```", "", "Label: ", "Reason: ", ""]
-    open(os.path.join(EV, "blind_for_priyanshi.md"), "w", encoding="utf-8", newline="\n").write("\n".join(lines))
+    open(os.path.join(EV, "blind_for_owner.md"), "w", encoding="utf-8", newline="\n").write("\n".join(lines))
     json.dump({"seed": SEED, "questions": pick}, open(os.path.join(EV, "blind_user_selection.json"), "w"))
     print("items", len(ordered), "per question", {n: sum(1 for i in ordered if i["question_no"] == n) for n in range(1, 16)})
     print("user questions", pick)

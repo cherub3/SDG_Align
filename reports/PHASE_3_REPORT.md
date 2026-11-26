@@ -29,12 +29,12 @@ No git was run. The Gemini key was never printed or committed. Per-step detail i
 | Keep rule (pre-stated: refuse >= 5/8 unanswerable AND false refusal <= 10%) | **FAILED for both templates** (2.1.0: 6/44 > 4/44) | VERIFIED | Step 4 report sections 7 and 9 |
 | Planner (2.1.0, fixed) vs none | refusals identical: 6/44 vs 6/44, cross_document 2/10 vs 2/10; calls 2.96 vs 1 per request; p50 latency 15.0 s vs 1.2 s (mostly 12 RPM pacing; un-paced about 4 s vs 1.3 s, INFERRED) | VERIFIED / INFERRED | `step5_arms.json` |
 | H1 (planner cuts cross-document false refusals by >= 3) | NOT SUPPORTED; the bar was arithmetically unreachable (baseline had 2) | VERIFIED | Step 5 report section 8 |
-| Served path vs offline hybrid (section 3) | identical on all 66 items; R@5 0.7727 (TEST), 0.8333 (DEV) | VERIFIED | `step7_served_vs_offline.json` |
+| Served path vs offline hybrid (section 3) | same retrieved chunks on all 66 gold queries; Recall@5 identical on the 56 answerable ones (TEST 0.7727, DEV 0.8333) | VERIFIED | `step7_served_vs_offline.json` |
 | Cloud Run cold start | 41.3 s (instance start to ready, from logs) | VERIFIED | Step 6 report |
-| Warm latency, reused connection | `/health` p50 48 ms; retrieval-only p50 111 ms, p95 151 ms (n = 10 each) | VERIFIED | `step6_smoke.json` |
+| Warm latency, reused connection | `/health` p50 48 ms; retrieval-only median 111 ms, max 151 ms over 10 warm requests (health: median 48 ms over 10) | VERIFIED | `step6_smoke.json` |
 | Warm LLM request latency | 5.1 s and 2.3 s (n = 2; no p50/p95 claim) | VERIFIED | `step6_smoke.json` |
 | Tests | 1034 passed, three consecutive full runs; scripts coverage 87% | VERIFIED | section 5 |
-| Mutation probe, Phase 3 code (M59-M75, 17 mutants) | 17 of 17 killed after one fix (section 5); a no-op control survives | VERIFIED | `mutation_results_M59_...M75.json`, `mutation_results_M75.json` |
+| Mutation probe, Phase 3 code (M59-M75, 17 mutants) | 17 of 17 killed after one fix (section 5); a no-op control survives | VERIFIED | `reports/mutation/mutation_results_M59_...M75.json`, `reports/mutation/mutation_results_M75.json` |
 | Fresh-venv install and suite | 1034 passed, scripts coverage 87%, in a new venv | VERIFIED | section 5 |
 | LLM calls spent in Steps 7-9 | 1 (the single Mode A query in the browser); limit was 2 | VERIFIED (browser network log shows one POST /run-query) | section 4 |
 
@@ -62,7 +62,7 @@ No git was run. The Gemini key was never printed or committed. Per-step detail i
 
 ## 6. Claims safe for a resume, and claims that are NOT safe
 **Safe (each backed by a file above):**
-- Built a hybrid BM25 + dense retriever and measured it on a frozen, split gold set: R@5 0.57 to 0.77 on the held-out test set, with bootstrap CIs and paired tests (Phase 2).
+- Built a hybrid BM25 + dense retriever and measured it on a frozen, split gold set: R@5 0.57 to 0.77 on the TEST split (no TEST-informed tuning for this comparison), with bootstrap CIs and paired tests (Phase 2).
 - Verified that the deployed service returns the same retrieval results as the offline evaluation on all 66 gold questions (identical ranks), with zero LLM calls for the check.
 - Deployed a containerised FastAPI RAG backend to Cloud Run (asia-south1) with IAM-only access, the API key in Secret Manager, scale-to-zero, one instance, a per-request call cap, and a daily LLM call cap with a 429 circuit breaker.
 - Ran a pre-registered A/B of an LLM planner against no planner. It gave no improvement at about 3x the calls, so it ships off by default. Found and fixed a prompt gap in the planner using 3 recorded live responses and regression tests.

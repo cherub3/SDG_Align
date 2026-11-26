@@ -4,7 +4,7 @@ Chronological, one entry per stage. Files/functions verified against the current
 (`scripts/`, `tests/`); revision history extracted from the design plan's own "Conflicts Found &
 Resolved" / round 2 / round 3 narration. This log is a historical record of the ingestion-phase
 build (Stages 4–7); per-stage counts below are each stage's own test file run in isolation. The
-full current suite across all stages (0–21) is **481 passing tests** (`python -m pytest`).
+full suite at the time of this log was 481 passing tests; the current suite collects 1104 tests; the last full run (`python -m pytest`) had 1104 passed, 0 failed, 0 skipped, with 87% coverage of `scripts/`.
 
 ## Stage 4 — Cleaning & Normalization
 - Files: `scripts/stage4_cleaning.py` (created), `tests/test_stage4_cleaning.py` (created),

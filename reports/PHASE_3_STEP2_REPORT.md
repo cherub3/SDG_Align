@@ -27,7 +27,7 @@ Gemini $0 on the free tier (no billing on the key project). Paid-equivalent is n
 `Dockerfile` (multi-stage, python:3.12-slim, CPU torch via the pytorch CPU index, bge-small baked at the pinned revision `5c38ec7c...` using the code's own loader with `ALLOW_MODEL_DOWNLOAD=true` in the builder only, runtime offline, non-root uid 10001, `uvicorn 0.0.0.0:$PORT`), `.dockerignore`, `.gcloudignore`, `cloudbuild.yaml` (build + push only, nothing deployed).
 - VERIFIED locally: a tree containing only scripts, src, config, manifest, chunks and vector_index (2.1 MB of data; no PDFs, no extracted text) passes the startup checks and loads the embedder offline: 6 docs, 497 chunks.
 - UNVERIFIED until the first Cloud Build: that the Dockerfile builds, final image size, cold start, warm p50/p95, and that the CPU torch pin resolves.
-- Needs your decision: `data/proposals/` is git-ignored because the corpus licence is unconfirmed. The image would contain derived chunk text (not PDFs) in your private Artifact Registry. `.gcloudignore` is written so Cloud Build uploads the derived data despite `.gitignore`.
+- Open decision for the project owner: `data/proposals/` is git-ignored because the corpus licence is unconfirmed. The image would contain derived chunk text (not PDFs) in a private Artifact Registry. `.gcloudignore` is written so Cloud Build uploads the derived data despite `.gitignore`.
 - Cloud Build is billable-adjacent (free tier 2,500 min/month per my Step 1 reading); not run. API enables needed first (Cloud Build, Artifact Registry, Cloud Run, Secret Manager): not enabled.
 
 ## Not done / next
