@@ -1,0 +1,63 @@
+{
+ "status": "POST HOC. Not pre-registered. TEST has been used for two abstention templates, one planner arm and this agent arm; no correction for multiple use.",
+ "arms": {
+  "A": "test_noplanner_v21.jsonl",
+  "B": "test_agents_v1.jsonl"
+ },
+ "method": "exact McNemar on discordant pairs (scipy binomtest, two-sided); CI = percentile bootstrap of the paired difference, 10000 resamples, seed 1 (as tools/compare_arms.py)",
+ "false_refusal_answerable_44": {
+  "n": 44,
+  "table": {
+   "both": 1,
+   "only_A": 5,
+   "only_B": 2,
+   "neither": 36
+  },
+  "events_A": 6,
+  "events_B": 3,
+  "discordant": 7,
+  "difference_B_minus_A": -0.0682,
+  "ci95_paired_bootstrap": [
+   -0.1818,
+   0.0455
+  ],
+  "mcnemar_exact_p": 0.4531
+ },
+ "automatic_wrong_all_52": {
+  "n": 52,
+  "table": {
+   "both": 9,
+   "only_A": 7,
+   "only_B": 3,
+   "neither": 33
+  },
+  "events_A": 16,
+  "events_B": 12,
+  "discordant": 10,
+  "difference_B_minus_A": -0.0769,
+  "ci95_paired_bootstrap": [
+   -0.1923,
+   0.0385
+  ],
+  "mcnemar_exact_p": 0.3438
+ },
+ "automatic_wrong_answerable_44": {
+  "n": 44,
+  "table": {
+   "both": 9,
+   "only_A": 7,
+   "only_B": 3,
+   "neither": 25
+  },
+  "events_A": 16,
+  "events_B": 12,
+  "discordant": 10,
+  "difference_B_minus_A": -0.0909,
+  "ci95_paired_bootstrap": [
+   -0.2273,
+   0.0455
+  ],
+  "mcnemar_exact_p": 0.3438
+ },
+ "note": "'wrong' is the automatic proxy (tools/answer_checks.py), not a correctness label. Nothing here is a human or AI correctness label for arm B."
+}

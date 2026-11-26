@@ -1,0 +1,30 @@
+{
+ "frozen_at_utc": "2026-11-23T21:37:31Z",
+ "config_hash": "803e6c93d274fd8c399c413ddeb2701d7e7f063e641f61edae25bac2fce7d50e",
+ "model": "gemini-3.5-flash-lite",
+ "caps": {
+  "max_llm_calls": 6,
+  "max_searches": 2,
+  "max_revisions": 1,
+  "timeout_s": 240.0,
+  "top_k": 10,
+  "context_budget_tokens": 4000,
+  "temperature": 0.0,
+  "retriever_max_tokens": 256,
+  "answer_max_tokens": 512,
+  "verifier_max_tokens": 512,
+  "snippet_chars": 400,
+  "template_version": "2.1.0"
+ },
+ "template_sha256": "34a89dc9db9c3d6f5135e29887fb29264b04d3454d579d29bcc12174e163cedd",
+ "dev_label": "dev_agents_v1",
+ "files": {
+  "__init__.py": "b296d8990412207237817802eb4de91da6304080f002db58907e15ea4447ccfd",
+  "config.py": "5ede387fb346ab4bd0ddff28b7507db6bc7c696bff4e0dfa6f8c15ab106f6b7d",
+  "llm.py": "ae08cc352277ac3b1ab4df2feda16f3d138db0276d8e5cc1ee339256fb968912",
+  "pipeline.py": "1424c667fe858fb7adacd022765bbe2f53c0eae22714524c3884b86dc0c8e751",
+  "prompts.py": "1aa3398a6eaff92552b409d835eaca2a4030a961a21fd45a9d2c01651e86b618",
+  "runtime.py": "73d33c6e0b9f397499ef0af6ce76789c8a108c1e8f3d30a7e34af3278a6e4bce",
+  "service.py": "7c0c68f0c0862abbdd8ab440b7d5fe10436449183e00139827a94fc4f7fbac4b"
+ }
+}

@@ -48,6 +48,97 @@
    "label": "test_planner_v21",
    "calls": 154,
    "note": "planner arm, template 2.1.0, 52 requests started"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "dev_agents_v1",
+   "calls": 7,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "dev_agents_v1",
+   "calls": 9,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "dev_agents_v1",
+   "calls": 36,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "dev_agents_v1",
+   "calls": 17,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "dev_agents_v1_record",
+   "calls": 9,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "key_change",
+   "calls": 0,
+   "reset": true,
+   "note": "The API key was replaced by a key from a different Google account (separate free-tier quota) to finish the Phase 4 TEST run. The 400-calls-per-day cap restarts from 0 for the new key. 387 calls were made on the previous key today."
+  },
+  {
+   "day_pacific": "2026-11-23",
+   "label": "test_agents_v1",
+   "calls": 104,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-24",
+   "label": "test_agents_v1",
+   "calls": 5,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-24",
+   "label": "test_agents_v1",
+   "calls": 9,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-24",
+   "label": "test_agents_v1",
+   "calls": 9,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-24",
+   "label": "test_agents_v1",
+   "calls": 47,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-24",
+   "label": "test_agents_v1",
+   "calls": 5,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-24",
+   "label": "test_agents_v1",
+   "calls": 20,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-24",
+   "label": "test_agents_v1",
+   "calls": 15,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
+  },
+  {
+   "day_pacific": "2026-11-24",
+   "label": "test_agents_v1",
+   "calls": 34,
+   "note": "ADK multi-agent arm, run of 2026-11-24; counted by QuotaGuard (every attempted call)"
   }
  ]
 }

@@ -1,0 +1,107 @@
+{
+ "label": "test_agents_v1",
+ "frozen_config_hash": "803e6c93d274fd8c399c413ddeb2701d7e7f063e641f61edae25bac2fce7d50e",
+ "arm_a_reuse_check": {
+  "arm_a_rows": "test_noplanner_v21.jsonl",
+  "arm_a_prompt_sha256_in_summary": "34a89dc9db9c3d6f5135e29887fb29264b04d3454d579d29bcc12174e163cedd",
+  "template_2_1_0_sha256_now": "34a89dc9db9c3d6f5135e29887fb29264b04d3454d579d29bcc12174e163cedd",
+  "prompt_unchanged": true,
+  "arm_a_model": "gemini-3.5-flash-lite",
+  "model_now": "gemini-3.5-flash-lite",
+  "model_unchanged": true
+ },
+ "A": {
+  "n_items": 52,
+  "n_answerable": 44,
+  "n_unanswerable": 8,
+  "false_refusals_answerable": 6,
+  "refusals_unanswerable": 8,
+  "wrong_answers_automatic": 16,
+  "wrong_answerable": 16,
+  "wrong_unanswerable": 0,
+  "answered_answerable": 35,
+  "cited_hit_at5_among_answered": 28,
+  "cited_hit_at5_over_all_answerable": 30,
+  "cited_hit_at5_explicit_markers_among_answered": null,
+  "llm_calls_per_question": {
+   "mean": 1.0,
+   "max": 1,
+   "total": 52
+  },
+  "tokens": {
+   "input_total": 247747,
+   "output_total": 2572,
+   "thinking_total": 0,
+   "input_per_question": 4764.4,
+   "output_incl_thinking_per_question": 49.5
+  },
+  "tokens_per_second_output": 39.49,
+  "estimated_cost_usd": {
+   "total": 0.08075,
+   "per_request": 0.001553,
+   "basis": "list price, gemini-3.5-flash-lite paid tier, 0.30 USD/1M input, 2.50 USD/1M output incl. thinking; an estimate, the project runs on the free tier"
+  },
+  "latency_ms_per_question": {
+   "n": 52,
+   "p50": 5012,
+   "max": 11838
+  },
+  "cap_hits": 0,
+  "implicit_refusals": 3
+ },
+ "B": {
+  "n_items": 52,
+  "n_answerable": 44,
+  "n_unanswerable": 8,
+  "false_refusals_answerable": 3,
+  "refusals_unanswerable": 8,
+  "wrong_answers_automatic": 12,
+  "wrong_answerable": 12,
+  "wrong_unanswerable": 0,
+  "answered_answerable": 36,
+  "cited_hit_at5_among_answered": 25,
+  "cited_hit_at5_over_all_answerable": 29,
+  "cited_hit_at5_explicit_markers_among_answered": 29,
+  "llm_calls_per_question": {
+   "mean": 3.827,
+   "max": 5,
+   "total": 199
+  },
+  "tokens": {
+   "input_total": 523302,
+   "output_total": 11119,
+   "thinking_total": 0,
+   "input_per_question": 10063.5,
+   "output_incl_thinking_per_question": 213.8
+  },
+  "tokens_per_second_output": 8.09,
+  "estimated_cost_usd": {
+   "total": 0.18479,
+   "per_request": 0.003554,
+   "basis": "list price, gemini-3.5-flash-lite paid tier, 0.30 USD/1M input, 2.50 USD/1M output incl. thinking; an estimate, the project runs on the free tier"
+  },
+  "latency_ms_per_question": {
+   "n": 52,
+   "p50": 20953.0,
+   "max": 79250.0
+  },
+  "cap_hits": 0,
+  "implicit_refusals": 5
+ },
+ "keep_rule": {
+  "conditions": {
+   "false_refusals_drop_by_2_or_more": true,
+   "wrong_answers_do_not_increase": true,
+   "mean_calls_le_4": true
+  },
+  "values": {
+   "false_refusals_A": 6,
+   "false_refusals_B": 3,
+   "wrong_A": 16,
+   "wrong_B": 12,
+   "mean_calls_B": 3.827
+  },
+  "verdict": "ELIGIBLE_AS_DEFAULT (default not changed in this phase)"
+ },
+ "label_note": "correctness labels were not produced for arm B; the wrong-answer count is the automatic proxy defined in PHASE_4_REPORT.md section 3"
+}
